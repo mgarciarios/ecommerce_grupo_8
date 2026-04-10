@@ -31,7 +31,6 @@ public class ProductoService {
 
     public Producto saveProducto(Producto producto) {
         return productoRepository.save(producto);
-
     }
 
     public Producto updateProducto(Long id, Producto producto) {

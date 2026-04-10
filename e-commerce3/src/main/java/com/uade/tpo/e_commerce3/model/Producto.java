@@ -21,7 +21,7 @@ import lombok.Data;
 @Table(name = "productos")
 public class Producto {
     
-        @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
@@ -37,15 +37,12 @@ public class Producto {
 
     // private String imagenUrl;
     
-    @ManyToMany(fetch = FetchType.LAZY) //PREGUNTA DE EXAMEN: es para que no te aparezcan todos los resultados de una si es que son demaisados
+    @ManyToMany(fetch = FetchType.LAZY) //PREGUNTA DE EXAMEN: es para que no te aparezcan todos los resultados de una si es que son demasiados
     @JoinTable(
         name = "productos_categorias",
         joinColumns = @JoinColumn(name = "producto_id"),
         inverseJoinColumns = @JoinColumn(name = "categoria_id")
     )
     private List<Categoria> categorias = new ArrayList<>();
- 
-    
-
 
 }
