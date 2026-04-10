@@ -33,7 +33,7 @@ public class Producto {
     @Column(nullable = false)
     private Double precio;    
     @Column(nullable = false)
-    private Integer stock;
+    private Double stock;
 
     // private String imagenUrl;
     
