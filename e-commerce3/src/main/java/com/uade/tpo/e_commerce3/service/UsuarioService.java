@@ -26,7 +26,7 @@ public class UsuarioService {
     }
 
     public Usuario getUsuarioByMail(String mail){
-        return usuarioRepository.findByMail(mail).orElse(null);
+        return usuarioRepository.findByEmail(mail).orElse(null);
     }
 
     public void deleteUsuarioById(Long id) {
@@ -43,7 +43,7 @@ public class UsuarioService {
             existingUsuario.setNombreUsuario(usuario.getNombreUsuario());
             existingUsuario.setNombre(usuario.getNombre());
             existingUsuario.setApellido(usuario.getApellido());
-            existingUsuario.setMail(usuario.getMail());
+            existingUsuario.setEmail(usuario.getEmail());
             existingUsuario.setContrasena(usuario.getContrasena());
             return usuarioRepository.save(existingUsuario);
         }

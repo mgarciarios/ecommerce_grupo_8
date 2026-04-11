@@ -1,5 +1,9 @@
 package com.uade.tpo.e_commerce3.repository;
 
-public class CarritoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.uade.tpo.e_commerce3.model.Carrito;
+
+public interface CarritoRepository extends JpaRepository<Carrito, Long>{
     
 }

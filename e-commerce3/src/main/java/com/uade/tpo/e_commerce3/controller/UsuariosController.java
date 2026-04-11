@@ -44,7 +44,7 @@ public class UsuariosController {
         }
         
         @PutMapping("/{id}")
-        public Usuario udpateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+        public Usuario updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
             return usuarioService.updateUsuario(id, usuario);
         }
 

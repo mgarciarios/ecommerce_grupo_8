@@ -6,8 +6,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -27,11 +36,12 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String nombreUsuario;
     private String nombre;
     private String apellido;
     @Column(unique = true)
     private String email;
-    private String password;
+    private String contrasena;
     // El rol del usuario (ADMIN o USER) se almacena como un string en la base de datos
     // @Enumerated(EnumType.STRING) indica que el enum se guardará como texto en la base de datos, no como un número
     @Enumerated(EnumType.STRING)
@@ -63,6 +73,13 @@ public class Usuario implements UserDetails {
     public String getUsername() {
         return email;
     }
+
+    @Override
+    public String getPassword(){
+        return contrasena;
+    }
+    
+
     //estado de la cuenta
     @Override
     public boolean isAccountNonExpired() {

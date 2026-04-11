@@ -101,7 +101,7 @@ public class AuthenticationService {
                 //      - Resistente a ataques de fuerza bruta (computacionalmente costoso)
                 //      - El mismo password se codifica diferente en cada llamada
                 //      - Al verificar en login, compara el hash almacenado con el nuevo hash generado
-                .password(passwordEncoder.encode(request.getPassword()))
+                .contrasena(passwordEncoder.encode(request.getPassword()))
                 // 2.5) Asigna el rol de usuario a todos los registros nuevos
                 //      Todos los usuarios nuevos tienen rol USER (permisos limitados)
                 //      Solo administradores pueden asignar roles especiales (ADMIN, MODERATOR, etc.)
