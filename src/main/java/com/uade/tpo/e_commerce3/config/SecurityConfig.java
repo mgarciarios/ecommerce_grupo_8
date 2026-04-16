@@ -35,7 +35,6 @@ public class SecurityConfig {
 
 
     private final JwtFilter jwtFilter;
-    private final AuthenticationProvider authenticationProvider;
     // Inyección del repositorio de usuarios
     // pueden utilizar también @Autowired
     private final UsuarioRepository usuarioRepository;
@@ -92,7 +91,7 @@ public class SecurityConfig {
 
     // Configura las reglas de seguridad para las diferentes rutas de la API
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
         // http
         //         .csrf(csrf -> csrf.disable())
         //         .authorizeHttpRequests(auth -> auth
