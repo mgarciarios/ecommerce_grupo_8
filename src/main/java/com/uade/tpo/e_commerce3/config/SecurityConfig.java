@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 
 import com.uade.tpo.e_commerce3.model.Role;
 import com.uade.tpo.e_commerce3.repository.UsuarioRepository;
@@ -52,13 +53,12 @@ public class SecurityConfig {
     // Usa el UserDetailsService para buscar el usuario en la base de datos
     // Usa el PasswordEncoder para verificar si la contraseña proporcionada coincide con la almacenada
     // Si todo es correcto, crea un token de autenticación; si no, lanza una excepción    
-    // @Bean
-    // public AuthenticationProvider authenticationProvider() {
-    //     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    //     authProvider.setPasswordEncoder(passwordEncoder());
-    //     authProvider.setUserDetailsService(userDetailsService());
-    //     return authProvider;
-    // }
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
 
     /**
      * AuthenticationManager es el componente central de autenticación en Spring Security.
