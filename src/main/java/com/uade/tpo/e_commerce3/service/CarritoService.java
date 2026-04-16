@@ -84,34 +84,47 @@ public class CarritoService {
         return new CarritoDTO(carritoGuardado);
     }
 
-    public CarritoDTO eliminarProductoDelCarrito(Long idCarrito, Long idProducto, Integer cantidad) {
-    Carrito carrito = carritoRepository.findById(idCarrito)
-            .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
+    // eliminar producto COMPLETO del carrito
 
-    ProductoCarrito item = carrito.getProductos().stream()
-            .filter(p -> p.getProducto().getId().equals(idProducto))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("Producto no encontrado en el carrito"));
-
-    // Validar que no intente eliminar más de lo que tiene
-    if (cantidad > item.getCantidad()) {
-        throw new RuntimeException("No puedes eliminar " + cantidad + " productos. El carrito solo tiene " + item.getCantidad());
+    public CarritoDTO deleteProductoInCarritoById(Long idCarrito, Long idProducto) {
+        Carrito carrito = carritoRepository.findById(idCarrito)
+                .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
+                Carrito carritoGuardado = carritoRepository.save(carrito);
+                return new CarritoDTO(carritoGuardado);
     }
 
-    if (cantidad <= 0) {
-        throw new RuntimeException("La cantidad a eliminar debe ser mayor a 0");
-    }
+    // reducir cantidad de un producto en el carrito, si la cantidad a eliminar es igual a la que tiene, remover el item completamente
 
-    // Si la cantidad a eliminar es igual a la que tiene, remover el item completamente
-    if (cantidad.equals(item.getCantidad())) {
-        carrito.getProductos().remove(item);
-    } else {
-        // Si es menor, solo reducir la cantidad
-        item.setCantidad(item.getCantidad() - cantidad);
-    }
+    public CarritoDTO reduceCantidadProductoInCarritoById(Long idCarrito, Long idProducto, Integer cantidad) {
+                Carrito carrito = carritoRepository.findById(idCarrito)
+                        .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
 
-    Carrito carritoGuardado = carritoRepository.save(carrito);
-    return new CarritoDTO(carritoGuardado);
+                ProductoCarrito item = carrito.getProductos().stream()
+                        .filter(p -> p.getProducto().getId().equals(idProducto))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Producto no encontrado en el carrito"));
+
+
+
+                // Validar que no intente eliminar más de lo que tiene
+                if (cantidad > item.getCantidad()) {
+                    throw new RuntimeException("No puedes eliminar " + cantidad + " productos. El carrito solo tiene " + item.getCantidad());
+                }
+
+                if (cantidad <= 0) {
+                    throw new RuntimeException("La cantidad a eliminar debe ser mayor a 0");
+                }
+
+                // Si la cantidad a eliminar es igual a la que tiene, remover el item completamente
+                if (cantidad.equals(item.getCantidad())) {
+                    carrito.getProductos().remove(item);
+                } else {
+                    // Si es menor, solo reducir la cantidad
+                    item.setCantidad(item.getCantidad() - cantidad);
+                }
+
+                Carrito carritoGuardado = carritoRepository.save(carrito);
+                return new CarritoDTO(carritoGuardado); 
     }
 
     public CarritoDTO getCarritoById(Long id) {
