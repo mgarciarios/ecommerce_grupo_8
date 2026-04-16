@@ -33,9 +33,9 @@ public class Producto {
     @Column(nullable = false)
     private Double precio;    
     @Column(nullable = false)
-    private Double stock;
+    private Integer stock;
 
-    // private String imagenUrl;
+    private String foto;
     
     @ManyToMany(fetch = FetchType.LAZY) //PREGUNTA DE EXAMEN: es para que no te aparezcan todos los resultados de una si es que son demasiados
     @JoinTable(

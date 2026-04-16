@@ -30,5 +30,5 @@ public class Carrito {
     private Long usuarioId;
 
     @ManyToMany
-    private List<ProductoCarrito> productos = new ArrayList();
+    private List<ProductoCarrito> productos = new ArrayList<>();
 }

@@ -1,10 +1,13 @@
 package com.uade.tpo.e_commerce3.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.e_commerce3.dto.UsuarioDTO;
+import com.uade.tpo.e_commerce3.exception.UsuarioNotFoundException;
 import com.uade.tpo.e_commerce3.model.Usuario;
 import com.uade.tpo.e_commerce3.repository.UsuarioRepository;
 
@@ -17,13 +20,17 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<Usuario> getAllUsuarios(){
-        return usuarioRepository.findAll();
-    }
+    public List<UsuarioDTO> getAllUsuarios() {
+    return usuarioRepository.findAll().stream()
+            .map(UsuarioDTO::new)
+            .collect(Collectors.toList());
+}
 
-    public Usuario getUsuarioById(Long id){
-        return usuarioRepository.findById(id).orElse(null);
-    }
+    public UsuarioDTO getUsuarioById(Long id) {
+    Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new UsuarioNotFoundException(id));
+    return new UsuarioDTO(usuario);
+}
 
     public Usuario getUsuarioByMail(String mail){
         return usuarioRepository.findByEmail(mail).orElse(null);
@@ -37,16 +44,15 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario updateUsuario(Long id, Usuario usuario) {
-        Usuario existingUsuario = getUsuarioById(id);
-        if (existingUsuario != null) {
-            existingUsuario.setNombreUsuario(usuario.getNombreUsuario());
-            existingUsuario.setNombre(usuario.getNombre());
-            existingUsuario.setApellido(usuario.getApellido());
-            existingUsuario.setEmail(usuario.getEmail());
-            existingUsuario.setContrasena(usuario.getContrasena());
-            return usuarioRepository.save(existingUsuario);
-        }
-        return null;
+    public UsuarioDTO updateUsuario(Long id, UsuarioDTO dto) {
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new UsuarioNotFoundException(id));
+    
+        usuario.setNombre(dto.getNombre());
+        usuario.setApellido(dto.getApellido());
+        usuario.setEmail(dto.getEmail());
+        
+        Usuario guardado = usuarioRepository.save(usuario);
+        return new UsuarioDTO(guardado);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.e_commerce3.dto.ProductoDTO;
+import com.uade.tpo.e_commerce3.model.Categoria;
 import com.uade.tpo.e_commerce3.model.Producto;
 import com.uade.tpo.e_commerce3.service.ProductoService;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -30,9 +33,17 @@ public class ProductoController {
 
     //http://localhost:8080/api/productos -> devuelve la lista de productos
     @GetMapping
-    public List<Producto> getAllProductos() {
-        return productoService.getAllProductos();
+    public ResponseEntity<List<ProductoDTO>> getAllProductos() {
+        List<ProductoDTO> productos = productoService.getAllProductos();
+        return new ResponseEntity<>(productos, HttpStatus.OK);
     }
+
+    @GetMapping("/categorias")
+    public ResponseEntity<List<Categoria>> getCategorias() {
+        List<Categoria> categorias = productoService.getAllCategorias();
+        return new ResponseEntity<>(categorias, HttpStatus.OK);
+    }
+    
 
     //http://localhost:8080/api/productos/1 -> devuelve el producto con id 1
     @GetMapping("/{id}")
@@ -51,20 +62,26 @@ public class ProductoController {
 
     // del http://localhost:8080/api/productos/1 -> elimina el producto con id 1
     @DeleteMapping("/{id}")
-    public void deleteProductoById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProducto(@PathVariable Long id) {
         productoService.deleteProductoById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping
-    public Producto saveProducto(@RequestBody Producto producto) {
-        return productoService.saveProducto(producto);
-
+    public ResponseEntity<ProductoDTO> saveProducto(@RequestBody ProductoDTO productoDTO) {
+        ProductoDTO nuevoProducto = productoService.saveProducto(productoDTO);
+        return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
     }
     
     @PutMapping("/{id}")
-    public ProductoDTO udpateProducto(@PathVariable Long id, @RequestBody ProductoDTO producto) {
-        return productoService.updateProducto(id, producto);
+    public ResponseEntity<ProductoDTO> updateProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
+        ProductoDTO productoActualizado = productoService.updateProducto(id, productoDTO);
+        return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
     }
-    
-    
+
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<ProductoDTO> updateStock(@PathVariable Long id, @RequestParam int cantidad) {
+        ProductoDTO productoActualizado = productoService.updateStock(id, cantidad);
+        return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
+    }
 }
