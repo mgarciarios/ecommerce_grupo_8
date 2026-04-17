@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 //TODO: ssanchez - se podría cambiar el nobmre a UsuarioRegisterDTO
 
 public class RegisterRequest {
+    private String nombreUsuario;
     private String nombre;
     private String apellido;
     private String email;

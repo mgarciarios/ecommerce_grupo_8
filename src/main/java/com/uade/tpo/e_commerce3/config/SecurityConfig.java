@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,8 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 
 import com.uade.tpo.e_commerce3.model.Role;
 import com.uade.tpo.e_commerce3.repository.UsuarioRepository;
@@ -112,17 +112,20 @@ public class SecurityConfig {
 
                         // Rutas que requieren autenticación para modificar productos
                         //solo los usuarios autenticados pueden crear un producto
-                        .requestMatchers(HttpMethod.POST, "/api/productos/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/productos/**").authenticated()              //Solo los usuarios autenticados pueden crear productos
+                        //.requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole(Role.ADMIN.name()) //Solo los administradores pueden crear productos
                         //solo los usuarios autenticados pueden actualizar un producto
-                        .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/productos/**").authenticated()               //Solo los usuarios autenticados pueden actualizar productos
+                        //.requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole(Role.ADMIN.name())  //Solo los administradores pueden actualizar productos
                         //solo los usuarios autenticados pueden eliminar un producto
-                        .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/productos/**").authenticated()            //Solo los usuarios autenticados pueden eliminar productos
+                        //.requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole(Role.ADMIN.name()) //Solo los administradores pueden eliminar productos
 
                         // Rutas exclusivas para administradores
                         //verifica que el usuario esté autenticado y tenga el rol ADMIN
                         .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
 
-                        .requestMatchers("/api/usuarios/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/usuarios/**").hasRole(Role.ADMIN.name())
 
                         // Rutas de pedidos solo para usuarios autenticados
                         .requestMatchers("/api/pedidos/**").authenticated()

@@ -36,10 +36,11 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable=false, name="nombre_usuario")
     private String nombreUsuario;
     private String nombre;
     private String apellido;
-    @Column(unique = true)
+    @Column(unique = true, name="mail")
     private String email;
     private String contrasena;
     // El rol del usuario (ADMIN o USER) se almacena como un string en la base de datos

@@ -87,6 +87,7 @@ public class AuthenticationService {
 
         //con el builder, se construye el usuario de forma fluida y clara, asignando cada campo de manera explícita
         Usuario usuario = Usuario.builder()
+                .nombreUsuario(request.getNombreUsuario()) // Asigna el email como nombre de usuario (username) para autenticación
                 // 2.1) Asigna el nombre completo del usuario desde el request
                 .nombre(request.getNombre())
                 // 2.2) Asigna el apellido del usuario desde el request
