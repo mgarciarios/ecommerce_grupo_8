@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.e_commerce3.dto.ProductoDTO;
 import com.uade.tpo.e_commerce3.model.Categoria;
-import com.uade.tpo.e_commerce3.model.Producto;
 import com.uade.tpo.e_commerce3.service.ProductoService;
 
 import java.util.List;

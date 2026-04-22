@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.e_commerce3.dto.CarritoDTO;
 import com.uade.tpo.e_commerce3.dto.ProductoCarritoDTO;
-import com.uade.tpo.e_commerce3.dto.ProductoDTO;
 import com.uade.tpo.e_commerce3.model.Producto;
 import com.uade.tpo.e_commerce3.model.ProductoCarrito;
 import com.uade.tpo.e_commerce3.model.Carrito;

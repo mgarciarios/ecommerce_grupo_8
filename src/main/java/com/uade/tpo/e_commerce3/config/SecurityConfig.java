@@ -43,7 +43,7 @@ public class SecurityConfig {
     //lo utiliza AuthenticationService. para buscar el email
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> usuarioRepository.findByEmail(username)
+        return username -> usuarioRepository.findByMail(username)
                 //TODO: ssanchez - capturar con globalexceptionhanlder @ControllerAdivce
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
@@ -112,11 +112,14 @@ public class SecurityConfig {
 
                         // Rutas que requieren autenticación para modificar productos
                         //solo los usuarios autenticados pueden crear un producto
-                        .requestMatchers(HttpMethod.POST, "/api/productos/**").authenticated()              //Solo los usuarios autenticados pueden crear productos
-                        //.requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole(Role.ADMIN.name()) //Solo los administradores pueden crear productos
+                        //.requestMatchers(HttpMethod.POST, "/api/productos/**").authenticated()              
+                        // //Solo los usuarios autenticados pueden crear productos
+                        .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole(Role.ADMIN.name()) 
+                        //Solo los administradores pueden crear productos
                         //solo los usuarios autenticados pueden actualizar un producto
-                        .requestMatchers(HttpMethod.PUT, "/api/productos/**").authenticated()               //Solo los usuarios autenticados pueden actualizar productos
-                        //.requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole(Role.ADMIN.name())  //Solo los administradores pueden actualizar productos
+                        //.requestMatchers(HttpMethod.PUT, "/api/productos/**").authenticated()               
+                        // //Solo los usuarios autenticados pueden actualizar productos
+                        .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole(Role.ADMIN.name())  //Solo los administradores pueden actualizar productos
                         //solo los usuarios autenticados pueden eliminar un producto
                         .requestMatchers(HttpMethod.DELETE, "/api/productos/**").authenticated()            //Solo los usuarios autenticados pueden eliminar productos
                         //.requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole(Role.ADMIN.name()) //Solo los administradores pueden eliminar productos

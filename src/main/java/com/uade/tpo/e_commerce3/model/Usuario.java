@@ -41,7 +41,8 @@ public class Usuario implements UserDetails {
     private String nombre;
     private String apellido;
     @Column(unique = true, name="mail")
-    private String email;
+    // El mail es único para cada usuario, se usará como username para autenticación
+    private String mail;
     private String contrasena;
     // El rol del usuario (ADMIN o USER) se almacena como un string en la base de datos
     // @Enumerated(EnumType.STRING) indica que el enum se guardará como texto en la base de datos, no como un número
@@ -72,7 +73,7 @@ public class Usuario implements UserDetails {
      */
     @Override
     public String getUsername() {
-        return email;
+        return mail;
     }
 
     @Override

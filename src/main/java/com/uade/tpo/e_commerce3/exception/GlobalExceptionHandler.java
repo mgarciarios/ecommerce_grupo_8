@@ -42,8 +42,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno: " + ex.getMessage());
     }
 
-    @ExceptionHandler(EmailYaRegistradoException.class)
-    public ResponseEntity<String> emailYaRegistrado(EmailYaRegistradoException ex) {
+    @ExceptionHandler(MailYaRegistradoException.class)
+    public ResponseEntity<String> mailYaRegistrado(MailYaRegistradoException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 

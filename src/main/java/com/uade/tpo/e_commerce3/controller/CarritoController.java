@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.e_commerce3.model.Carrito;
-import com.uade.tpo.e_commerce3.model.Producto;
-import com.uade.tpo.e_commerce3.model.ProductoCarrito;
 import com.uade.tpo.e_commerce3.service.CarritoService;
 import com.uade.tpo.e_commerce3.dto.CarritoDTO;
 import com.uade.tpo.e_commerce3.dto.ProductoCarritoDTO;

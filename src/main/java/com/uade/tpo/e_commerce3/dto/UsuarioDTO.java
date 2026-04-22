@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 public class UsuarioDTO {
     private Long id;
     private String username;
-    private String email;
+    private String mail;
     private String nombre;
     private String apellido;
 
     public UsuarioDTO(Usuario usuario) {
         this.id = usuario.getId();
         this.username = usuario.getUsername();
-        this.email = usuario.getEmail();
+        this.mail = usuario.getMail();
         this.nombre = usuario.getNombre();
         this.apellido = usuario.getApellido();
     }

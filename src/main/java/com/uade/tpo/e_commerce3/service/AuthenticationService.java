@@ -33,11 +33,11 @@ public class AuthenticationService {
      * Método que realiza el registro de un nuevo usuario en el sistema.
      * 
      * Este método es responsable de realizar el procedimiento completo de registro,
-     * validando unicidad del email, creando el usuario con datos encriptados, 
+     * validando unicidad del mail, creando el usuario con datos encriptados, 
      * asignando permisos por defecto y persistiendo en la base de datos.
      * 
      * FLUJO DE EJECUCIÓN:
-     * 1. Valida que el email no esté duplicado en el sistema
+     * 1. Valida que el mail no esté duplicado en el sistema
      * 2. Construye una nueva entidad Usuario con el patrón Builder
      * 3. Encripta la contraseña usando BCrypt (algoritmo seguro resistente a ataques de fuerza bruta)
      * 4. Asigna automáticamente el rol de usuario básico (USER)
@@ -47,24 +47,24 @@ public class AuthenticationService {
      * @param request objeto RegisterRequest que contiene:
      *                - nombre: nombre del usuario a registrar
      *                - apellido: apellido del usuario a registrar
-     *                - email: email único del usuario (validado en PASO 1)
+     *                - mail: mail único del usuario (validado en PASO 1)
      *                - password: contraseña en texto plano que será encriptada
      * @return "User registered successfully" - mensaje de confirmación del registro exitoso
-     * @throws RuntimeException si el email ya existe en el sistema 
-     *         (TODO: implementar excepción personalizada EmailException y manejar con @ControllerAdvice)
+     * @throws RuntimeException si el mail ya existe en el sistema 
+     *         (TODO: implementar excepción personalizada mailException y manejar con @ControllerAdvice)
      */
     public String register(RegisterRequest request) {
 
-        // ==================== PASO 1: VALIDACIÓN DE EMAIL ÚNICO ====================
-        // Verifica que el email proporcionado no esté ya registrado en la base de datos.
+        // ==================== PASO 1: VALIDACIÓN DE mail ÚNICO ====================
+        // Verifica que el mail proporcionado no esté ya registrado en la base de datos.
         // Esto evita duplicados y garantiza que cada usuario tenga un identificador único.
-        // Se utiliza el método existsByEmail() del repositorio para una consulta eficiente.
-        if (usuarioRepository.existsByEmail(request.getEmail())) {
-            //TODO: ssanchez - crear exception personalizada EmailException y manejar con @ControllerAdvice
-            // Si el email ya existe, se lanza una excepción. En futuras actualizaciones se debe
-            // crear una excepción personalizada (EmailException) y capturarla en un @ControllerAdvice
+        // Se utiliza el método existsByMail() del repositorio para una consulta eficiente.
+        if (usuarioRepository.existsByMail(request.getMail())) {
+            //TODO: ssanchez - crear exception personalizada mailException y manejar con @ControllerAdvice
+            // Si el mail ya existe, se lanza una excepción. En futuras actualizaciones se debe
+            // crear una excepción personalizada (mailException) y capturarla en un @ControllerAdvice
             // para devolver respuestas HTTP consistentes y mensajes de error profesionales
-            throw new RuntimeException("El email ya existe en la base de datos");
+            throw new RuntimeException("El mail ya existe en la base de datos");
         }
 
         // ==================== PASO 2: CONSTRUCCIÓN DEL OBJETO USUARIO ====================
@@ -81,19 +81,19 @@ public class AuthenticationService {
         // Usuario usuario = new Usuario();
         // usuario.setNombre(request.getNombre());
         // usuario.setApellido(request.getApellido());
-        // usuario.setEmail(request.getEmail());
+        // usuario.setmail(request.getMail());
         // usuario.setPassword(passwordEncoder.encode(request.getPassword()));
         // usuario.setRole(Role.USER);
 
         //con el builder, se construye el usuario de forma fluida y clara, asignando cada campo de manera explícita
         Usuario usuario = Usuario.builder()
-                .nombreUsuario(request.getNombreUsuario()) // Asigna el email como nombre de usuario (username) para autenticación
+                .nombreUsuario(request.getNombreUsuario()) // Asigna el mail como nombre de usuario (username) para autenticación
                 // 2.1) Asigna el nombre completo del usuario desde el request
                 .nombre(request.getNombre())
                 // 2.2) Asigna el apellido del usuario desde el request
                 .apellido(request.getApellido())
-                // 2.3) Asigna el email del usuario (ya validado como único en PASO 1)
-                .email(request.getEmail())
+                // 2.3) Asigna el mail del usuario (ya validado como único en PASO 1)
+                .mail(request.getMail())
                 // 2.4) ENCRIPTACIÓN DE LA CONTRASEÑA (PASO CRÍTICO DE SEGURIDAD)
                 //      Se utiliza passwordEncoder (PasswordEncoder de Spring Security) 
                 //      para codificar la contraseña usando el algoritmo BCrypt
@@ -137,7 +137,7 @@ public class AuthenticationService {
      * Método que autentica un usuario existente y genera un token JWT.
      * 
      * Este método implementa el flujo completo de autenticación:
-     * 1. Valida las credenciales (email y contraseña) contra la base de datos
+     * 1. Valida las credenciales (mail y contraseña) contra la base de datos
      * 2. Verifica que el usuario existe y que la contraseña es correcta
      * 3. Extrae los roles/permisos del usuario autenticado
      * 4. Genera un token JWT con la información de autenticación
@@ -146,14 +146,14 @@ public class AuthenticationService {
      * FLUJO DE SEGURIDAD:
      * - Se utiliza Spring Security AuthenticationManager para validar credenciales
      * - Las contraseñas se comparan de manera segura usando BCrypt
-     * - El token JWT se genera con email y roles del usuario
+     * - El token JWT se genera con mail y roles del usuario
      * - El cliente debe incluir este token en el header Authorization de futuras solicitudes
      * 
      * @param request objeto LoginRequest que contiene:
-     *                - email: identificador único del usuario
+     *                - mail: identificador único del usuario
      *                - password: contraseña en texto plano (será encriptada internamente para validación)
      * @return token JWT (JSON Web Token) que el cliente debe usar para autenticarse en solicitudes futuras
-     * @throws UsernameNotFoundException si el usuario (email) no existe en la base de datos
+     * @throws UsernameNotFoundException si el usuario (mail) no existe en la base de datos
      * @throws BadCredentialsException si la contraseña proporcionada es incorrecta
      * @throws NoSuchElementException si no se encuentra el usuario después de la autenticación exitosa
      */
@@ -171,11 +171,11 @@ public class AuthenticationService {
         // UsernamePasswordAuthenticationToken:
         // - Representa las credenciales NO autenticadas del usuario
         // - Constructor: (principal, credentials)
-        //   * principal: email del usuario (actúa como username)
+        //   * principal: mail del usuario (actúa como username)
         //   * credentials: contraseña en texto plano que fue enviada por el cliente
         //
         // Proceso de validación:
-        // 1. Spring busca el usuario por email en la BD (a través de UserDetailsService)
+        // 1. Spring busca el usuario por mail en la BD (a través de UserDetailsService)
         // 2. Si no existe, lanza UsernameNotFoundException
         // 3. Si existe, obtiene la contraseña encriptada almacenada en BD
         // 4. Compara la contraseña enviada (encriptada con el mismo salt) con la almacenada
@@ -183,9 +183,9 @@ public class AuthenticationService {
         // 6. Si no coinciden, lanza BadCredentialsException
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        // Email del usuario (actúa como username)
+                        // mail del usuario (actúa como username)
                         // Ejemplo: ssanchez@gmail.com
-                        request.getEmail(),
+                        request.getMail(),
                         // Contraseña en texto plano enviada por el cliente
                         // Ejemplo: 1234
                         // El AuthenticationManager la encriptará internamente y la comparará con la BD
@@ -195,10 +195,10 @@ public class AuthenticationService {
         // Una vez que authenticationManager.authenticate() pasa sin excepciones,
         // significa que las credenciales son válidas. Ahora se obtienen los detalles del usuario.
         //
-        // findByEmail() retorna un Optional<Usuario> (puede o no existir el usuario)
+        // findBymail() retorna un Optional<Usuario> (puede o no existir el usuario)
         // orElseThrow() lanza NoSuchElementException si el usuario no existe
         // (esto es una precaución adicional, aunque en teoría ya fue validado en PASO 1)
-        Usuario user = usuarioRepository.findByEmail(request.getEmail()).orElseThrow();
+        Usuario user = usuarioRepository.findByMail(request.getMail()).orElseThrow();
         
         // ==================== PASO 3: EXTRACCIÓN Y EXTRACCIÓN DE ROLES ====================
         // Obtiene la lista de roles/permisos del usuario autenticado
@@ -228,15 +228,15 @@ public class AuthenticationService {
         // - Estructura: [header].[payload].[signature]
         // - Es un token autofirmado (contiene su propia validación mediante firma)
         // - No se requiere consultar BD en cada solicitud para validarlo (validación local)
-        // - Contiene información encriptada sobre el usuario (email, roles)
+        // - Contiene información encriptada sobre el usuario (mail, roles)
         // - Tiene expiration time (vencimiento después de cierto tiempo)
         // - El cliente lo debe incluir en el header Authorization para futuras solicitudes
         //
-        // jwtUtil.generateToken(email, roles):
-        // - Crea un token JWT con el email y los roles del usuario
+        // jwtUtil.generateToken(mail, roles):
+        // - Crea un token JWT con el mail y los roles del usuario
         // - Firma el token con una clave secreta definida en la aplicación
         // - El servidor podrá verificar este token en futuras solicitudes sin consultar BD
         // - Solo tokens con firma válida serán aceptados (previene manipulación)
-        return jwtUtil.generateToken(user.getEmail(), roles);
+        return jwtUtil.generateToken(user.getMail(), roles);
     }
 }

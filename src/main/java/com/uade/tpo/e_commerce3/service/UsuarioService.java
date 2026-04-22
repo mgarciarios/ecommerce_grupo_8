@@ -33,7 +33,7 @@ public class UsuarioService {
 }
 
     public Usuario getUsuarioByMail(String mail){
-        return usuarioRepository.findByEmail(mail).orElse(null);
+        return usuarioRepository.findByMail(mail).orElse(null);
     }
 
     public void deleteUsuarioById(Long id) {
@@ -50,7 +50,7 @@ public class UsuarioService {
     
         usuario.setNombre(dto.getNombre());
         usuario.setApellido(dto.getApellido());
-        usuario.setEmail(dto.getEmail());
+        usuario.setMail(dto.getMail());
         
         Usuario guardado = usuarioRepository.save(usuario);
         return new UsuarioDTO(guardado);
