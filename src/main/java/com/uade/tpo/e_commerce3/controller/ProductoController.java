@@ -57,7 +57,6 @@ public class ProductoController {
         //ResponseEntity es una clase que representa toda la respuesta HTTP: código de estado, encabezados y cuerpo.
         //devuelve una promesa en el cuerpo los datos del producto, y un codigo de estado 200 (OK)
         // el cuerpo es un json productos -> json
-        //TODO: ssanchez - devolver en todos los enpoints ResponseEntity con DTO correspondiente
         return new ResponseEntity<ProductoDTO>(productoDTO, HttpStatus.OK);
     }
 
