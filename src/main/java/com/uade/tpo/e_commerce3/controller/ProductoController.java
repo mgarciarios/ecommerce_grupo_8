@@ -66,6 +66,8 @@ public class ProductoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /*http://localhost:8080/api/productos -> crea un nuevo producto con los datos enviados en el cuerpo 
+     de la petición*/
     @PostMapping
     public ResponseEntity<ProductoDTO> saveProducto(@RequestBody ProductoDTO productoDTO) {
         ProductoDTO nuevoProducto = productoService.saveProducto(productoDTO);
