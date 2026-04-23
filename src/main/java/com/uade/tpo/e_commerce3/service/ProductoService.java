@@ -1,5 +1,6 @@
 package com.uade.tpo.e_commerce3.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.e_commerce3.dto.ProductoDTO;
 import com.uade.tpo.e_commerce3.dto.ProductoEliminadoDTO;
-import com.uade.tpo.e_commerce3.model.Producto;
-import com.uade.tpo.e_commerce3.model.Categoria;
-import com.uade.tpo.e_commerce3.repository.ProductoRepository;
-import com.uade.tpo.e_commerce3.repository.CategoriaRepository;
 import com.uade.tpo.e_commerce3.exception.ProductoNotFoundException;
+import com.uade.tpo.e_commerce3.model.Categoria;
+import com.uade.tpo.e_commerce3.model.Producto;
+import com.uade.tpo.e_commerce3.repository.CategoriaRepository;
+import com.uade.tpo.e_commerce3.repository.ProductoRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -70,8 +71,25 @@ public class ProductoService {
         producto.setPrecio(productoDTO.getPrecio());
         producto.setStock(productoDTO.getStock());
         producto.setFoto(productoDTO.getFoto());
-        List<Categoria> categoriasEntity = categoriaRepository.findByNombreIn(productoDTO.getCategorias());
+        
+        // Buscar categorías existentes y crear las que no existan
+        List<Categoria> categoriasEntity = new ArrayList<>();
+        if (productoDTO.getCategorias() != null) {
+            for (String nombreCategoria : productoDTO.getCategorias()) {
+                List<Categoria> existente = categoriaRepository.findByNombreIn(List.of(nombreCategoria));
+                if (existente.isEmpty()) {
+                    Categoria nuevaCategoria = new Categoria();
+                    nuevaCategoria.setNombre(nombreCategoria);
+                    categoriaRepository.save(nuevaCategoria);
+                    categoriasEntity.add(nuevaCategoria);
+                } else {
+                    categoriasEntity.add(existente.get(0));
+                }
+            }
+        }
         producto.setCategorias(categoriasEntity);
+
+
 
         Producto productoGuardado = productoRepository.save(producto);
         
