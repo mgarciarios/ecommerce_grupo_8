@@ -46,3 +46,7 @@ public class Producto {
     private List<Categoria> categorias = new ArrayList<>();
 
 }
+
+
+
+

@@ -1,6 +1,5 @@
 package com.uade.tpo.e_commerce3.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -29,10 +28,9 @@ import lombok.RequiredArgsConstructor;
 // Habilita la seguridad web de Spring Security
 @EnableWebSecurity
 
-// Esto no es Spring Security: Genera un constructor con los campos final requeridos lombok 
+// Esto no es Spring Security: Genera un constructor con los campos final requeridos lombok
 @RequiredArgsConstructor
 public class SecurityConfig {
-
 
     private final JwtFilter jwtFilter;
     // Inyección del repositorio de usuarios
@@ -61,7 +59,7 @@ public class SecurityConfig {
 
     /**
      * AuthenticationManager es el componente central de autenticación en Spring Security.
-     * 
+     *
      * Funcionamiento:
      * 1. Recibe un objeto Authentication (UsernamePasswordAuthenticationToken en nuestro caso)
      * 2. Delega la autenticación a una cadena de AuthenticationProvider configurados
@@ -69,12 +67,12 @@ public class SecurityConfig {
      *    - Utiliza UserDetailsService para cargar el usuario de la base de datos
      *    - Emplea PasswordEncoder para verificar la contraseña
      *    - Compara las credenciales proporcionadas con las almacenadas
-     * 
+     *
      * Proceso de autenticación:
      * - Entrada: Credenciales sin verificar (username/password)
      * - Proceso: Validación de credenciales
      * - Salida: Authentication completamente autenticado con authorities
-     * 
+     *
      * Si la autenticación falla, lanza AuthenticationException
      */
     @Bean

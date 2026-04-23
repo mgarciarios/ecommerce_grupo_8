@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.e_commerce3.dto.CarritoDTO;
 import com.uade.tpo.e_commerce3.dto.ProductoCarritoDTO;
+import com.uade.tpo.e_commerce3.exception.ProductoNotFoundException;
+import com.uade.tpo.e_commerce3.model.Carrito;
 import com.uade.tpo.e_commerce3.model.Producto;
 import com.uade.tpo.e_commerce3.model.ProductoCarrito;
-import com.uade.tpo.e_commerce3.model.Carrito;
-
 import com.uade.tpo.e_commerce3.repository.CarritoRepository;
-import com.uade.tpo.e_commerce3.exception.ProductoNotFoundException;
 import com.uade.tpo.e_commerce3.repository.ProductoCarritoRepository;
 import com.uade.tpo.e_commerce3.repository.ProductoRepository;
 
@@ -84,7 +83,6 @@ public class CarritoService {
     }
 
     // eliminar producto COMPLETO del carrito
-
     public CarritoDTO deleteProductoInCarritoById(Long idCarrito, Long idProducto) {
         Carrito carrito = carritoRepository.findById(idCarrito)
                 .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
@@ -93,37 +91,34 @@ public class CarritoService {
     }
 
     // reducir cantidad de un producto en el carrito, si la cantidad a eliminar es igual a la que tiene, remover el item completamente
-
     public CarritoDTO reduceCantidadProductoInCarritoById(Long idCarrito, Long idProducto, Integer cantidad) {
-                Carrito carrito = carritoRepository.findById(idCarrito)
-                        .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
+        Carrito carrito = carritoRepository.findById(idCarrito)
+                .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
 
-                ProductoCarrito item = carrito.getProductos().stream()
-                        .filter(p -> p.getProducto().getId().equals(idProducto))
-                        .findFirst()
-                        .orElseThrow(() -> new RuntimeException("Producto no encontrado en el carrito"));
+        ProductoCarrito item = carrito.getProductos().stream()
+                .filter(p -> p.getProducto().getId().equals(idProducto))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado en el carrito"));
 
+        // Validar que no intente eliminar más de lo que tiene
+        if (cantidad > item.getCantidad()) {
+            throw new RuntimeException("No puedes eliminar " + cantidad + " productos. El carrito solo tiene " + item.getCantidad());
+        }
 
+        if (cantidad <= 0) {
+            throw new RuntimeException("La cantidad a eliminar debe ser mayor a 0");
+        }
 
-                // Validar que no intente eliminar más de lo que tiene
-                if (cantidad > item.getCantidad()) {
-                    throw new RuntimeException("No puedes eliminar " + cantidad + " productos. El carrito solo tiene " + item.getCantidad());
-                }
+        // Si la cantidad a eliminar es igual a la que tiene, remover el item completamente
+        if (cantidad.equals(item.getCantidad())) {
+            carrito.getProductos().remove(item);
+        } else {
+            // Si es menor, solo reducir la cantidad
+            item.setCantidad(item.getCantidad() - cantidad);
+        }
 
-                if (cantidad <= 0) {
-                    throw new RuntimeException("La cantidad a eliminar debe ser mayor a 0");
-                }
-
-                // Si la cantidad a eliminar es igual a la que tiene, remover el item completamente
-                if (cantidad.equals(item.getCantidad())) {
-                    carrito.getProductos().remove(item);
-                } else {
-                    // Si es menor, solo reducir la cantidad
-                    item.setCantidad(item.getCantidad() - cantidad);
-                }
-
-                Carrito carritoGuardado = carritoRepository.save(carrito);
-                return new CarritoDTO(carritoGuardado); 
+        Carrito carritoGuardado = carritoRepository.save(carrito);
+        return new CarritoDTO(carritoGuardado);
     }
 
     public CarritoDTO getCarritoById(Long id) {
@@ -133,11 +128,11 @@ public class CarritoService {
         return new CarritoDTO(carrito);
     }
 
-    public Carrito saveCarrito(Carrito carrito){
+    public Carrito saveCarrito(Carrito carrito) {
         return carritoRepository.save(carrito);
     }
 
-    public void deleteCarritoById(Long id){
+    public void deleteCarritoById(Long id) {
         carritoRepository.deleteById(id);
     }
 
@@ -151,7 +146,7 @@ public class CarritoService {
         return new CarritoDTO(carritoGuardado);
     }
 
-    public Carrito doCheckout(Long id){
+    public Carrito doCheckout(Long id) {
         //TODO implementar doCheckout
         return null;
     }

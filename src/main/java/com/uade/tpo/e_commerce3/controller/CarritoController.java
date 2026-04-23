@@ -1,14 +1,5 @@
 package com.uade.tpo.e_commerce3.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.uade.tpo.e_commerce3.model.Carrito;
-import com.uade.tpo.e_commerce3.service.CarritoService;
-import com.uade.tpo.e_commerce3.dto.CarritoDTO;
-import com.uade.tpo.e_commerce3.dto.ProductoCarritoDTO;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +9,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.uade.tpo.e_commerce3.dto.CarritoDTO;
+import com.uade.tpo.e_commerce3.dto.ProductoCarritoDTO;
+import com.uade.tpo.e_commerce3.model.Carrito;
+import com.uade.tpo.e_commerce3.service.CarritoService;
 
 
 @RestController
@@ -54,11 +53,10 @@ public class CarritoController {
 
     // crear deleteProductoInCarritoById
     @PutMapping("/carritos/{idCarrito}/productos/{idProducto}/reduce")
-        public ResponseEntity<CarritoDTO> reduceCantidadProductoInCarrito(@PathVariable Long idCarrito, @PathVariable Long idProducto, @RequestParam Integer cantidad) {
-            CarritoDTO carrito = carritoService.reduceCantidadProductoInCarritoById(idCarrito, idProducto, cantidad);
-            return ResponseEntity.ok(carrito);
+    public ResponseEntity<CarritoDTO> reduceCantidadProductoInCarrito(@PathVariable Long idCarrito, @PathVariable Long idProducto, @RequestParam Integer cantidad) {
+        CarritoDTO carrito = carritoService.reduceCantidadProductoInCarritoById(idCarrito, idProducto, cantidad);
+        return ResponseEntity.ok(carrito);
     }
-
 
     @DeleteMapping("/{idCarrito}/productos")
     public ResponseEntity<CarritoDTO> vaciarCarrito(@PathVariable Long idCarrito) {
@@ -77,6 +75,4 @@ public class CarritoController {
         CarritoDTO carritoActualizado = carritoService.addProductoToCarrito(idCarrito, nuevoProducto);
         return new ResponseEntity<>(carritoActualizado, HttpStatus.OK);
     }
-    
-    
 }

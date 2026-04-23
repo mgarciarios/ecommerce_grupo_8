@@ -1,4 +1,5 @@
 package com.uade.tpo.e_commerce3.model;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,6 +67,7 @@ public class Usuario implements UserDetails {
         // resultado ROLE_USER o ROLE_ADMIN
         return List.of(new SimpleGrantedAuthority("ROLE_" + (role != null ? role.name() : "USER")));
     }
+
     /**
      * getUsername() retorna el identificador único del usuario para autenticación
      * - En este caso usamos el email como username
@@ -77,27 +80,30 @@ public class Usuario implements UserDetails {
     }
 
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return contrasena;
     }
-    
 
     //estado de la cuenta
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
         return true;
+    }
     }
 }
 

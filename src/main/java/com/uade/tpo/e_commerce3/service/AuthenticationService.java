@@ -31,11 +31,11 @@ public class AuthenticationService {
 
     /**
      * Método que realiza el registro de un nuevo usuario en el sistema.
-     * 
+     *
      * Este método es responsable de realizar el procedimiento completo de registro,
-     * validando unicidad del mail, creando el usuario con datos encriptados, 
+     * validando unicidad del mail, creando el usuario con datos encriptados,
      * asignando permisos por defecto y persistiendo en la base de datos.
-     * 
+     *
      * FLUJO DE EJECUCIÓN:
      * 1. Valida que el mail no esté duplicado en el sistema
      * 2. Construye una nueva entidad Usuario con el patrón Builder
@@ -43,14 +43,14 @@ public class AuthenticationService {
      * 4. Asigna automáticamente el rol de usuario básico (USER)
      * 5. Persiste el usuario en la base de datos dentro de una transacción
      * 6. Retorna un mensaje de confirmación
-     * 
+     *
      * @param request objeto RegisterRequest que contiene:
      *                - nombre: nombre del usuario a registrar
      *                - apellido: apellido del usuario a registrar
      *                - mail: mail único del usuario (validado en PASO 1)
      *                - password: contraseña en texto plano que será encriptada
      * @return "User registered successfully" - mensaje de confirmación del registro exitoso
-     * @throws RuntimeException si el mail ya existe en el sistema 
+     * @throws RuntimeException si el mail ya existe en el sistema
      *         (TODO: implementar excepción personalizada mailException y manejar con @ControllerAdvice)
      */
     public String register(RegisterRequest request) {
@@ -123,7 +123,7 @@ public class AuthenticationService {
         // - Si ocurre una excepción, la transacción se revierte automáticamente (rollback)
         //   garantizando la consistencia de datos
         usuarioRepository.save(usuario);
-        
+
         // ==================== PASO 4: RETORNO DE RESPUESTA ====================
         // Retorna un mensaje de confirmación al cliente informando que el registro fue exitoso.
         // En el futuro, se podría mejorar esta respuesta para incluir:
@@ -135,20 +135,20 @@ public class AuthenticationService {
 
     /**
      * Método que autentica un usuario existente y genera un token JWT.
-     * 
+     *
      * Este método implementa el flujo completo de autenticación:
      * 1. Valida las credenciales (mail y contraseña) contra la base de datos
      * 2. Verifica que el usuario existe y que la contraseña es correcta
      * 3. Extrae los roles/permisos del usuario autenticado
      * 4. Genera un token JWT con la información de autenticación
      * 5. Retorna el token al cliente para futuras solicitudes autenticadas
-     * 
+     *
      * FLUJO DE SEGURIDAD:
      * - Se utiliza Spring Security AuthenticationManager para validar credenciales
      * - Las contraseñas se comparan de manera segura usando BCrypt
      * - El token JWT se genera con mail y roles del usuario
      * - El cliente debe incluir este token en el header Authorization de futuras solicitudes
-     * 
+     *
      * @param request objeto LoginRequest que contiene:
      *                - mail: identificador único del usuario
      *                - password: contraseña en texto plano (será encriptada internamente para validación)
