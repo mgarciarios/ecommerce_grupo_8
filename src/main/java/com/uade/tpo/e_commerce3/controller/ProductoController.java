@@ -3,7 +3,9 @@ package com.uade.tpo.e_commerce3.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uade.tpo.e_commerce3.dto.ApiResponse;
 import com.uade.tpo.e_commerce3.dto.ProductoDTO;
+import com.uade.tpo.e_commerce3.dto.ProductoEliminadoDTO;
 import com.uade.tpo.e_commerce3.model.Categoria;
 import com.uade.tpo.e_commerce3.service.ProductoService;
 
@@ -61,28 +63,45 @@ public class ProductoController {
 
     // del http://localhost:8080/api/productos/1 -> elimina el producto con id 1
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProducto(@PathVariable Long id) {
-        productoService.deleteProductoById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<ApiResponse<ProductoEliminadoDTO>> deleteProducto(@PathVariable Long id) {
+        ProductoEliminadoDTO productoEliminado = productoService.deleteProductoById(id);
+        ApiResponse<ProductoEliminadoDTO> response = ApiResponse.<ProductoEliminadoDTO>builder()
+            .mensaje("El producto " + productoEliminado.getNombre() + " fue eliminado exitosamente")
+            .data(productoEliminado)
+            .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /*http://localhost:8080/api/productos -> crea un nuevo producto con los datos enviados en el cuerpo 
      de la petición*/
+
     @PostMapping
-    public ResponseEntity<ProductoDTO> saveProducto(@RequestBody ProductoDTO productoDTO) {
+    public ResponseEntity<ApiResponse<ProductoDTO>> saveProducto(@RequestBody ProductoDTO productoDTO) {
         ProductoDTO nuevoProducto = productoService.saveProducto(productoDTO);
-        return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
+        ApiResponse<ProductoDTO> response = ApiResponse.<ProductoDTO>builder()
+            .mensaje("El producto " + nuevoProducto.getNombre() + " fue creado exitosamente")
+            .data(nuevoProducto)
+            .build();
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ProductoDTO> updateProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
+    public ResponseEntity<ApiResponse<ProductoDTO>> updateProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
         ProductoDTO productoActualizado = productoService.updateProducto(id, productoDTO);
-        return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
+        ApiResponse<ProductoDTO> response = ApiResponse.<ProductoDTO>builder()
+            .mensaje("El producto " + productoActualizado.getNombre() + " fue actualizado exitosamente")
+            .data(productoActualizado)
+            .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/{id}/stock")
-    public ResponseEntity<ProductoDTO> updateStock(@PathVariable Long id, @RequestParam int cantidad) {
+    public ResponseEntity<ApiResponse<ProductoDTO>> updateStock(@PathVariable Long id, @RequestParam int cantidad) {
         ProductoDTO productoActualizado = productoService.updateStock(id, cantidad);
-        return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
+        ApiResponse<ProductoDTO> response = ApiResponse.<ProductoDTO>builder()
+            .mensaje("El stock del producto " + productoActualizado.getNombre() + " fue actualizado a " + productoActualizado.getStock())
+            .data(productoActualizado)
+            .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

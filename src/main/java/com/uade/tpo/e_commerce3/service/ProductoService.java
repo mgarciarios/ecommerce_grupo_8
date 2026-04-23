@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.e_commerce3.dto.ProductoDTO;
+import com.uade.tpo.e_commerce3.dto.ProductoEliminadoDTO;
 import com.uade.tpo.e_commerce3.model.Producto;
 import com.uade.tpo.e_commerce3.model.Categoria;
 import com.uade.tpo.e_commerce3.repository.ProductoRepository;
@@ -54,8 +55,12 @@ public class ProductoService {
         return productoDTO;
     }
 
-    public void deleteProductoById(Long id) {
+    public ProductoEliminadoDTO deleteProductoById(Long id) {
+        Producto producto = productoRepository.findById(id)
+            .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado con id: " + id));
+        String nombre = producto.getNombre();
         productoRepository.deleteById(id);
+        return new ProductoEliminadoDTO(id, nombre);
     }
 
     public ProductoDTO saveProducto(ProductoDTO productoDTO) {
