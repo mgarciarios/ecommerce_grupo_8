@@ -1,13 +1,17 @@
 package com.uade.tpo.e_commerce3.service;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.e_commerce3.dto.AuthResponse;
 import com.uade.tpo.e_commerce3.dto.LoginRequest;
 import com.uade.tpo.e_commerce3.dto.RegisterRequest;
 import com.uade.tpo.e_commerce3.model.Role;
@@ -53,7 +57,7 @@ public class AuthenticationService {
      * @throws RuntimeException si el mail ya existe en el sistema
      *         (TODO: implementar excepción personalizada mailException y manejar con @ControllerAdvice)
      */
-    public String register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
 
         // ==================== PASO 1: VALIDACIÓN DE mail ÚNICO ====================
         // Verifica que el mail proporcionado no esté ya registrado en la base de datos.
@@ -130,7 +134,12 @@ public class AuthenticationService {
         // - El ID del usuario creado
         // - Un objeto JSON con los datos del usuario registrado
         // - Un token de autenticación automático
-        return "User registered successfully";
+        usuarioRepository.save(usuario);
+        return AuthResponse.builder()
+            .mensaje("Usuario registrado exitosamente")
+            .nombreUsuario(usuario.getNombreUsuario())
+            .token(null)
+            .build();
     }
 
     /**
@@ -157,7 +166,7 @@ public class AuthenticationService {
      * @throws BadCredentialsException si la contraseña proporcionada es incorrecta
      * @throws NoSuchElementException si no se encuentra el usuario después de la autenticación exitosa
      */
-    public String authenticate(LoginRequest request) {
+    public AuthResponse authenticate(LoginRequest request) {
         
         // ==================== PASO 1: VALIDACIÓN DE CREDENCIALES ====================
         // Utiliza el AuthenticationManager de Spring Security para validar las credenciales
@@ -237,6 +246,11 @@ public class AuthenticationService {
         // - Firma el token con una clave secreta definida en la aplicación
         // - El servidor podrá verificar este token en futuras solicitudes sin consultar BD
         // - Solo tokens con firma válida serán aceptados (previene manipulación)
-        return jwtUtil.generateToken(user.getMail(), roles);
+        String token = jwtUtil.generateToken(user.getMail(), roles);
+        return AuthResponse.builder()
+            .mensaje("Ingreso exitoso")
+            .nombreUsuario(user.getNombreUsuario())
+            .token(token)
+            .build();
     }
 }
