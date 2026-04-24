@@ -28,5 +28,5 @@ public class ProductoCarrito {
     private Producto producto;
 
     // Cuántas unidades de este producto se agregaron
-    private Integer cantidad;
+    private Integer cantidad_producto;
 }

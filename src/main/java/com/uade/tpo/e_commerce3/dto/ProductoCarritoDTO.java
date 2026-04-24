@@ -20,7 +20,7 @@ public class ProductoCarritoDTO {
         this.id = pc.getId();
         this.productoId = pc.getProducto().getId();
         this.nombreProducto = pc.getProducto().getNombre();
-        this.cantidad = pc.getCantidad();
+        this.cantidad = pc.getCantidad_producto();
         this.precioUnitario = pc.getProducto().getPrecio();
     }
 }

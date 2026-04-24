@@ -45,16 +45,16 @@ public class CarritoService {
                 .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
 
 
-        // Validar que el nuevo producto no sea 0 o negativo     
-        if (nuevoProductoDTO.getCantidad() < 0) {
-            throw new RuntimeException("La cantidad debe ser mayor a 0");
-        }    
+        Integer cantidad = nuevoProductoDTO.getCantidad();
+        if (cantidad == null || cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad es obligatoria y debe ser mayor que 0");
+        }
         
         // Buscar producto por id
         Producto producto = productoRepository.findById(nuevoProductoDTO.getProductoId())
                 .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado con id: " + nuevoProductoDTO.getProductoId()));
 
-        if (producto.getStock() < nuevoProductoDTO.getCantidad()) {
+        if (producto.getStock() < cantidad) {
             throw new RuntimeException("Stock insuficiente");
         }
 
@@ -65,15 +65,15 @@ public class CarritoService {
 
         if (item != null) {
             // Validar que la cantidad total no supere el stock disponible
-            if (item.getCantidad() + nuevoProductoDTO.getCantidad() > producto.getStock()) {
+            if (item.getCantidad_producto() + cantidad > producto.getStock()) {
                 throw new RuntimeException("No hay suficiente stock");
             }
-            item.setCantidad(item.getCantidad() + nuevoProductoDTO.getCantidad());
+            item.setCantidad_producto(item.getCantidad_producto() + cantidad);
         } else {
             item = new ProductoCarrito();
             item.setCarrito(carrito);
             item.setProducto(producto);
-            item.setCantidad(nuevoProductoDTO.getCantidad());
+            item.setCantidad_producto(cantidad);
             carrito.getProductos().add(item);
         }
 
@@ -101,8 +101,8 @@ public class CarritoService {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado en el carrito"));
 
         // Validar que no intente eliminar más de lo que tiene
-        if (cantidad > item.getCantidad()) {
-            throw new RuntimeException("No puedes eliminar " + cantidad + " productos. El carrito solo tiene " + item.getCantidad());
+        if (cantidad > item.getCantidad_producto()) {
+            throw new RuntimeException("No puedes eliminar " + cantidad + " productos. El carrito solo tiene " + item.getCantidad_producto());
         }
 
         if (cantidad <= 0) {
@@ -110,11 +110,11 @@ public class CarritoService {
         }
 
         // Si la cantidad a eliminar es igual a la que tiene, remover el item completamente
-        if (cantidad.equals(item.getCantidad())) {
+        if (cantidad.equals(item.getCantidad_producto())) {
             carrito.getProductos().remove(item);
         } else {
             // Si es menor, solo reducir la cantidad
-            item.setCantidad(item.getCantidad() - cantidad);
+            item.setCantidad_producto(item.getCantidad_producto() - cantidad);
         }
 
         Carrito carritoGuardado = carritoRepository.save(carrito);
