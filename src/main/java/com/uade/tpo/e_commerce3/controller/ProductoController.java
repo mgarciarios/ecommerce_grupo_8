@@ -9,6 +9,7 @@ import com.uade.tpo.e_commerce3.dto.ProductoEliminadoDTO;
 import com.uade.tpo.e_commerce3.model.Categoria;
 import com.uade.tpo.e_commerce3.service.ProductoService;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class ProductoController {
      de la petición*/
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductoDTO>> saveProducto(@RequestBody ProductoDTO productoDTO) {
+    public ResponseEntity<ApiResponse<ProductoDTO>> saveProducto(@Valid @RequestBody ProductoDTO productoDTO) {
         ProductoDTO nuevoProducto = productoService.saveProducto(productoDTO);
         ApiResponse<ProductoDTO> response = ApiResponse.<ProductoDTO>builder()
             .mensaje("El producto " + nuevoProducto.getNombre() + " fue creado exitosamente")
@@ -85,7 +86,7 @@ public class ProductoController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductoDTO>> updateProducto(@PathVariable Long id, @RequestBody ProductoDTO productoDTO) {
+    public ResponseEntity<ApiResponse<ProductoDTO>> updateProducto(@PathVariable Long id, @Valid @RequestBody ProductoDTO productoDTO) {
         ProductoDTO productoActualizado = productoService.updateProducto(id, productoDTO);
         ApiResponse<ProductoDTO> response = ApiResponse.<ProductoDTO>builder()
             .mensaje("El producto " + productoActualizado.getNombre() + " fue actualizado exitosamente")

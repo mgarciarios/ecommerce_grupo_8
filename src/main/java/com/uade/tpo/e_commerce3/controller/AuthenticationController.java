@@ -1,4 +1,5 @@
 package com.uade.tpo.e_commerce3.controller;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,14 +23,14 @@ public class AuthenticationController {
 
     //http://localhost:8080/api/auth/register con metodo post http, enviar un body -> crear un usuario
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         //request tiene los datos del usuario a registrar, como nombre, email y contraseña
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
     //http://localhost:8080/api/auth/login con metodo post http, enviar un body -> loguear un usuario
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 }

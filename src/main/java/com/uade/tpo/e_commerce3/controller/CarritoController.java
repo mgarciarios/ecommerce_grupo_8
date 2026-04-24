@@ -2,6 +2,7 @@ package com.uade.tpo.e_commerce3.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +74,7 @@ public class CarritoController {
 
     // crear addProductoToCarrito
     @PostMapping("/{idCarrito}/productos")
-    public ResponseEntity<CarritoDTO> addProductoToCarrito(@PathVariable Long idCarrito, @RequestBody ProductoCarritoDTO nuevoProducto) {
+    public ResponseEntity<CarritoDTO> addProductoToCarrito(@PathVariable Long idCarrito, @Valid @RequestBody ProductoCarritoDTO nuevoProducto) {
         CarritoDTO carritoActualizado = carritoService.addProductoToCarrito(idCarrito, nuevoProducto);
         return new ResponseEntity<>(carritoActualizado, HttpStatus.OK);
     }
