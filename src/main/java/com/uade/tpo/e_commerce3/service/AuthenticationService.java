@@ -134,7 +134,6 @@ public class AuthenticationService {
         // - El ID del usuario creado
         // - Un objeto JSON con los datos del usuario registrado
         // - Un token de autenticación automático
-        usuarioRepository.save(usuario);
         return AuthResponse.builder()
             .mensaje("Usuario registrado exitosamente")
             .nombreUsuario(usuario.getNombreUsuario())
