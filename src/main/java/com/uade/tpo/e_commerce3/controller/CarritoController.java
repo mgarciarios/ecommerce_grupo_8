@@ -46,30 +46,32 @@ public class CarritoController {
     }
 
     @DeleteMapping("/{idCarrito}/productos/{idProducto}")
-    public ResponseEntity<Void> deleteProductoInCarritoById(@PathVariable Long idCarrito, @PathVariable Long idProducto) {
-        carritoService.deleteProductoInCarritoById(idCarrito, idProducto);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public CarritoDTO deleteProductoInCarritoById(@PathVariable Long idCarrito, @PathVariable Long idProducto) {
+        CarritoDTO carritoActualizado = carritoService.deleteProductoInCarritoById(idCarrito, idProducto);
+        return carritoActualizado;
     }
 
     // crear deleteProductoInCarritoById
-    @PutMapping("/carritos/{idCarrito}/productos/{idProducto}/reduce")
+    @PutMapping("/{idCarrito}/productos/{idProducto}/reduce")
     public ResponseEntity<CarritoDTO> reduceCantidadProductoInCarrito(@PathVariable Long idCarrito, @PathVariable Long idProducto, @RequestParam Integer cantidad) {
         CarritoDTO carrito = carritoService.reduceCantidadProductoInCarritoById(idCarrito, idProducto, cantidad);
         return ResponseEntity.ok(carrito);
     }
 
+    //vaciar carrito, eliminar todos los productos del carrito
     @DeleteMapping("/{idCarrito}/productos")
     public ResponseEntity<CarritoDTO> vaciarCarrito(@PathVariable Long idCarrito) {
         CarritoDTO carritoVacio = carritoService.vaciarCarritoById(idCarrito);
         return new ResponseEntity<>(carritoVacio, HttpStatus.OK);
     }
-
+    //TODO: implementar checkout
     @PostMapping("/{id}/checkout")
     public ResponseEntity<String> doCheckout(@PathVariable Long id) {
         //TODO Checkout pendiente por ahora
         return new ResponseEntity<>("Funcionalidad de Checkout deshabilitada temporalmente.", HttpStatus.NOT_IMPLEMENTED);
     }
 
+    // crear addProductoToCarrito
     @PostMapping("/{idCarrito}/productos")
     public ResponseEntity<CarritoDTO> addProductoToCarrito(@PathVariable Long idCarrito, @RequestBody ProductoCarritoDTO nuevoProducto) {
         CarritoDTO carritoActualizado = carritoService.addProductoToCarrito(idCarrito, nuevoProducto);

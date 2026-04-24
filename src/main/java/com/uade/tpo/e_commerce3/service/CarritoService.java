@@ -86,8 +86,11 @@ public class CarritoService {
     public CarritoDTO deleteProductoInCarritoById(Long idCarrito, Long idProducto) {
         Carrito carrito = carritoRepository.findById(idCarrito)
                 .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
-                Carrito carritoGuardado = carritoRepository.save(carrito);
-                return new CarritoDTO(carritoGuardado);
+        
+        carrito.getProductos().removeIf(p -> p.getProducto().getId().equals(idProducto));
+        
+        Carrito carritoGuardado = carritoRepository.save(carrito);
+        return new CarritoDTO(carritoGuardado);
     }
 
     // reducir cantidad de un producto en el carrito, si la cantidad a eliminar es igual a la que tiene, remover el item completamente
