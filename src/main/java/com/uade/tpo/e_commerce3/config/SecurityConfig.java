@@ -118,9 +118,8 @@ public class SecurityConfig {
                         //.requestMatchers(HttpMethod.PUT, "/api/productos/**").authenticated()               
                         // //Solo los usuarios autenticados pueden actualizar productos
                         .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole(Role.ADMIN.name())  //Solo los administradores pueden actualizar productos
-                        //solo los usuarios autenticados pueden eliminar un producto
-                        .requestMatchers(HttpMethod.DELETE, "/api/productos/**").authenticated()            //Solo los usuarios autenticados pueden eliminar productos
-                        //.requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole(Role.ADMIN.name()) //Solo los administradores pueden eliminar productos
+                        //solo los administradores pueden eliminar un producto
+                        .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole(Role.ADMIN.name()) //Solo los administradores pueden eliminar productos
 
                         // Rutas exclusivas para administradores
                         //verifica que el usuario esté autenticado y tenga el rol ADMIN
