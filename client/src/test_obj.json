@@ -1,0 +1,34 @@
+{
+  "productos": [
+    {
+      "id": 1,
+      "nombre": "Auriculares Inalámbricos Sony WH-1000XM5",
+      "descripcion": "Cancelación de ruido líder en la industria, batería de 30 horas, carga rápida y sonido de alta resolución.",
+      "precio": 349.99,
+      "imgLink": "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fm.media-amazon.com%2Fimages%2FI%2F71F2ccIPPLL._AC_SL1500_.jpg&sp=1778271375T395608745d563d9207e7d842e5c048b8ce877e247e527d8c8c084ce6f7825c6b",
+      "categoria": "audio",
+      "stock": 15,
+      "rating": 4.8
+    },
+    {
+      "id": 2,
+      "nombre": "Smartwatch Samsung Galaxy Watch 6",
+      "descripcion": "Pantalla Super AMOLED, monitor de ritmo cardíaco, sueño y ejercicio, compatible con Android e iOS.",
+      "precio": 279.99,
+      "imgLink": "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.W_MTIcCuvgZ2SXcI36lRTQHaIy%3Fpid%3DApi&sp=1778271412T425a22f441399d689f9bb517d68b64b5082a449169651f076a3e24f9e00d06f0",
+      "categoria": "wearables",
+      "stock": 23,
+      "rating": 4.6
+    },
+    {
+      "id": 3,
+      "nombre": "Teclado Mecánico Logitech G Pro X",
+      "descripcion": "Teclado mecánico con switches intercambiables, iluminación RGB LIGHTSYNC, diseño compacto sin teclado numérico.",
+      "precio": 149.99,
+      "imgLink": "https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fa-static.mlcdn.com.br%2F1500x1500%2Fteclado-mecanico-gamer-logitech-g413-usb-abnt2-preto%2Fmagazineluiza%2F226139300%2F773c61511195c3616a52a2cf4303169b.jpg&sp=1778271443T886298705cd4b72f4d69953a8d9d1dc4b490319f0a6d31a6645702b2f32b3948",
+      "categoria": "perifericos",
+      "stock": 42,
+      "rating": 4.7
+    }
+  ]
+}
