@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import listadoProductos from './listadoProductos';
+import ListadoProductos from './listadoProductos';
 import Login from './usuarios/login';
 import Registro from './usuarios/registro';
 import Perfil from './usuarios/perfil';
@@ -9,7 +9,7 @@ function App() {
     <Router>
       <Routes>
         {/* Ruta para el listado de productos */}
-        <Route path="/productos" element={<listadoProductos />} />
+        <Route path="/productos" element={<ListadoProductos />} />
         
         {/* Ruta para el login */}
         <Route path="/login" element={<Login />} />
