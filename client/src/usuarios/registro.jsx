@@ -1,28 +1,136 @@
 import { useState } from "react";
-import "../css/registro.css";; // <-- Importación de los estilos separados
+import { useNavigate } from "react-router-dom";
+import "../css/registro.css";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     nombre: "",
     apellido: "",
-    username: "",
+    nombreUsuario: "",
     email: "",
     password: "",
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    // Limpiar error cuando el usuario empiece a escribir
+    if (error) setError("");
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    const { nombre, apellido, username, email, password } = form;
-    if (!nombre || !apellido || !username || !email || !password) {
-      alert("Por favor completá todos los campos.");
+    
+    const { nombre, apellido, nombreUsuario, email, password } = form;
+    
+    // Validaciones
+    if (!nombre || !apellido || !nombreUsuario || !email || !password) {
+      setError("Por favor completá todos los campos.");
       return;
     }
-    console.log("Registro:", form);
+
+    // Validación de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Por favor ingresá un email válido.");
+      return;
+    }
+
+    // Validación de contraseña (mínimo 6 caracteres)
+    if (password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      // Preparar el body que se enviará
+      const requestBody = {
+        nombre: form.nombre,
+        apellido: form.apellido,
+        nombreUsuario: form.nombreUsuario,
+        mail: form.email,
+        password: form.password,
+      };
+
+      console.log("📤 Enviando solicitud a:", "http://localhost:8080/api/auth/register");
+      console.log("📦 Body enviado:", JSON.stringify(requestBody, null, 2));
+
+      // Llamada al endpoint de registro
+      const response = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      console.log("📡 Status HTTP:", response.status);
+      console.log("📡 Status Text:", response.statusText);
+      console.log("📡 Headers:", Object.fromEntries(response.headers.entries()));
+
+      // Intentar obtener la respuesta como texto primero para mejor debugging
+      const responseText = await response.text();
+      console.log("📄 Respuesta cruda (texto):", responseText);
+
+      let data = null;
+      try {
+        // Intentar parsear como JSON
+        data = JSON.parse(responseText);
+        console.log("📄 Respuesta parseada (JSON):", data);
+      } catch (parseError) {
+        console.error("❌ Error al parsear JSON:", parseError);
+        data = { message: responseText || "No se pudo parsear la respuesta" };
+      }
+
+      if (!response.ok) {
+        // Mostrar error detallado
+        console.error("❌ Error HTTP:", response.status);
+        console.error("❌ Detalle del error:", data);
+        
+        // Construir mensaje de error detallado
+        let errorMessage = `Error ${response.status}: `;
+        
+        if (response.status === 404) {
+          errorMessage += "El endpoint /api/auth/register no existe. Verifica la URL.";
+        } else if (response.status === 409) {
+          errorMessage += data.message || "El email o nombre de usuario ya está registrado";
+        } else if (response.status === 400) {
+          errorMessage += data.message || "Datos inválidos";
+        } else if (response.status === 500) {
+          errorMessage += data.message || "Error interno del servidor. Revisa los logs del backend.";
+        } else {
+          errorMessage += data.message || data.error || "Error al registrar usuario";
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      console.log("✅ Registro exitoso:", data);
+      
+      // Mostrar mensaje de éxito
+      alert("Registro exitoso. Ahora podés iniciar sesión.");
+      
+      // Redirigir al login
+      navigate("/login");
+
+    } catch (err) {
+      console.error("🚨 ERROR CAPTURADO:", err);
+      console.error("🚨 Nombre del error:", err.name);
+      console.error("🚨 Mensaje del error:", err.message);
+      console.error("🚨 Stack trace:", err.stack);
+      
+      // Mostrar error detallado en la interfaz
+      setError(err.message || "Error al conectar con el servidor");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -38,6 +146,13 @@ export default function Register() {
         <h1 className="register-heading">Crear cuenta</h1>
         <p className="register-subtitle">Completá tus datos para registrarte</p>
 
+        {/* Mostrar mensaje de error detallado */}
+        {error && (
+          <div className="register-error" style={{ backgroundColor: "#fee2e2", color: "#dc2626", padding: "10px", borderRadius: "8px", marginBottom: "1rem", fontSize: "14px", wordBreak: "break-word" }}>
+            <strong>Error:</strong> {error}
+          </div>
+        )}
+
         <form onSubmit={handleRegister}>
           {/* Nombre + Apellido */}
           <div className="register-row">
@@ -52,6 +167,7 @@ export default function Register() {
                 value={form.nombre}
                 onChange={handleChange}
                 className="register-input"
+                disabled={loading}
               />
             </div>
             <div className="register-field register-field-flex">
@@ -65,24 +181,26 @@ export default function Register() {
                 value={form.apellido}
                 onChange={handleChange}
                 className="register-input"
+                disabled={loading}
               />
             </div>
           </div>
 
-          {/* Username */}
+          {/* nombreUsuario */}
           <div className="register-field">
-            <label className="register-label" htmlFor="username">Nombre de usuario</label>
+            <label className="register-label" htmlFor="nombreUsuario">Nombre de usuario</label>
             <div className="register-input-wrap">
               <span className="register-input-prefix">@</span>
               <input
-                id="username"
-                name="username"
+                id="nombreUsuario"
+                name="nombreUsuario"
                 type="text"
                 placeholder="juanperez"
-                autoComplete="username"
-                value={form.username}
+                autoComplete="nombreUsuario"
+                value={form.nombreUsuario}
                 onChange={handleChange}
-                className="register-input register-input-username"
+                className="register-input register-input-nombreUsuario"
+                disabled={loading}
               />
             </div>
           </div>
@@ -104,6 +222,7 @@ export default function Register() {
                 value={form.email}
                 onChange={handleChange}
                 className="register-input"
+                disabled={loading}
               />
             </div>
           </div>
@@ -125,12 +244,14 @@ export default function Register() {
                 value={form.password}
                 onChange={handleChange}
                 className="register-input register-input-password"
+                disabled={loading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="register-eye-btn"
                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                disabled={loading}
               >
                 {showPassword ? (
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -149,15 +270,29 @@ export default function Register() {
           </div>
 
           {/* Submit */}
-          <button type="submit" className="register-btn-primary">
-            Crear cuenta
+          <button 
+            type="submit" 
+            className="register-btn-primary" 
+            disabled={loading}
+            style={{ opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}
+          >
+            {loading ? "Creando cuenta..." : "Crear cuenta"}
           </button>
         </form>
 
         {/* Footer */}
         <p className="register-footer">
           ¿Ya tenés cuenta?{" "}
-          <a href="#" className="register-footer-link">Iniciá sesión</a>
+          <a 
+            href="#" 
+            className="register-footer-link"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/login");
+            }}
+          >
+            Iniciá sesión
+          </a>
         </p>
       </div>
     </div>
