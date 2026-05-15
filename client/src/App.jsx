@@ -3,6 +3,7 @@ import ListadoProductos from './listadoProductos';
 import Login from './usuarios/login';
 import Registro from './usuarios/registro';
 import Perfil from './usuarios/perfil';
+import AdminPanel from './pages/AdminPanel/AdminPanel';
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
 
         {/* Ruta para el perfil */}
         <Route path="/perfil" element={<Perfil />} />
+
+        <Route path="/AdminPanel" element={<AdminPanel />} />
 
         {/* Redirección por defecto si entran a la raíz (/) */}
         <Route path="*" element={<Navigate to="/productos" replace />} />
