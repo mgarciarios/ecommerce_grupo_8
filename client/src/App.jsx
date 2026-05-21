@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import ListadoProductos from './listadoProductos';
-import Login from './usuarios/login';
-import Registro from './usuarios/registro';
-import Perfil from './usuarios/perfil';
-import AdminPanel from './pages/AdminPanel/AdminPanel';
+import ListadoProductos from './pages/listadoProductos';
+import Login from './pages/login';
+import Registro from './pages/registro';
+import Perfil from './pages/perfil';
+import AdminPanel from './pages/AdminPanel';
 
 function App() {
   return (
@@ -16,10 +16,10 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         {/* Ruta para el registro */}
-        <Route path="/registro" element={<Registro />} />
+        <Route path="/register" element={<Registro />} />
 
         {/* Ruta para el perfil */}
-        <Route path="/perfil" element={<Perfil />} />
+        <Route path="/profile" element={<Perfil />} />
 
         <Route path="/AdminPanel" element={<AdminPanel />} />
 
