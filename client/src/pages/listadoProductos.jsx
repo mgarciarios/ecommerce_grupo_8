@@ -1,7 +1,7 @@
 import '../css/listadoProductos.css'
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom' // ← Esta importación es necesaria
 import Card from '../components/Card.jsx'
-import testObj from '../test_obj.json'
 import { useProducts } from '../hooks/useProducts.js';
 
 export default function ListadoProductos() {
@@ -40,7 +40,13 @@ export default function ListadoProductos() {
             imgLink={producto.imgLink}
             formatUserName={(name) => name.toUpperCase()}
           >
-            <h4>{producto.nombre}</h4>
+            {/* Solo el título es un Link - no necesita useNavigate */}
+            <Link 
+              to={`/producto/${producto.id}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <h4>{producto.nombre}</h4>
+            </Link>
             <p>{producto.descripcion}</p>
             <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#00a650' }}>
               ${producto.precio}
