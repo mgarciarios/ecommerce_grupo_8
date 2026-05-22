@@ -1,19 +1,18 @@
 /* perfil.css */
 
+/* perfil.css - VERSIÓN CORREGIDA */
+
 .profile-wrap {
-  width: 100vw;
-  height: 100vh;
-  position: fixed; /* Pantalla completa garantizada superponiéndose a todo */
-  top: 0;
-  left: 0;
+  
+  /* En su lugar, usa: */
+  min-height: calc(100vh - 60px); /* Ajusta 60px según la altura de tu NavBar */
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #f5f5f3;
-  padding: 1rem;
+  padding: 2rem 1rem; /* Aumenta el padding para compensar */
   font-family: system-ui, sans-serif;
   box-sizing: border-box;
-  z-index: 9999;
 }
 
 .profile-card {

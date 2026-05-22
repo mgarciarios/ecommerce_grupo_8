@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -169,7 +169,7 @@ export default function Login() {
             />
             Recordarme
           </label>
-          <a href="#" style={styles.forgot}>¿Olvidaste tu contraseña?</a>
+          <Link to="/login" style={styles.forgot}>¿Olvidaste tu contraseña?</Link>
         </div>
 
         {/* Submit */}
@@ -180,10 +180,9 @@ export default function Login() {
         {/* Footer */}
         <p style={styles.footer}>
           ¿No tenés cuenta?{" "}
-          <a href="#" style={styles.footerLink} onClick={(e) => {
-            e.preventDefault();
-            navigate("/registro");
-          }}>Registrate</a>
+          <Link to="/register" style={styles.footerLink}>
+            Registrate
+          </Link>
         </p>
       </div>
     </div>

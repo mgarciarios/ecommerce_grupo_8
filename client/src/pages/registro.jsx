@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../css/registro.css";
 
 export default function Register() {
@@ -283,16 +283,11 @@ export default function Register() {
         {/* Footer */}
         <p className="register-footer">
           ¿Ya tenés cuenta?{" "}
-          <a 
-            href="#" 
-            className="register-footer-link"
-            onClick={(e) => {
-              e.preventDefault();
-              navigate("/login");
-            }}
+          <Link
+            to="/login"
           >
             Iniciá sesión
-          </a>
+          </Link>
         </p>
       </div>
     </div>
