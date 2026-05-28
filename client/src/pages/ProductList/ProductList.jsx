@@ -7,6 +7,25 @@ import { useProducts } from '../../hooks/useProducts.js';
 export default function ListadoProductos() {
   const { productos, cargando, error, cargarProductos } = useProducts();
 
+  const formatPrice = (value) => {
+    if (value === null || value === undefined || value === '') return '—';
+
+    const normalized = typeof value === 'string'
+      ? value.replace(/\./g, '').replace(',', '.')
+      : String(value);
+
+    const number = Number(normalized);
+
+    if (!Number.isFinite(number)) {
+      return String(value);
+    }
+
+    return number.toLocaleString('es-AR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
   useEffect(() => {
       cargarProductos();
     }, [cargarProductos]);
@@ -35,8 +54,10 @@ export default function ListadoProductos() {
         {productos.map((producto) => (
           <Card
             key={producto.id}
+            id={producto.id}
             userName={producto.nombre}
-            imgLink={producto.imgLink}
+            imgLink={producto.imgLink || producto.image || producto.imagen || producto.img || producto.foto}
+            producto={producto}
             formatUserName={(name) => name.toUpperCase()}
           >
             {/* Solo el título es un Link - no necesita useNavigate */}
@@ -48,7 +69,7 @@ export default function ListadoProductos() {
             </Link>
             <p>{producto.descripcion}</p>
             <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#7c3aed' }}>
-              ${producto.precio}
+              ${formatPrice(producto.precio)}
             </p>
           </Card>
         ))}

@@ -12,6 +12,14 @@ const Card = ({
   id, // Añade el id del producto
   producto // Opcional: pasar todo el objeto producto
 }) => {
+  const normalizeImageUrl = (value) => {
+    if (!value) return '/icons.svg';
+    if (/^https?:\/\//i.test(value) || value.startsWith('data:')) {
+      return value;
+    }
+
+    return `http://localhost:8080/${value.replace(/^\/+/, '')}`;
+  };
   const [isFollowing, setIsFollowing] = useState(false);
   const navigate = useNavigate();
 
@@ -23,18 +31,27 @@ const Card = ({
   };
 
   const handleCardClick = () => {
-    // Navega al detalle del producto usando el id
-    if (id) {
-      navigate(`/producto/${id}`);
+    const productId = id ?? producto?.id;
+    if (productId) {
+      navigate(`/producto/${productId}`);
     }
   };
 
   const text = isFollowing ? 'Sacar del Carrito' : 'Añadir al Carrito';
   const buttonClass = isFollowing ? 'card__button--following' : 'card__button--not-following';
+  const imageSrc = normalizeImageUrl(producto?.foto);
 
   return (
     <div className="card" onClick={handleCardClick}>
-      <img src={imgLink} className="card__image" alt={userName || 'Producto'} />
+      <img
+        src={imageSrc}
+        className="card__image"
+        alt={userName || 'Producto'}
+        onError={(e) => {
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = '/icons.svg';
+        }}
+      />
       <div className="card__info">
         <div className="card__content">
           <div className="card__title">{children}</div>

@@ -98,7 +98,7 @@ export default function ProductoDetalle() {
       <div className="detalle-card">
         <div className="detalle-imagen">
           <img 
-            src={producto.imgLink || '/placeholder-image.jpg'} 
+            src={producto.foto || '/placeholder-image.jpg'} 
             alt={producto.nombre}
             onError={(e) => {
               e.target.src = '/placeholder-image.jpg';
