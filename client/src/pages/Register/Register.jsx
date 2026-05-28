@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "../css/registro.css";
+import "./Register.css";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);

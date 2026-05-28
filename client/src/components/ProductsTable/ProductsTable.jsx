@@ -1,4 +1,4 @@
-import '../css/components/ProductsTable.css';
+import './ProductsTable.css';
 
 export default function ProductsTable({ productos, onEditar, onEliminar, cargando }) {
   return (

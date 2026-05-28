@@ -1,8 +1,8 @@
-import '../css/listadoProductos.css'
+import './ProductList.css'
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom' // ← Esta importación es necesaria
-import Card from '../components/Card.jsx'
-import { useProducts } from '../hooks/useProducts.js';
+import { Link } from 'react-router-dom'
+import Card from '../../components/Card/Card.jsx'
+import { useProducts } from '../../hooks/useProducts.js';
 
 export default function ListadoProductos() {
   const { productos, cargando, error, cargarProductos } = useProducts();
@@ -31,7 +31,6 @@ export default function ListadoProductos() {
 
   return (
     <main className="product-list-page">
-      <h1>Listado de Productos</h1>
       <div className="product-list">
         {productos.map((producto) => (
           <Card
@@ -48,7 +47,7 @@ export default function ListadoProductos() {
               <h4>{producto.nombre}</h4>
             </Link>
             <p>{producto.descripcion}</p>
-            <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#00a650' }}>
+            <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#7c3aed' }}>
               ${producto.precio}
             </p>
           </Card>

@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import ListadoProductos from './pages/listadoProductos';
-import ProductoDetalle from './pages/ProductoDetalle'; // Importa el nuevo componente
-import Login from './pages/login';
-import Registro from './pages/registro';
-import Perfil from './pages/perfil';
-import AdminPanel from './pages/AdminPanel';
-import NavBar from './components/NavBar';
+import Landing from './pages/Landing/Landing';
+import ProductDetail from './pages/ProductDetail/ProductDetail';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import Profile from './pages/Profile/Profile';
+import AdminPanel from './pages/AdminPanel/AdminPanel';
+import NavBar from './components/NavBar/NavBar';
 
 function AppContent() {
   const location = useLocation();
@@ -16,11 +16,11 @@ function AppContent() {
     <>
       {!shouldHideNavBar && <NavBar />}
       <Routes>
-        <Route path="/productos" element={<ListadoProductos />} />
-        <Route path="/producto/:id" element={<ProductoDetalle />} /> {/* Nueva ruta */}
+        <Route path="/productos" element={<Landing />} />
+        <Route path="/producto/:id" element={<ProductDetail />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Registro />} />
-        <Route path="/profile" element={<Perfil />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/AdminPanel" element={<AdminPanel />} />
         <Route path="*" element={<Navigate to="/productos" replace />} />
       </Routes>

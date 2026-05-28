@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useProducts } from '../hooks/useProducts';
-import '../css/ProductoDetalle.css';
+import { useProducts } from '../../hooks/useProducts';
+import './ProductDetail.css';
 
 export default function ProductoDetalle() {
   const { id } = useParams(); // Obtiene el ID de la URL

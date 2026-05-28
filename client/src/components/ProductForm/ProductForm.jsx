@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import '../css/components/ProductForm.css';
+import './ProductForm.css';
 
 export default function ProductForm({ onSubmit, producto = null, categorias = [] }) {
   const [formData, setFormData] = useState({

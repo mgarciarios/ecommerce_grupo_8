@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../css/perfil.css"; // <-- Importamos tus nuevos estilos
+import "./Profile.css";
 
 const IconUser = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
