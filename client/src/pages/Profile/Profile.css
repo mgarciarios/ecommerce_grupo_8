@@ -30,11 +30,13 @@
   width: 36px;
   height: 36px;
   background-color: #111;
+  border: none;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
+  cursor: pointer;
 }
 
 .profile-avatar-row {

@@ -1,10 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { FavoriteProvider } from './hooks/useContext/FavoriteProvider';
 import Landing from './pages/Landing/Landing';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Profile from './pages/Profile/Profile';
 import AdminPanel from './pages/AdminPanel/AdminPanel';
+import FavoritesList from './pages/FavoritesList/FavoritesList';
 import NavBar from './components/NavBar/NavBar';
 
 function AppContent() {
@@ -22,6 +24,8 @@ function AppContent() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/AdminPanel" element={<AdminPanel />} />
+        <Route path="/favorites/:categoria" element={<FavoritesList />} />
+        <Route path="/favorites" element={<FavoritesList />} />
         <Route path="*" element={<Navigate to="/productos" replace />} />
       </Routes>
     </>
@@ -30,9 +34,11 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <FavoriteProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </FavoriteProvider>
   );
 }
 

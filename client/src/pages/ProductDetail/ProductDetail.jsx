@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useProducts } from '../../hooks/useProducts';
+import { useFavorites } from '../../hooks/useContext/FavoriteProvider';
 import './ProductDetail.css';
 
 export default function ProductoDetalle() {
@@ -8,6 +9,8 @@ export default function ProductoDetalle() {
   const navigate = useNavigate();
   const { obtenerProductoPorId } = useProducts();
   
+  const { toggleFavorite, isFavorite } = useFavorites();
+
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
@@ -164,6 +167,15 @@ export default function ProductoDetalle() {
               </div>
             </>
           )}
+
+          <div className="detalle-acciones">
+            <button
+              onClick={() => toggleFavorite(producto)}
+              className={isFavorite(producto.id) ? 'btn-favorito-activo' : 'btn-favorito'}
+            >
+              {isFavorite(producto.id) ? '❤ Quitar de favoritos' : '♡ Añadir a favoritos'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

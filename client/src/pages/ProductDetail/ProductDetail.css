@@ -196,6 +196,33 @@
   background: #f5f5f3;
 }
 
+.btn-favorito,
+.btn-favorito-activo {
+  flex: 1;
+  height: 48px;
+  background: white;
+  border: 1px solid #e5e5e3;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-favorito:hover {
+  background: #fff0f0;
+  border-color: #ffcccc;
+}
+
+.btn-favorito-activo {
+  background: #fff0f0;
+  border-color: #ff9999;
+  color: #cc0000;
+}
+
+.btn-favorito-activo:hover {
+  background: #ffe0e0;
+}
+
 .detalle-loading {
   text-align: center;
   padding: 4rem;

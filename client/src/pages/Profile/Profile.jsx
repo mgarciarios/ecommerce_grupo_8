@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
 const IconUser = () => (
@@ -85,6 +86,7 @@ function Toast({ message }) {
 }
 
 export default function Profile() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("info");
   const [toast, setToast] = useState(null);
 
@@ -135,11 +137,11 @@ export default function Profile() {
     <div className="profile-wrap">
       <div className="profile-card">
         {/* Logo */}
-        <div className="profile-logo">
+        <button className="profile-logo" onClick={() => navigate('/favorites')} title="Mis favoritos">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
           </svg>
-        </div>
+        </button>
 
         {/* Avatar */}
         <div className="profile-avatar-row">
