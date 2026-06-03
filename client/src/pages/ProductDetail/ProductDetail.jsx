@@ -5,16 +5,25 @@ import { useFavorites } from '../../hooks/useContext/FavoriteProvider';
 import './ProductDetail.css';
 
 export default function ProductoDetalle() {
-  const { id } = useParams(); // Obtiene el ID de la URL
+  const { id } = useParams(); 
   const navigate = useNavigate();
   const { obtenerProductoPorId } = useProducts();
   
-  const { toggleFavorite, isFavorite } = useFavorites();
+  const { addToFavorite, removeFavorite, isFavorite } = useFavorites();
 
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [cantidad, setCantidad] = useState(1);
+
+  // FUNCIÓN PARA NORMALIZAR LA URL DE LA IMAGEN
+  const normalizeImageUrl = (value) => {
+    if (!value) return 'https://via.placeholder.com/400?text=Sin+Imagen';
+    if (/^https?:\/\//i.test(value) || value.startsWith('data:')) {
+      return value;
+    }
+    return `http://localhost:8080/${value.replace(/^\/+/, '')}`;
+  };
 
   useEffect(() => {
     const fetchProducto = async () => {
@@ -40,13 +49,6 @@ export default function ProductoDetalle() {
     }
   }, [id, obtenerProductoPorId]);
 
-  const handleCantidadChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (value > 0 && value <= (producto?.stock || 99)) {
-      setCantidad(value);
-    }
-  };
-
   const incrementarCantidad = () => {
     if (cantidad < (producto?.stock || 99)) {
       setCantidad(cantidad + 1);
@@ -60,10 +62,18 @@ export default function ProductoDetalle() {
   };
 
   const agregarAlCarrito = () => {
-    // Aquí implementas la lógica para agregar al carrito
     console.log(`Agregando ${cantidad} x ${producto?.nombre} al carrito`);
     alert(`¡${producto?.nombre} agregado al carrito!`);
   };
+
+ const handleFavoriteClick = () => {
+  if (!producto) return;
+  if (isFavorite(producto.id)) {
+    removeFavorite(producto.id); // Borra usando el ID
+  } else {
+    addToFavorite(producto);   // Mandamos el objeto "producto" real que vino del backend
+  }
+};
 
   if (cargando) {
     return (
@@ -100,11 +110,13 @@ export default function ProductoDetalle() {
 
       <div className="detalle-card">
         <div className="detalle-imagen">
+          {/* IMAGEN CORREGIDA CON NORMALIZACIÓN Y APAGADO DE ERROR EN BUCLE */}
           <img 
-            src={producto.foto || '/placeholder-image.jpg'} 
+            src={normalizeImageUrl(producto.foto)} 
             alt={producto.nombre}
             onError={(e) => {
-              e.target.src = '/placeholder-image.jpg';
+              e.target.onerror = null; // Corta el bucle de renderizado infinito de raíz
+              e.target.src = 'https://via.placeholder.com/400?text=Imagen+No+Disponible';
             }}
           />
         </div>
@@ -138,25 +150,109 @@ export default function ProductoDetalle() {
 
           {producto.stock > 0 && (
             <>
-              <div className="detalle-cantidad">
-                <label>Cantidad:</label>
-                <div className="cantidad-control">
-                  <button onClick={decrementarCantidad} disabled={cantidad <= 1}>
+              {/* SECCIÓN DE CANTIDAD TOTALMENTE REDISEÑADA Y CENTRADA */}
+              <div className="detalle-cantidad" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '20px 0' }}>
+                <label style={{ marginBottom: '8px', fontWeight: 'bold', color: '#555' }}>Cantidad</label>
+                <div className="cantidad-control" style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '15px'
+                }}>
+                  <button 
+                    type="button"
+                    onClick={decrementarCantidad} 
+                    disabled={cantidad <= 1}
+                    style={{
+                      width: '35px',
+                      height: '35px',
+                      borderRadius: '50%',
+                      border: '1px solid #8a3ffc',
+                      background: '#db0d0d',
+                      color: '#ffffff',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '1.2rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      opacity: cantidad <= 1 ? 0.4 : 1
+                    }}
+                  >
                     -
                   </button>
-                  <input
-                    type="number"
-                    value={cantidad}
-                    onChange={handleCantidadChange}
-                    min="1"
-                    max={producto.stock}
-                  />
-                  <button onClick={incrementarCantidad} disabled={cantidad >= producto.stock}>
+                  
+                  <span style={{
+                    fontSize: '1.3rem',
+                    fontWeight: '600',
+                    minWidth: '30px',
+                    textAlign: 'center',
+                    color: '#333'
+                  }}>
+                    {cantidad}
+                  </span>
+
+                  <button 
+                    type="button"
+                    onClick={incrementarCantidad} 
+                    disabled={cantidad >= producto.stock}
+                    style={{
+                      width: '35px',
+                      height: '35px',
+                      borderRadius: '50%',
+                      border: '1px solid #553ffc',
+                      background: '#81fc3f',
+                      color: '#fff',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '1.2rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      opacity: cantidad >= producto.stock ? 0.4 : 1
+                    }}
+                  >
                     +
                   </button>
                 </div>
               </div>
-
+              {/* BOTÓN ÚNICO DE FAVORITOS - TOTALMENTE INTEGRADO Y ESTILIZADO */}
+              {/* LE AGREGAMOS ESTOS 3 ESTILOS AL DIV PADRE PARA CENTRAR EL BOTÓN */}
+              <div className="detalle-acciones" style={{ 
+                marginTop: '15px', 
+                display: 'flex', 
+                justifyContent: 'center', 
+                width: '100%' 
+              }}>
+                <button
+                  type="button"
+                  onClick={handleFavoriteClick}
+                  style={{
+                    width: 'max-content', // Tu configuración actual
+                    padding: '12px',
+                    borderRadius: '8px',
+                    fontSize: '0.6rem', // Tu configuración actual
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'all 0.3s ease',
+                    background: isFavorite(producto.id) ? '#ffebee' : 'transparent',
+                    color: isFavorite(producto.id) ? '#c62828' : '#000000',
+                    border: isFavorite(producto.id) ? '2px solid #ef5350' : '2px solid #333333',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isFavorite(producto.id)) e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isFavorite(producto.id)) e.currentTarget.style.background = 'transparent';
+                  }}
+                >
+                  {isFavorite(producto.id) ? '❤️ Quitar de favoritos' : '🖤 Añadir a favoritos'}
+                </button>
+              </div>
               <div className="detalle-acciones">
                 <button onClick={agregarAlCarrito} className="btn-comprar">
                   Agregar al carrito
@@ -168,14 +264,7 @@ export default function ProductoDetalle() {
             </>
           )}
 
-          <div className="detalle-acciones">
-            <button
-              onClick={() => toggleFavorite(producto)}
-              className={isFavorite(producto.id) ? 'btn-favorito-activo' : 'btn-favorito'}
-            >
-              {isFavorite(producto.id) ? '❤ Quitar de favoritos' : '♡ Añadir a favoritos'}
-            </button>
-          </div>
+          
         </div>
       </div>
     </div>

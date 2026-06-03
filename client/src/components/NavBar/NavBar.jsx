@@ -34,6 +34,9 @@ const NavBar = () => {
         <li>
           <Link to="/AdminPanel" className={`navbar-link navbar-link-admin ${location.pathname === '/AdminPanel' ? 'navbar-link-active' : ''}`}>Admin</Link>
         </li>
+        <li>
+          <Link to="/favorites" className={linkClass('/favorites')}>Favoritos</Link>
+        </li>
       </ul>
     </nav>
   )

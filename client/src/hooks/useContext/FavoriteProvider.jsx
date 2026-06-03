@@ -28,7 +28,7 @@ export function FavoriteProvider({ children }) {
     saveFavorites(favorites);
   }, [favorites]);
 
-  const addFavorite = useCallback((product) => {
+  const addToFavorite = useCallback((product) => {
     setFavorites((prev) => {
       if (prev.some((p) => p.id === product.id)) return prev;
       return [...prev, product];
@@ -55,7 +55,7 @@ export function FavoriteProvider({ children }) {
 
   const value = {
     favorites,
-    addFavorite,
+    addToFavorite,
     removeFavorite,
     toggleFavorite,
     isFavorite,
