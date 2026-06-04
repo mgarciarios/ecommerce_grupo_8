@@ -49,32 +49,31 @@ export default function ListadoProductos() {
   }
 
   return (
-  <main className="product-list-page">
-    <div className="product-list">
-      {productos.map((producto) => (
-        <Card
-          key={producto.id}
-          id={producto.id}
-          userName={producto.nombre}
-          imgLink={producto.imgLink || producto.image || producto.imagen || producto.img || producto.foto}
-          producto={producto}
-          formatUserName={(name) => name.toUpperCase()}
-        >
-          {/* Solo el título es un Link - no necesita useNavigate */}
-          <Link 
-            to={`/producto/${producto.id}`}
-            style={{ textDecoration: 'none', color: 'inherit' }}
+    <main className="product-list-page">
+      <div className="product-list">
+        {productos.map((producto) => (
+          <Card
+            key={producto.id}
+            id={producto.id}
+            userName={producto.nombre}
+            imgLink={producto.imgLink || producto.image || producto.imagen || producto.img || producto.foto}
+            producto={producto}
+            formatUserName={(name) => name.toUpperCase()}
           >
-            <h4>{producto.nombre}</h4>
-          </Link>
-          
-          <p>{producto.descripcion}</p>
-          
-          {/* ❌ ACÁ BORRASTE LAS LÍNEAS DEL PRECIO VIEJO */}
-
-        </Card>
-      ))}
-    </div>
-  </main>
-)
+            {/* Solo el título es un Link - no necesita useNavigate */}
+            <Link 
+              to={`/producto/${producto.id}`}
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <h4>{producto.nombre}</h4>
+            </Link>
+            <p>{producto.descripcion}</p>
+            <p style={{ fontSize: '20px', fontWeight: 'bold', color: '#7c3aed' }}>
+              ${formatPrice(producto.precio)}
+            </p>
+          </Card>
+        ))}
+      </div>
+    </main>
+  )
 }
