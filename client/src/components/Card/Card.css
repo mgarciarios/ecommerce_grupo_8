@@ -8,9 +8,6 @@
   width: 100%;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  height: 100%; 
 }
 
 .card:hover {
@@ -28,72 +25,49 @@
 
 .card__info {
   padding: 16px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; 
 }
 
 .card__content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; 
+  cursor: pointer;
 }
 
-/* Contenedor fijo para los textos superiores (Evita desalineado de precios) */
-.card__text-block {
+.card__title {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  height: 110px; /* Mantiene la misma altura en todas las tarjetas */
-  overflow: hidden; 
-}
-
-/* EL TÍTULO: Forzamos a que mantenga su tamaño pase lo que pase */
-.card__text-block h4, 
-.card__text-block a,
-.card__text-block link {
-  font-size: 18px !important;
+  gap: 4px;
+  font-size: 16px;
   font-weight: 600;
   color: #18181b;
-  margin-top: 0;
-  margin-bottom: 6px;
-  text-decoration: none;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  overflow: visible;
 }
 
-/* LA DESCRIPCIÓN: Modificá el font-size acá abajo tranquilo */
-.card__text-block p {
-  font-size: 14px; /* <--- CAMBIÁ ESTE NÚMERO PARA CAMBIAR LA DESCRIPCIÓN */
-  color: #71717a;
-  margin: 0;
-  line-height: 1.4;
-  
-  /* Límite estricto de 4 líneas */
+.card__title h4 {
   display: -webkit-box;
-  -webkit-line-clamp: 4; 
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-size: 16px;
+  font-weight: 600;
+  color: #18181b;
+  margin: 0 0 4px;
 }
 
-/* EL PRECIO VIOLETA: Flota exactamente en el centro del espacio libre */
-.card__price {
-  font-size: 18px;
-  font-weight: 700;
-  color: #18d712; /* Color del precio */
-  text-align: center;
-  margin-top: auto;   
-  margin-bottom: auto; 
-  padding: 12px 0;
+.card__title p {
+  font-size: 13px;
+  color: #71717a;
+  margin: 0 0 8px;
+  line-height: 1.4;
 }
 
-/* BOTONERA INFERIOR */
-.card__favorite-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-top: 0;
-  margin-bottom: 16px; 
+.card__username {
+  font-size: 13px;
+  color: #7c3aed;
+  font-weight: 600;
+  margin-bottom: 12px;
+  margin-top: 4px;
+  letter-spacing: 0.3px;
 }
 
 .card__button {
@@ -108,23 +82,23 @@
 }
 
 .card__button--not-following {
-  background: #040109;
+  background: #7c3aed;
   color: #fff;
 }
 
 .card__button--not-following:hover {
-  background: #34b115;
+  background: #6d28d9;
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
 }
 
 .card__button--following {
-  background: #976f6f;
-  color: #fffbfb;
+  background: #f0ebf5;
+  color: #7c3aed;
   border: 1px solid #d4cde0;
 }
 
 .card__button--following:hover {
-  background: #c92543;
+  background: #e4daf0;
 }
 
 .card__button:active {
