@@ -1,8 +1,8 @@
-import './ProductList.css'
+import './css/ProductList.css'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Card from '../../components/Card/Card.jsx'
-import { useProducts } from '../../hooks/useProducts.js';
+import Card from '../components/Card'
+import { useProducts } from '../hooks/useProducts.js';
 
 export default function ListadoProductos() {
   const { productos, cargando, error, cargarProductos } = useProducts();

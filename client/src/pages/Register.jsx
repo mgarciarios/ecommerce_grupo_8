@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Register.css";
+import "./css/Register.css";
 
 export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
@@ -135,7 +135,13 @@ export default function Register() {
 
   return (
     <div className="register-wrap">
+        {/* Back link */}
+        <Link to="/productos" style={{ display: "inline-block", marginBottom: "1rem", fontSize: "13px", color: "#888", textDecoration: "none" }}>
+          ← Volver al inicio
+        </Link>
+        
       <div className="register-card">
+
         {/* Logo */}
         <div className="register-logo">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

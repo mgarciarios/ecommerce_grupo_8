@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import ProductForm from '../../components/ProductForm/ProductForm';
-import ProductsTable from '../../components/ProductsTable/ProductsTable';
-import { useProducts } from '../../hooks/useProducts';
-import './AdminPanel.css';
+import ProductForm from '../components/ProductForm';
+import ProductsTable from '../components/ProductsTable';
+import { useProducts } from '../hooks/useProducts';
+import './css/AdminPanel.css';
 
 export default function AdminPanel() {
   const {

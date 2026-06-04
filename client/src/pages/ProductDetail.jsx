@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useProducts } from '../../hooks/useProducts';
-import { useFavorites } from '../../hooks/useContext/FavoriteProvider';
-import './ProductDetail.css';
+import { useProducts } from '../hooks/useProducts';
+import { useFavorites } from '../hooks/useContext/FavoriteProvider';
+import './css/ProductDetail.css';
 
 export default function ProductoDetalle() {
   const { id } = useParams(); 
@@ -62,7 +62,23 @@ export default function ProductoDetalle() {
   };
 
   const agregarAlCarrito = () => {
-    console.log(`Agregando ${cantidad} x ${producto?.nombre} al carrito`);
+    const carritoActual = JSON.parse(localStorage.getItem('cart') || '[]');
+    const itemExistente = carritoActual.find(item => item.id === producto.id);
+
+    if (itemExistente) {
+      itemExistente.cantidad += cantidad;
+    } else {
+      carritoActual.push({
+        id: producto.id,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        foto: producto.foto,
+        cantidad,
+        stock: producto.stock,
+      });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(carritoActual));
     alert(`¡${producto?.nombre} agregado al carrito!`);
   };
 

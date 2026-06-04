@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useFavorites } from '../../hooks/useContext/FavoriteProvider';
-import './Favorite.css';
+import { useFavorites } from '../hooks/useContext/FavoriteProvider';
+import './css/Favorite.css';
 
 export default function Favorite({ categoria }) {
   const { favorites, removeFavorite } = useFavorites();

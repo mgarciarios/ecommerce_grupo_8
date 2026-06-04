@@ -1,26 +1,48 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFavorites } from '../../hooks/useContext/FavoriteProvider';
-import './Card.css';
+import { useFavorites } from '../hooks/useContext/FavoriteProvider';
+import './css/Card.css';
 
-const Card = ({ 
-  children, 
-  userName, 
-  id, 
-  producto 
+const STORAGE_KEY = 'cart';
+
+const readCart = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+const isInCart = (id) => readCart().some((item) => item.id === id);
+
+const Card = ({
+  children,
+  userName,
+  id,
+  producto
 }) => {
   const navigate = useNavigate();
   const { addToFavorite, removeFavorite, isFavorite } = useFavorites();
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [inCart, setInCart] = useState(() => isInCart(id ?? producto?.id));
 
-  const productId = id ?? producto?.id; 
-  const esFav = isFavorite(productId); 
+  const productId = id ?? producto?.id;
+  const esFav = isFavorite(productId);
   const infoProducto = producto || { id: productId, nombre: userName, foto: producto?.foto };
 
-  const handleFollow = (e) => {
-    e.stopPropagation(); 
-    setIsFollowing(!isFollowing);
-    console.log(isFollowing ? 'Sacar del carrito' : 'Añadir al carrito');
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    const carrito = readCart();
+    const itemExistente = carrito.find((item) => item.id === productId);
+
+    if (itemExistente) {
+      itemExistente.cantidad += 1;
+    } else {
+      carrito.push({
+        id: producto.id,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        foto: producto.foto,
+        cantidad: 1,
+        stock: producto.stock ?? 99,
+      });
+    }
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(carrito));
+    setInCart(true);
   };
 
   const handleFavoriteClick = (e) => {
@@ -42,8 +64,8 @@ const Card = ({
     return `http://localhost:8080/${value.replace(/^\/+/, '')}`;
   };
 
-  const text = isFollowing ? 'Sacar del Carrito' : 'Añadir al Carrito';
-  const buttonClass = isFollowing ? 'card__button--following' : 'card__button--not-following';
+  const text = inCart ? 'En el Carrito' : 'Añadir al Carrito';
+  const buttonClass = inCart ? 'card__button--following' : 'card__button--not-following';
   const imageSrc = normalizeImageUrl(producto?.foto);
 
   return (
@@ -107,9 +129,9 @@ const Card = ({
           </button>
         </div>
 
-        <button 
-          className={`card__button ${buttonClass}`} 
-          onClick={handleFollow}
+        <button
+          className={`card__button ${buttonClass}`}
+          onClick={handleAddToCart}
         >
           {text}
         </button>

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import './NavBar.css'
+import './css/NavBar.css'
 
 const NavBar = () => {
   const location = useLocation()
@@ -36,6 +36,9 @@ const NavBar = () => {
         </li>
         <li>
           <Link to="/favorites" className={linkClass('/favorites')}>Favoritos</Link>
+        </li>
+        <li>
+          <Link to="/cart" className={linkClass('/cart')}>Carrito</Link>
         </li>
       </ul>
     </nav>

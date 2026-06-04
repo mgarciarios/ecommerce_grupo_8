@@ -15,6 +15,8 @@
   font-family: system-ui, sans-serif;
   box-sizing: border-box;
   z-index: 9999; /* Por encima de cualquier fondo o navbar previo */
+  display:flex;
+  flex-direction:column;
 }
 
 .register-card {

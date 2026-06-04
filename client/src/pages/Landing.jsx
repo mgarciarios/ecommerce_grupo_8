@@ -1,5 +1,5 @@
-import ProductList from '../ProductList/ProductList'
-import './Landing.css'
+import ProductList from './ProductList'
+import './css/Landing.css'
 
 export default function Landing() {
   const scrollToProducts = () => {
