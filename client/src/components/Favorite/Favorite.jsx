@@ -35,7 +35,9 @@ export default function Favorite({ categoria }) {
       <h2 className="favorite__title">
         {categoria ? `Favoritos - ${categoria}` : 'Mis Favoritos'} ({filtered.length})
       </h2>
-      <div className="favorite__grid">
+      <div 
+        className="favorite__grid"
+      >
         {filtered.map((product) => {
           // Buscamos alternativas por si las propiedades se llaman distinto
           const nombreProducto = product.nombre || product.children || 'Producto sin nombre';

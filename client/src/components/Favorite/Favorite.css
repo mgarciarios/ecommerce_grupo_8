@@ -1,7 +1,6 @@
 .favorite {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 1rem;
+  margin: 0 2rem;
 }
 
 .favorite__title {
@@ -38,8 +37,9 @@
 
 .favorite__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1.5rem;
+  width: 100%;
 }
 
 .favorite__card {
@@ -48,6 +48,7 @@
   border-radius: 12px;
   overflow: hidden;
   transition: box-shadow 0.2s;
+  min-width: 0;
 }
 
 .favorite__card:hover {
