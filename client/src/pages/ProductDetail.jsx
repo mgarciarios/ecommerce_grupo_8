@@ -25,6 +25,10 @@ export default function ProductoDetalle() {
     return `http://localhost:8080/${value.replace(/^\/+/, '')}`;
   };
 
+    const handleAddToFavorite = () => {
+    dispatch(addFavorite(producto.id));
+  };
+
   useEffect(() => {
     const fetchProducto = async () => {
       try {

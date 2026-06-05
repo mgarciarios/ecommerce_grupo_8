@@ -5,6 +5,11 @@ import './css/Favorite.css';
 
 export default function Favorite({ categoria }) {
   const { favorites, removeFavorite } = useFavorites();
+  const dispatch = useDispatch();
+
+  const handleRemoveFromFavorite = (productId) => {
+    dispatch(removeFavorite(productId));
+  };
 
   // Nos aseguramos de que 'favorites' sea un array válido antes de filtrar
   const validFavorites = Array.isArray(favorites) ? favorites : [];
@@ -30,6 +35,8 @@ export default function Favorite({ categoria }) {
       </div>
     );
   }
+
+  
 
   return (
     <div className="favorite">
@@ -68,7 +75,7 @@ export default function Favorite({ categoria }) {
                 className="favorite__remove"
                 onClick={(e) => {
                   e.preventDefault(); // Evita que el click interactúe con el Link de la tarjeta
-                  removeFavorite(product.id);
+                  handleRemoveFromFavorite(product.id);
                 }}
               >
                 Quitar
