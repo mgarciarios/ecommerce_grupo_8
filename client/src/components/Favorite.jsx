@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useFavorites } from '../hooks/useContext/FavoriteProvider';
+import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
 import './css/Favorite.css';
 
 export default function Favorite({ categoria }) {
