@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../hooks/useContext/CartContext';
+import { useCart } from '../hooks/useContext/CartProvider';
 import defaultImage from '../assets/imgXdefault.jpg';
 const Cart = () => {
-  const { cartItems } = useCart();
+  const { cartItems} = useCart();
 
-  
 
   return (
     <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
@@ -15,9 +14,7 @@ const Cart = () => {
       {/* Si es falsa, no se renderiza nada. */}
       {/* true && true -> true */}
       {/* false && true -> false */}
-      {cartItems.length > 0 && (
-        <p>Tienes {cartItems.length} productos en el carrito</p>
-      )}
+      {cartItems.length > 0 && (<p>Tienes {cartItems.length} productos en el carrito</p>)}
 
       {/* Renderizado condicional con operador ternario */}
       {/* Si el carrito está vacío (cartItems.length === 0), muestra un mensaje. */}

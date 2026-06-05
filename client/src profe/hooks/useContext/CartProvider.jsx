@@ -32,7 +32,7 @@ export function CartProvider({ children }) {
   // `setCartItems` es la función que usamos para actualizar `cartItems`.
   // cartItems es el estado que contiene los productos que el usuario ha agregado al carrito. Inicialmente es un array vacío.
   const [cartItems, setCartItems] = useState([]);
-  // const [cantItems, setCantItems] = useState(0);
+  const [total, setTotal] = useState(0);
 
   // Esta es la función que los componentes usarán para agregar un producto al carrito.
   const addToCart = (product) => {
@@ -41,6 +41,7 @@ export function CartProvider({ children }) {
     // `[...prevItems, product]` crea un NUEVO array, copiando los items anteriores y añadiendo el nuevo.
     // Es crucial no mutar el estado directamente (ej. `prevItems.push(product)`).
     // React detecta cambios comparando la referencia del objeto, no el contenido. Si usas push, modifica el array en memoria pero la referencia sigue siendo la misma, así que React no sabe que algo cambió y no re-renderiza.
+    //cartItems.push(product); -> NO HACER ESTO react no detectará el cambio y no actualizará la UI
     setCartItems(prevItems => [...prevItems, product]);
     // Cuando pasas una función callback a setCartItems(), React te pasa como argumento el valor actual del estado: prevItems
     // Un mensaje en la consola para confirmar que la acción se realizó.    

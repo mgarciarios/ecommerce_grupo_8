@@ -1,7 +1,7 @@
 // Importamos React.
 import React from 'react';
 // Importamos nuestro custom hook 'useCart' para acceder al contexto del carrito.
-import { useCart } from './CartContext.jsx';
+import { useCart } from './CartProvider.jsx';
 
 // --- COMPONENTE CONSUMIDOR: EL ÍCONO/RESUMEN DEL CARRITO ---
 // Este componente es responsable únicamente de mostrar el resumen del carrito.

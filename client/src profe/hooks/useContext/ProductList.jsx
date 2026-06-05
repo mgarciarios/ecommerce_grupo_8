@@ -1,7 +1,7 @@
 // Importamos React y los hooks necesarios.
 import React, { useState, useEffect } from 'react';
 // Importamos nuestro custom hook 'useCart' para acceder al contexto del carrito.
-import { useCart } from './CartContext.jsx';
+import { useCart } from './CartProvider.jsx';
 
 
 // --- COMPONENTE CONSUMIDOR: LISTA DE PRODUCTOS ---

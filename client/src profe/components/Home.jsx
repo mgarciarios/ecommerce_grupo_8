@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react';  
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -13,6 +13,9 @@ const Home = () => {
       {/* link en react*/}
       <br />
       <Link to="/products">Ir a la lista de productos</Link>
+      {/* <Link to="/cart">Ir al carrito</Link> */}
+      <br />
+      <Link to="/counter">Ir al contador</Link>
     </div>
   );
 };

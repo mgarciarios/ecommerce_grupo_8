@@ -13,6 +13,9 @@ const ProtectedRoute = ({ children }) => {
   //para ver un ejemplo AuthContext, 
   const isAuthenticated = true;
 
+  
+  //TODO: ssanchez - utilizar operador ternario en lugar de un if 
+  // isAuthenticated ? children : <Navigate to="/login" />
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }

@@ -6,12 +6,16 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Home from './components/Home'
 import ProductList from './components/ProductList'
 import ProductDetail from './components/ProductDetail'
+import ProductDetailRedux from './components/ProductDetailRedux'
 import Cart from './components/Cart'
+import CartRedux from './components/CartRedux'
 import Checkout from './components/Checkout'
 import FormularioValidado from './formularios/FormularioValidado'
 import FormularioPago from './formularios/FormularioPago'
 import FormularioPagoReactForm from './formularios/FormularioPagoReactForm'
-import { CartProvider } from './hooks/useContext/CartContext'
+import { CartProvider } from './hooks/useContext/CartProvider'
+import Card from './ejemplos/Card'
+import Counter from './components/Counter'
 
 function App() {
   return (
@@ -24,10 +28,14 @@ function App() {
             {/* <a href="/ProductList.html">Link a productos</a> */}
             <Route path="/products" element={<ProductList />} />
             <Route path="/products/:id" element={<ProductDetail />} />
+            <Route path="/products-redux/:id" element={<ProductDetailRedux />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/cart-redux" element={<CartRedux />} />
+            <Route path="/counter" element={<Counter />} />
             <Route path="/login" element={<LoginJWTContext />} />
             <Route path="/checkout" 
               element={
+                // protected route es un componente que verifica si el usuario está autenticado antes de permitir el acceso a la ruta. Si no está autenticado, redirige al login.
                 <ProtectedRoute>
                   <Checkout />  
                 </ProtectedRoute>
@@ -40,6 +48,9 @@ function App() {
         </BrowserRouter>
       </CartProvider>  
       // </AuthProvider>
+
+
+      
   )
 }
 

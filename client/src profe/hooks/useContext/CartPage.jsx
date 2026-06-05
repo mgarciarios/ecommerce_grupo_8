@@ -3,7 +3,7 @@ import React from 'react';
 
 // --- 1. IMPORTACIÓN DE COMPONENTES Y CONTEXTO ---
 // Importamos el Provider que envolverá nuestra página para darle acceso al estado global.
-import { CartProvider } from './CartContext.jsx';
+import { CartProvider } from './CartProvider.jsx';
 // Importamos los componentes que consumirán el contexto.
 import ProductList from './ProductList.jsx';
 import CartSummary from './CartSummary.jsx';

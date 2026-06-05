@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useCart } from '../hooks/useContext/CartContext';
+import { useCart } from '../hooks/useContext/CartProvider';
 import defaultImage from '../assets/imgXdefault.jpg';
 
 const ProductDetail = () => {
@@ -63,12 +63,22 @@ const ProductDetail = () => {
   }, [id]);
 
   const handleAddToCart = () => {
+    //funcion de CartProvider que agrega el producto al carrito globalmente
     addToCart(product);
 
     // Aquí se invoca la función 'navigate' para redirigir al usuario.
     // Después de agregar un producto al carrito, se le lleva a la página '/cart'.
     navigate('/cart');
   };
+
+  // ejemplo de utilizacion del navigate para redirigir a login si el usuario no está logueado, o al carrito si ya lo está
+  const estaLogueado = () => {
+    // Verifica si el token JWT existe en localStorage para determinar si el usuario está logueado
+    const isAuth = localStorage.getItem('token');
+    isAuth ? navigate('/cart') : navigate('/login');
+    
+  }
+
 
   if (loading) return <div>Cargando producto...</div>;
   if (error) return <div>Error: {error}</div>;
