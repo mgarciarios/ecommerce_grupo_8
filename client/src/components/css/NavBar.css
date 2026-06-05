@@ -66,6 +66,27 @@
   color: #fbbf24;
 }
 
+.navbar-search {
+  background: #1a1a1e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  padding: 8px 12px;
+  width: 200px;
+  outline: none;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.navbar-search::placeholder {
+  color: #6b6b7b;
+}
+
+.navbar-search:focus {
+  border-color: #7c3aed;
+  background: #22222a;
+}
+
 .navbar-link-admin:hover {
   color: #fbbf24;
   background: rgba(251, 191, 36, 0.1);

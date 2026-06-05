@@ -1,18 +1,16 @@
 package com.uade.tpo.e_commerce3.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.uade.tpo.e_commerce3.model.Producto;
 
 
-//minimiza el boiler plate.
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
-    //findAll() ya está implementado por JpaRepository, no es necesario definirlo aquí
-    // select * from productos
 
-    //save, delete, findById, findAll, update etc. también están implementados por JpaRepository
-
-    //query methods personalizados pueden ser definidos aquí, por ejemplo:
-    //findByNombre(String nombre); 
-    //findByPrecioBetween(Double minPrecio, Double maxPrecio);
+    @Query(value = "SELECT * FROM productos WHERE nombre REGEXP :pattern", nativeQuery = true)
+    List<Producto> findByNombreRegex(@Param("pattern") String pattern);
 }

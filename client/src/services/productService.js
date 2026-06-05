@@ -107,6 +107,21 @@ export const productService = {
     }
   },
 
+  // Buscar productos por query
+  searchProductos: async (query) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/productos/search?query=${encodeURIComponent(query)}`);
+      if (!response.ok) {
+        throw new Error('Error al buscar productos');
+      }
+      const result = await response.json();
+      return result.data ?? result;
+    } catch (error) {
+      console.error('Error en searchProductos:', error);
+      throw error;
+    }
+  },
+
   // Obtener todas las categorías
   getCategorias: async () => {
     try {

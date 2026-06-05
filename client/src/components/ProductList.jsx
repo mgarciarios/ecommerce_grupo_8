@@ -1,7 +1,7 @@
 import './css/ProductList.css'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Card from '../components/Card'
+import Card from './Card'
 import { useProducts } from '../hooks/useProducts.js';
 
 export default function ListadoProductos() {

@@ -104,18 +104,6 @@ public class ProductoService {
         );
     }
 
-   /*  public ProductoDTO updateProducto(Long id, ProductoDTO producto) {
-        ProductoDTO existingProducto = getProductoById(id);
-        if (existingProducto != null) {
-            existingProducto.setNombre(producto.getNombre());
-            existingProducto.setDescripcion(producto.getDescripcion());
-            existingProducto.setPrecio(producto.getPrecio());
-            return productoRepository.save(existingProducto);
-        }
-        return null;
-    }*/
-
-
     public ProductoDTO updateProducto(Long id, ProductoDTO producto) {
     // 1. Buscamos la ENTIDAD, no el DTO (usamos findById directamente)
     Producto existingProducto = productoRepository.findById(id)
@@ -152,5 +140,34 @@ public class ProductoService {
             producto.getFoto(),
             producto.getCategorias().stream().map(Categoria::getNombre).collect(Collectors.toList())
         );
+    }
+
+
+    public List<ProductoDTO> getProductosByQuery(String query) {
+        if (query == null || query.isBlank()) {
+            return List.of();
+        }
+
+        String[] palabras = query.trim().split("\\s+");
+        String pattern = java.util.Arrays.stream(palabras)
+                .map(ProductoService::escapeRegex)
+                .collect(Collectors.joining("|"));
+
+        List<Producto> productos = productoRepository.findByNombreRegex(pattern);
+        return productos.stream()
+                .map(producto -> new ProductoDTO(
+                        producto.getId(),
+                        producto.getNombre(),
+                        producto.getDescripcion(),
+                        producto.getPrecio(),
+                        producto.getStock(),
+                        producto.getFoto(),
+                        producto.getCategorias().stream().map(Categoria::getNombre).collect(Collectors.toList())
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private static String escapeRegex(String word) {
+        return word.replaceAll("([.\\-+*?\\[\\](){}^$|\\\\])", "\\\\$1");
     }
 }

@@ -1,11 +1,20 @@
-import { Link, useLocation } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import './css/NavBar.css'
 
 const NavBar = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const [searchTerm, setSearchTerm] = useState('')
 
   const linkClass = (path) =>
     `navbar-link ${location.pathname === path ? 'navbar-link-active' : ''}`
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`)
+    }
+  }
 
   return (
     <nav className="navbar">
@@ -19,6 +28,16 @@ const NavBar = () => {
       </Link>
 
       <ul className="navbar-links">
+        <li>
+          <input
+            type="text"
+            className="navbar-search"
+            placeholder="Buscar productos..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+        </li>
         <li>
           <Link to="/productos" className={linkClass('/productos')}>Productos</Link>
         </li>

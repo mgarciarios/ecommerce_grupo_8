@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import AdminPanel from './pages/AdminPanel';
 import FavoritesList from './pages/FavoritesList';
 import Cart from './pages/Cart';
+import Search from './pages/Search';
 import NavBar from './components/NavBar';
 
 function AppContent() {
@@ -28,6 +29,7 @@ function AppContent() {
         <Route path="/favorites/:categoria" element={<FavoritesList />} />
         <Route path="/favorites" element={<FavoritesList />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/search" element={<Search />} />
         <Route path="*" element={<Navigate to="/productos" replace />} />
       </Routes>
     </>

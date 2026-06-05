@@ -1,4 +1,4 @@
-import ProductList from './ProductList'
+import ProductList from '../components/ProductList'
 import './css/Landing.css'
 
 export default function Landing() {

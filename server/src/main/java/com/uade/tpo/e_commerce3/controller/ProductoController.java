@@ -104,4 +104,15 @@ public class ProductoController {
             .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<ProductoDTO>>> searchProductos(@RequestParam String query) {
+        List<ProductoDTO> productosEncontrados = productoService.getProductosByQuery(query);
+        ApiResponse<List<ProductoDTO>> response = ApiResponse.<List<ProductoDTO>>builder()
+            .mensaje("Se encontraron " + productosEncontrados.size() + " productos para la búsqueda: " + query)
+            .data(productosEncontrados)
+            .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }
