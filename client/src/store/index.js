@@ -6,9 +6,7 @@ import favoriteReducer from './slices/favoriteSlice';
 // Crea el store global, agrupa todos los reducers (contextos o estados globales) en un solo objeto
 export const store = configureStore({
   reducer: { 
-    counter: counterReducer, // Gestiona el estado del contador
     // cartReducer cumple la función de CartProvider en useContext
-    cart: cartReducer, // Gestiona el estado del carrito
     favorite: favoriteReducer, // Gestiona el estado de los favoritos (si lo tienes)
     // user: userReducer, // Gestiona el estado del usuario (si lo tienes)
     // favoritos: favoritesReducer, // Gestiona el estado de los favoritos (si lo tienes)
