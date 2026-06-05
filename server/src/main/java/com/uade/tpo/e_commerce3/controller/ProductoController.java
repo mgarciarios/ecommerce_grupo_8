@@ -106,10 +106,10 @@ public class ProductoController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<ProductoDTO>>> searchProductos(@RequestParam String query) {
-        List<ProductoDTO> productosEncontrados = productoService.getProductosByQuery(query);
+    public ResponseEntity<ApiResponse<List<ProductoDTO>>> searchProductos(@RequestParam String query, @RequestParam(required = false) List<String> categorias) {
+        List<ProductoDTO> productosEncontrados = productoService.getProductosByQuery(query, categorias);
         ApiResponse<List<ProductoDTO>> response = ApiResponse.<List<ProductoDTO>>builder()
-            .mensaje("Se encontraron " + productosEncontrados.size() + " productos para la búsqueda: " + query)
+            .mensaje("Se encontraron " + productosEncontrados.size() + " productos para la búsqueda: " + query + (categorias != null && !categorias.isEmpty() ? " en las categorías: " + String.join(", ", categorias) : ""))
             .data(productosEncontrados)
             .build();
         return new ResponseEntity<>(response, HttpStatus.OK);

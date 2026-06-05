@@ -143,7 +143,7 @@ public class ProductoService {
     }
 
 
-    public List<ProductoDTO> getProductosByQuery(String query) {
+    public List<ProductoDTO> getProductosByQuery(String query, List<String> categorias) {
         if (query == null || query.isBlank()) {
             return List.of();
         }
@@ -153,7 +153,12 @@ public class ProductoService {
                 .map(ProductoService::escapeRegex)
                 .collect(Collectors.joining("|"));
 
-        List<Producto> productos = productoRepository.findByNombreRegex(pattern);
+        List<Producto> productos;
+        if (categorias != null && !categorias.isEmpty()) {
+            productos = productoRepository.findByNombreRegexAndCategoria(pattern, categorias);
+        } else {
+            productos = productoRepository.findByNombreRegex(pattern);
+        }
         return productos.stream()
                 .map(producto -> new ProductoDTO(
                         producto.getId(),

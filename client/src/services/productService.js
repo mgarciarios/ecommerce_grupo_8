@@ -108,24 +108,28 @@ export const productService = {
   },
 
   // Buscar productos por query
-  searchProductos: async (query) => {
+  searchProductos: async (query, categorias = []) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/productos/search?query=${encodeURIComponent(query)}`);
+      const params = new URLSearchParams()
+      params.append('query', query)
+      categorias.forEach((cat) => params.append('categorias', cat))
+
+      const response = await fetch(`${API_BASE_URL}/productos/search?${params.toString()}`)
       if (!response.ok) {
-        throw new Error('Error al buscar productos');
+        throw new Error('Error al buscar productos')
       }
-      const result = await response.json();
-      return result.data ?? result;
+      const result = await response.json()
+      return result.data ?? result
     } catch (error) {
-      console.error('Error en searchProductos:', error);
-      throw error;
+      console.error('Error en searchProductos:', error)
+      throw error
     }
   },
 
   // Obtener todas las categorías
   getCategorias: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/categorias`);
+      const response = await fetch(`${API_BASE_URL}/productos/categorias`);
       if (!response.ok) {
         throw new Error('Error al obtener categorías');
       }

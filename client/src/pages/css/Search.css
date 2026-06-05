@@ -1,8 +1,16 @@
 .search-page {
+  display: flex;
+  align-items: flex-start;
   width: 100%;
-  padding: 40px 64px;
+  min-height: calc(100vh - 60px);
   background: var(--bg);
   box-sizing: border-box;
+}
+
+.search-content {
+  flex: 1;
+  padding: 40px 48px;
+  min-width: 0;
 }
 
 .search-header {
@@ -45,6 +53,10 @@
 
 @media (max-width: 720px) {
   .search-page {
+    flex-direction: column;
+  }
+
+  .search-content {
     padding: 24px 20px;
   }
 
