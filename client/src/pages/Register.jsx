@@ -154,7 +154,7 @@ export default function Register() {
 
         {/* Mostrar mensaje de error detallado */}
         {error && (
-          <div className="register-error" style={{ backgroundColor: "#fee2e2", color: "#dc2626", padding: "10px", borderRadius: "8px", marginBottom: "1rem", fontSize: "14px", wordBreak: "break-word" }}>
+          <div className="register-error" role="alert" aria-live="assertive" style={{ backgroundColor: "#fee2e2", color: "#dc2626", padding: "10px", borderRadius: "8px", marginBottom: "1rem", fontSize: "14px", wordBreak: "break-word" }}>
             <strong>Error:</strong> {error}
           </div>
         )}
@@ -174,6 +174,7 @@ export default function Register() {
                 onChange={handleChange}
                 className="register-input"
                 disabled={loading}
+                aria-invalid={Boolean(error && !form.nombre)}
               />
             </div>
             <div className="register-field register-field-flex">
@@ -188,6 +189,7 @@ export default function Register() {
                 onChange={handleChange}
                 className="register-input"
                 disabled={loading}
+                aria-invalid={Boolean(error && !form.apellido)}
               />
             </div>
           </div>
@@ -207,6 +209,7 @@ export default function Register() {
                 onChange={handleChange}
                 className="register-input register-input-nombreUsuario"
                 disabled={loading}
+                aria-invalid={Boolean(error && !form.nombreUsuario)}
               />
             </div>
           </div>
@@ -229,6 +232,7 @@ export default function Register() {
                 onChange={handleChange}
                 className="register-input"
                 disabled={loading}
+                aria-invalid={Boolean(error && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))}
               />
             </div>
           </div>
@@ -251,6 +255,7 @@ export default function Register() {
                 onChange={handleChange}
                 className="register-input register-input-password"
                 disabled={loading}
+                aria-invalid={Boolean(error && form.password.length < 6)}
               />
               <button
                 type="button"

@@ -43,8 +43,16 @@
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  border-color: #1f2937;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.14);
+}
+
+.btn:focus-visible,
+.form-group input:focus-visible,
+.form-group textarea:focus-visible,
+.form-group select:focus-visible {
+  outline: 3px solid #111827;
+  outline-offset: 2px;
 }
 
 .form-group input.input-error,
@@ -110,30 +118,31 @@
 }
 
 .btn-primary {
-  background-color: #4a90e2;
+  background-color: #111827;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #357abd;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+  background-color: #1f2937;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.18);
 }
 
 .btn-primary:disabled {
-  background-color: #bdc3c7;
+  background-color: #9ca3af;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .btn-secundario {
-  background-color: #ecf0f1;
-  color: #333;
-  border: 2px solid #bdc3c7;
+  background-color: #f3f4f6;
+  color: #111827;
+  border: 2px solid #cbd5e1;
 }
 
-.btn-secundario:hover {
-  background-color: #d5dbdb;
-  border-color: #95a5a6;
+.btn-secundario:hover:not(:disabled) {
+  background-color: #e5e7eb;
+  border-color: #94a3b8;
 }
 
 /* Estilos para inputs numéricos */

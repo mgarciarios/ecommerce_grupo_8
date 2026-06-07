@@ -17,8 +17,19 @@
   text-decoration: none;
 }
 
-.login-back-link:hover {
-  color: #555;
+.login-back-link:hover,
+.login-back-link:focus-visible {
+  color: #111;
+  text-decoration: underline;
+}
+
+.login-back-link:focus-visible,
+.login-input:focus-visible,
+.login-eye-btn:focus-visible,
+.login-btn-primary:focus-visible,
+.login-footer-link:focus-visible {
+  outline: 3px solid #111;
+  outline-offset: 2px;
 }
 
 .login-card {
@@ -93,12 +104,18 @@
   height: 38px;
   padding: 0 12px 0 34px;
   font-size: 14px;
-  border: 1px solid #e5e5e3;
+  border: 1px solid #cfcfc9;
   border-radius: 8px;
   outline: none;
   background-color: #fff;
   color: #111;
   box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login-input:focus {
+  border-color: #111;
+  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.12);
 }
 
 .login-input-password {
@@ -112,9 +129,14 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  color: #aaa;
+  color: #666;
   display: flex;
   align-items: center;
+}
+
+.login-eye-btn:hover,
+.login-eye-btn:focus-visible {
+  color: #111;
 }
 
 .login-row {
@@ -151,15 +173,21 @@
   border: none;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   margin-bottom: 1.5rem;
-  transition: opacity 0.2s;
+  transition: transform 0.15s ease, opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.login-btn-primary:hover:not(:disabled) {
+  background-color: #222;
+  transform: translateY(-1px);
 }
 
 .login-btn-primary:disabled {
-  opacity: 0.7;
+  opacity: 0.65;
   cursor: not-allowed;
+  transform: none;
 }
 
 .login-footer {

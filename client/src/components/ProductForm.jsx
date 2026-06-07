@@ -134,8 +134,10 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
           onChange={manejarCambio}
           placeholder="Ej: Laptop Dell"
           className={errores.nombre ? 'input-error' : ''}
+          aria-invalid={Boolean(errores.nombre)}
+          aria-describedby={errores.nombre ? 'nombre-error' : undefined}
         />
-        {errores.nombre && <span className="error-mensaje">{errores.nombre}</span>}
+        {errores.nombre && <span id="nombre-error" className="error-mensaje">{errores.nombre}</span>}
       </div>
 
       <div className="form-group">
@@ -148,8 +150,10 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
           placeholder="Describe el producto en detalle"
           rows="4"
           className={errores.descripcion ? 'input-error' : ''}
+          aria-invalid={Boolean(errores.descripcion)}
+          aria-describedby={errores.descripcion ? 'descripcion-error' : undefined}
         />
-        {errores.descripcion && <span className="error-mensaje">{errores.descripcion}</span>}
+        {errores.descripcion && <span id="descripcion-error" className="error-mensaje">{errores.descripcion}</span>}
       </div>
 
       <div className="form-row">
@@ -165,8 +169,10 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
             step="0.01"
             min="0"
             className={errores.precio ? 'input-error' : ''}
+            aria-invalid={Boolean(errores.precio)}
+            aria-describedby={errores.precio ? 'precio-error' : undefined}
           />
-          {errores.precio && <span className="error-mensaje">{errores.precio}</span>}
+          {errores.precio && <span id="precio-error" className="error-mensaje">{errores.precio}</span>}
         </div>
 
         <div className="form-group">
@@ -180,8 +186,10 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
             placeholder="0"
             min="0"
             className={errores.stock ? 'input-error' : ''}
+            aria-invalid={Boolean(errores.stock)}
+            aria-describedby={errores.stock ? 'stock-error' : undefined}
           />
-          {errores.stock && <span className="error-mensaje">{errores.stock}</span>}
+          {errores.stock && <span id="stock-error" className="error-mensaje">{errores.stock}</span>}
         </div>
       </div>
 
@@ -193,6 +201,8 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
           value={formData.categoria}
           onChange={manejarCambio}
           className={errores.categoria ? 'input-error' : ''}
+          aria-invalid={Boolean(errores.categoria)}
+          aria-describedby={errores.categoria ? 'categoria-error' : undefined}
         >
           <option value="">Selecciona una categoría</option>
           {categorias.map((cat) => (
@@ -201,7 +211,7 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
             </option>
           ))}
         </select>
-        {errores.categoria && <span className="error-mensaje">{errores.categoria}</span>}
+        {errores.categoria && <span id="categoria-error" className="error-mensaje">{errores.categoria}</span>}
       </div>
 
       <div className="form-botones">

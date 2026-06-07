@@ -84,12 +84,13 @@ export default function Login() {
         <p className="login-subtitle">Ingresá a tu cuenta para continuar</p>
 
         {error && (
-          <div className="login-error">
+          <div className="login-error" role="alert" aria-live="assertive">
             {error}
           </div>
         )}
 
-        <div className="login-field">
+        <form className="login-form" onSubmit={handleLogin} noValidate>
+          <div className="login-field">
           <label className="login-label" htmlFor="email">Correo electrónico</label>
           <div className="login-input-wrap">
             <svg className="login-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -105,6 +106,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               className="login-input"
               disabled={loading}
+              aria-invalid={Boolean(error && !email)}
             />
           </div>
         </div>
@@ -125,6 +127,7 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               className="login-input login-input-password"
               disabled={loading}
+              aria-invalid={Boolean(error && !password)}
             />
             <button
               type="button"
@@ -161,9 +164,10 @@ export default function Login() {
           <Link to="/login" className="login-forgot">¿Olvidaste tu contraseña?</Link>
         </div>
 
-        <button onClick={handleLogin} className="login-btn-primary" disabled={loading}>
-          {loading ? "Iniciando sesión..." : "Iniciar sesión"}
-        </button>
+          <button type="submit" className="login-btn-primary" disabled={loading}>
+            {loading ? "Iniciando sesión..." : "Iniciar sesión"}
+          </button>
+        </form>
 
         <p className="login-footer">
           ¿No tenés cuenta?{" "}
