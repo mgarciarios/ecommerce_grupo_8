@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import './css/NavBar.css'
+import { isAdminUser, isAuthenticated } from '../utils/auth'
 
 const NavBar = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
+  const canAccessAdmin = isAuthenticated() && isAdminUser()
 
   const linkClass = (path) =>
     `navbar-link ${location.pathname === path ? 'navbar-link-active' : ''}`
@@ -50,9 +52,11 @@ const NavBar = () => {
         <li>
           <Link to="/profile" className={linkClass('/profile')}>Perfil</Link>
         </li>
-        <li>
-          <Link to="/AdminPanel" className={`navbar-link navbar-link-admin ${location.pathname === '/AdminPanel' ? 'navbar-link-active' : ''}`}>Admin</Link>
-        </li>
+        {canAccessAdmin && (
+          <li>
+            <Link to="/AdminPanel" className={`navbar-link navbar-link-admin ${location.pathname === '/AdminPanel' ? 'navbar-link-active' : ''}`}>Admin</Link>
+          </li>
+        )}
         <li>
           <Link to="/favorites" className={linkClass('/favorites')}>Favoritos</Link>
         </li>

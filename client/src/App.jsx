@@ -10,6 +10,19 @@ import FavoritesList from './pages/FavoritesList';
 import Cart from './pages/Cart';
 import Search from './pages/Search';
 import NavBar from './components/NavBar';
+import { isAuthenticated, isAdminUser } from './utils/auth';
+
+function AdminRoute({ children }) {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!isAdminUser()) {
+    return <Navigate to="/productos" replace />;
+  }
+
+  return children;
+}
 
 function AppContent() {
   const location = useLocation();
@@ -25,7 +38,14 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/AdminPanel" element={<AdminPanel />} />
+        <Route
+          path="/AdminPanel"
+          element={
+            <AdminRoute>
+              <AdminPanel />
+            </AdminRoute>
+          }
+        />
         <Route path="/favorites/:categoria" element={<FavoritesList />} />
         <Route path="/favorites" element={<FavoritesList />} />
         <Route path="/cart" element={<Cart />} />
