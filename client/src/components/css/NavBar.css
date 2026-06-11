@@ -114,6 +114,23 @@
   background: rgba(251, 191, 36, 0.1);
 }
 
+.navbar-logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: #ff6b6b;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.navbar-logout-btn:hover {
+  color: #ff5252;
+  background: rgba(255, 107, 107, 0.1);
+}
+
 @media (max-width: 980px) {
   .navbar {
     padding: 0 18px;

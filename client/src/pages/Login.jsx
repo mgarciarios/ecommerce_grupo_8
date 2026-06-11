@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../store/slices/userSlice";
 import "./css/Login.css";
 
 export default function Login() {
@@ -10,6 +12,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -47,13 +50,11 @@ export default function Login() {
         throw new Error(data.message || "Error al iniciar sesión");
       }
 
-      if (remember) {
-        localStorage.setItem("token", data.token);
-      } else {
-        sessionStorage.setItem("token", data.token);
-      }
-
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // Usar Redux para guardar el token y usuario
+      dispatch(login({
+        user: data.user,
+        token: data.token
+      }));
 
       console.log("Login exitoso:", data);
 

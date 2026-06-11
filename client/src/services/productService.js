@@ -1,6 +1,13 @@
 // productService.js - Servicio para gestionar productos
+import { store } from '../store';
 
 const API_BASE_URL = 'http://localhost:8080/api';
+
+// Función helper para obtener el token del Redux store
+const getToken = () => {
+  const state = store.getState();
+  return state.user?.token || null;
+};
 
 export const productService = {
   // Obtener todos los productos
@@ -34,7 +41,7 @@ export const productService = {
   // Crear un nuevo producto
   createProducto: async (productoData) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       
       const response = await fetch(`${API_BASE_URL}/productos`, {
         method: 'POST',
@@ -60,7 +67,7 @@ export const productService = {
   // Actualizar un producto
   updateProducto: async (id, productoData) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       
       const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
         method: 'PUT',
@@ -86,7 +93,7 @@ export const productService = {
   // Eliminar un producto
   deleteProducto: async (id) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getToken();
       
       const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
         method: 'DELETE',

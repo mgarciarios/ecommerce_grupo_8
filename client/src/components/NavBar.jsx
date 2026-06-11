@@ -1,14 +1,20 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../store/slices/userSlice'
 import './css/NavBar.css'
-import { isAdminUser, isAuthenticated } from '../utils/auth'
+import { isAdminUser } from '../utils/auth'
 
 const NavBar = () => {
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [searchTerm, setSearchTerm] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
-  const canAccessAdmin = isAuthenticated() && isAdminUser()
+  
+  // Obtener estado de autenticación y usuario de Redux
+  const { isAuthenticated, user } = useSelector(state => state.user)
+  const canAccessAdmin = isAuthenticated && user && isAdminUser()
 
   const linkClass = (path) =>
     `navbar-link ${location.pathname === path ? 'navbar-link-active' : ''}`
@@ -17,6 +23,12 @@ const NavBar = () => {
     if (e.key === 'Enter' && searchTerm.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`)
     }
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
+    closeMenu()
+    navigate('/productos')
   }
 
   const closeMenu = () => setMenuOpen(false)
@@ -67,6 +79,18 @@ const NavBar = () => {
         <li>
           <Link to="/profile" className={linkClass('/profile')} onClick={closeMenu}>Perfil</Link>
         </li>
+        {isAuthenticated && (
+          <li>
+            <button
+              type="button"
+              className="navbar-link navbar-logout-btn"
+              onClick={handleLogout}
+              title="Cerrar sesión"
+            >
+              Salir
+            </button>
+          </li>
+        )}
         {canAccessAdmin && (
           <li>
             <Link to="/AdminPanel" className={`navbar-link navbar-link-admin ${location.pathname === '/AdminPanel' ? 'navbar-link-active' : ''}`} onClick={closeMenu}>Admin</Link>
