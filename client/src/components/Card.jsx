@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useFavorites } from '../hooks/useContext/FavoriteProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
 import './css/Card.css';
 
 const STORAGE_KEY = 'cart';
@@ -16,11 +17,12 @@ const Card = ({
   producto
 }) => {
   const navigate = useNavigate();
-  const { addToFavorite, removeFavorite, isFavorite } = useFavorites();
+  const dispatch = useDispatch();
+  const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
   const [inCart, setInCart] = useState(() => isInCart(id ?? producto?.id));
 
   const productId = id ?? producto?.id;
-  const esFav = isFavorite(productId);
+  const esFav = favorites.some((item) => item.id === productId);
   const infoProducto = producto || { id: productId, nombre: userName, foto: producto?.foto };
 
   const handleAddToCart = (e) => {
@@ -48,9 +50,9 @@ const Card = ({
   const handleFavoriteClick = (e) => {
     e.stopPropagation(); 
     if (esFav) {
-      removeFavorite(productId);
+      dispatch(removeFavorite(productId));
     } else {
-      addToFavorite(infoProducto);
+      dispatch(addFavorite(infoProducto));
     }
   };
 

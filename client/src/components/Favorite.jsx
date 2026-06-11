@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import { useFavorites } from '../hooks/useContext/FavoriteProvider';
-import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeFavorite } from '../store/slices/favoriteSlice';
 import './css/Favorite.css';
 
 export default function Favorite({ categoria }) {
-  const { favorites, removeFavorite } = useFavorites();
   const dispatch = useDispatch();
+  const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
 
   const handleRemoveFromFavorite = (productId) => {
     dispatch(removeFavorite(productId));

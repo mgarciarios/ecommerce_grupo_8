@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
-import { useFavorites } from '../hooks/useContext/FavoriteProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
 import './css/ProductDetail.css';
 
 export default function ProductoDetalle() {
@@ -9,7 +10,8 @@ export default function ProductoDetalle() {
   const navigate = useNavigate();
   const { obtenerProductoPorId } = useProducts();
   
-  const { addToFavorite, removeFavorite, isFavorite } = useFavorites();
+  const dispatch = useDispatch();
+  const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
 
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -25,8 +27,9 @@ export default function ProductoDetalle() {
     return `http://localhost:8080/${value.replace(/^\/+/, '')}`;
   };
 
-    const handleAddToFavorite = () => {
-    dispatch(addFavorite(producto.id));
+  const handleAddToFavorite = () => {
+    if (!producto) return;
+    dispatch(addFavorite(producto));
   };
 
   useEffect(() => {
@@ -88,10 +91,11 @@ export default function ProductoDetalle() {
 
  const handleFavoriteClick = () => {
   if (!producto) return;
-  if (isFavorite(producto.id)) {
-    removeFavorite(producto.id); // Borra usando el ID
+  const esFav = favorites.some((f) => f.id === producto.id);
+  if (esFav) {
+    dispatch(removeFavorite(producto.id));
   } else {
-    addToFavorite(producto);   // Mandamos el objeto "producto" real que vino del backend
+    dispatch(addFavorite(producto));
   }
 };
 
@@ -259,9 +263,9 @@ export default function ProductoDetalle() {
                     justifyContent: 'center',
                     gap: '8px',
                     transition: 'all 0.3s ease',
-                    background: isFavorite(producto.id) ? '#ffebee' : 'transparent',
-                    color: isFavorite(producto.id) ? '#c62828' : '#000000',
-                    border: isFavorite(producto.id) ? '2px solid #ef5350' : '2px solid #333333',
+                    background: favorites.some((f) => f.id === producto.id) ? '#ffebee' : 'transparent',
+                    color: favorites.some((f) => f.id === producto.id) ? '#c62828' : '#000000',
+                    border: favorites.some((f) => f.id === producto.id) ? '2px solid #ef5350' : '2px solid #333333',
                   }}
                   onMouseEnter={(e) => {
                     if (!isFavorite(producto.id)) e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
@@ -270,7 +274,7 @@ export default function ProductoDetalle() {
                     if (!isFavorite(producto.id)) e.currentTarget.style.background = 'transparent';
                   }}
                 >
-                  {isFavorite(producto.id) ? '❤️ Quitar de favoritos' : '🖤 Añadir a favoritos'}
+                    {favorites.some((f) => f.id === producto.id) ? '❤️ Quitar de favoritos' : '🖤 Añadir a favoritos'}
                 </button>
               </div>
               <div className="detalle-acciones">
