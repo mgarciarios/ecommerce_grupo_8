@@ -90,7 +90,7 @@ export default function Cart() {
       </div>
 
       <div className="cart-footer">
-        <span className="cart-total">Total: ${total}</span>
+        <span className="cart-total">Total: ${total.toFixed(2)}</span>
         <div className="cart-actions">
           <Link to="/productos" className="cart-btn-back">
             Seguir comprando

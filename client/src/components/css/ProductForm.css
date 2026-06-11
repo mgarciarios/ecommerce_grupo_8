@@ -2,7 +2,7 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 30px;
-  background: #f9f9f9;
+  background: #FFFFFF;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -10,7 +10,7 @@
 .product-form h2 {
   margin-top: 0;
   margin-bottom: 30px;
-  color: #333;
+  color: #203C60;
   font-size: 24px;
   text-align: center;
 }
@@ -24,7 +24,7 @@
 .form-group label {
   margin-bottom: 8px;
   font-weight: 600;
-  color: #333;
+  color: #203C60;
   font-size: 14px;
 }
 
@@ -37,21 +37,28 @@
   font-size: 14px;
   font-family: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #999999;
 }
 
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #1f2937;
-  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.14);
+  border-color: #5A7BA0;
+  box-shadow: 0 0 0 3px rgba(90, 123, 160, 0.15);
 }
 
 .btn:focus-visible,
 .form-group input:focus-visible,
 .form-group textarea:focus-visible,
 .form-group select:focus-visible {
-  outline: 3px solid #111827;
+  outline: 3px solid #5A7BA0;
   outline-offset: 2px;
 }
 
@@ -60,6 +67,7 @@
 .form-group select.input-error {
   border-color: #e74c3c;
   background-color: #fadbd8;
+  color: #000000;
 }
 
 .error-mensaje {
@@ -118,14 +126,14 @@
 }
 
 .btn-primary {
-  background-color: #111827;
+  background-color: #203C60;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #1f2937;
+  background-color: #162d45;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.18);
+  box-shadow: 0 4px 12px rgba(32, 60, 96, 0.18);
 }
 
 .btn-primary:disabled {

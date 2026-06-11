@@ -24,7 +24,7 @@ export default function CartCard({ item, onUpdateCantidad, onRemove }) {
         <Link to={`/producto/${item.id}`} className="cart-item-name">
           {item.nombre}
         </Link>
-        <span className="cart-item-price">${item.precio}</span>
+        <span className="cart-item-price">${item.precio.toFixed(2)}</span>
       </div>
 
       <div className="cart-item-qty">
@@ -46,7 +46,7 @@ export default function CartCard({ item, onUpdateCantidad, onRemove }) {
       </div>
 
       <span className="cart-item-subtotal">
-        ${item.precio * item.cantidad}
+        ${(item.precio * item.cantidad).toFixed(2)}
       </span>
 
       <button

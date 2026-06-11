@@ -1,5 +1,6 @@
 .products-table-container {
   overflow-x: auto;
+  background-color: #FFFFFF;
 }
 
 .products-table {
@@ -9,15 +10,15 @@
 }
 
 .products-table thead {
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #dee2e6;
+  background-color: #203C60;
+  border-bottom: 2px solid #203C60;
 }
 
 .products-table th {
   padding: 15px;
   text-align: left;
   font-weight: 600;
-  color: #333;
+  color: #FFFFFF;
   white-space: nowrap;
 }
 
@@ -49,15 +50,15 @@
 
 .precio {
   font-weight: 600;
-  color: #27ae60;
+  color: #00796B;
   font-size: 15px;
 }
 
 .stock {
   padding: 4px 8px;
   border-radius: 4px;
-  background-color: #d4edda;
-  color: #155724;
+  background-color: #E8F5E9;
+  color: #4A4A4A;
   font-weight: 600;
 }
 
@@ -94,11 +95,13 @@
 }
 
 .btn-editar {
-  background-color: #e3f2fd;
+  background-color: #E8F2FF;
+  color: #203C60;
 }
 
 .btn-editar:hover:not(:disabled) {
-  background-color: #bbdefb;
+  background-color: #D0E3FF;
+  color: #203C60;
 }
 
 .btn-eliminar {
