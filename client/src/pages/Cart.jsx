@@ -1,41 +1,64 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import CartCard from '../components/CartCard';
+import {
+  fetchCart,
+  updateCartItemQuantity,
+  removeItemFromCart,
+  clearUserCart,
+  selectCartItems,
+  selectCartTotal,
+  selectCartStatus,
+  selectCartError,
+} from '../store/slices/cartSlice';
 import './css/Cart.css';
 
-const STORAGE_KEY = 'cart';
-
-const readCart = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
 export default function Cart() {
-  const [items, setItems] = useState(readCart);
+  const dispatch = useDispatch();
+  const items = useSelector(selectCartItems);
+  const total = useSelector(selectCartTotal);
+  const status = useSelector(selectCartStatus);
+  const error = useSelector(selectCartError);
 
-  const syncStorage = (nuevos) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nuevos));
-    setItems(nuevos);
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
+
+  const handleUpdateCantidad = (id, delta) => {
+    dispatch(updateCartItemQuantity({ id, delta }));
   };
 
-  const updateCantidad = (id, delta) => {
-    const nuevos = items
-      .map((item) => {
-        if (item.id !== id) return item;
-        const nuevaCantidad = item.cantidad + delta;
-        if (nuevaCantidad < 1 || nuevaCantidad > item.stock) return item;
-        return { ...item, cantidad: nuevaCantidad };
-      });
-    syncStorage(nuevos);
+  const handleRemove = (id) => {
+    dispatch(removeItemFromCart(id));
   };
 
-  const removeItem = (id) => {
-    syncStorage(items.filter((item) => item.id !== id));
-  };
-
-  const finalizarCompra = () => {
+  const handleFinalizarCompra = () => {
+    dispatch(clearUserCart());
     alert('Compra finalizada!');
-    syncStorage([]);
   };
 
-  const total = items.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+  if (status === 'loading') {
+    return (
+      <div className="cart-container">
+        <p className="cart-loading">Cargando carrito...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="cart-container">
+        <div className="cart-empty">
+          <h2>Error al cargar el carrito</h2>
+          <p>{error}</p>
+          <Link to="/productos" className="cart-btn-back">
+            Ir a productos
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -60,8 +83,8 @@ export default function Cart() {
           <CartCard
             key={item.id}
             item={item}
-            onUpdateCantidad={updateCantidad}
-            onRemove={removeItem}
+            onUpdateCantidad={handleUpdateCantidad}
+            onRemove={handleRemove}
           />
         ))}
       </div>
@@ -72,7 +95,7 @@ export default function Cart() {
           <Link to="/productos" className="cart-btn-back">
             Seguir comprando
           </Link>
-          <button onClick={finalizarCompra} className="cart-btn-checkout">
+          <button onClick={handleFinalizarCompra} className="cart-btn-checkout">
             Finalizar compra
           </button>
         </div>

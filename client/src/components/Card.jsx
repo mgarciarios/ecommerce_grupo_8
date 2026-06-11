@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
+import { addItemToCart, selectCartItems } from '../store/slices/cartSlice';
 import './css/Card.css';
-
-const STORAGE_KEY = 'cart';
-
-const readCart = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-const isInCart = (id) => readCart().some((item) => item.id === id);
 
 const Card = ({
   children,
@@ -19,32 +14,23 @@ const Card = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
-  const [inCart, setInCart] = useState(() => isInCart(id ?? producto?.id));
+  const cartItems = useSelector(selectCartItems);
 
   const productId = id ?? producto?.id;
   const esFav = favorites.some((item) => item.id === productId);
+  const inCart = cartItems.some((item) => item.id === productId);
   const infoProducto = producto || { id: productId, nombre: userName, foto: producto?.foto };
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    const carrito = readCart();
-    const itemExistente = carrito.find((item) => item.id === productId);
-
-    if (itemExistente) {
-      itemExistente.cantidad += 1;
-    } else {
-      carrito.push({
-        id: producto.id,
-        nombre: producto.nombre,
-        precio: producto.precio,
-        foto: producto.foto,
-        cantidad: 1,
-        stock: producto.stock ?? 99,
-      });
-    }
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(carrito));
-    setInCart(true);
+    dispatch(addItemToCart({
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      foto: producto.foto,
+      cantidad: 1,
+      stock: producto.stock ?? 99,
+    }));
   };
 
   const handleFavoriteClick = (e) => {

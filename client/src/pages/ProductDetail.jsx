@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
+import { addItemToCart } from '../store/slices/cartSlice';
 import './css/ProductDetail.css';
 
 export default function ProductoDetalle() {
@@ -69,23 +70,14 @@ export default function ProductoDetalle() {
   };
 
   const agregarAlCarrito = () => {
-    const carritoActual = JSON.parse(localStorage.getItem('cart') || '[]');
-    const itemExistente = carritoActual.find(item => item.id === producto.id);
-
-    if (itemExistente) {
-      itemExistente.cantidad += cantidad;
-    } else {
-      carritoActual.push({
-        id: producto.id,
-        nombre: producto.nombre,
-        precio: producto.precio,
-        foto: producto.foto,
-        cantidad,
-        stock: producto.stock,
-      });
-    }
-
-    localStorage.setItem('cart', JSON.stringify(carritoActual));
+    dispatch(addItemToCart({
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      foto: producto.foto,
+      cantidad,
+      stock: producto.stock,
+    }));
     alert(`¡${producto?.nombre} agregado al carrito!`);
   };
 
