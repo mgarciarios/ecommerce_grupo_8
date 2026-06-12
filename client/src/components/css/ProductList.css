@@ -119,6 +119,26 @@ code {
   height: 100%;
 }
 
+.card {
+  opacity: 0;
+}
+
+.card.visible {
+  animation: cardAnimation 2s ease 1 normal forwards;
+}
+
+@keyframes cardAnimation {
+	0% {
+		opacity: 0;
+		transform: translateY(50px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
 main.product-list-page {
   width: 100%;
   padding: 24px 20px;

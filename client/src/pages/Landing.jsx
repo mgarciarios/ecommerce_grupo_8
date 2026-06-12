@@ -33,7 +33,7 @@ export default function Landing() {
       </section>
 
       <section className="features">
-        <div className="feature">
+        <div className="feature feature1">
           <div className="feature-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -42,7 +42,7 @@ export default function Landing() {
           <h3>Compra segura</h3>
           <p>Tus datos protegidos siempre</p>
         </div>
-        <div className="feature">
+        <div className="feature feature2">
           <div className="feature-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="1" y="3" width="15" height="13" />
@@ -54,7 +54,7 @@ export default function Landing() {
           <h3>Envíos rápidos</h3>
           <p>Recibí tu pedido en 48hs</p>
         </div>
-        <div className="feature">
+        <div className="feature feature3">
           <div className="feature-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />

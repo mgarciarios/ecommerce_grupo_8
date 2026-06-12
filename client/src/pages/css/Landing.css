@@ -179,6 +179,55 @@
   text-align: center;
   gap: 8px;
   max-width: 180px;
+  opacity: 0;
+}
+
+.feature1{
+  animation: feature1Anim 2s ease 0.5s 1 normal forwards;
+}
+
+@keyframes feature1Anim {
+	0% {
+		opacity: 0;
+		transform: translateY(-50px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.feature2{
+  animation: feature2Anim 2s ease 1s 1 normal forwards;
+}
+
+@keyframes feature2Anim {
+	0% {
+		opacity: 0;
+		transform: translateY(-50px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.feature3{
+  animation: feature3Anim 2s ease 1.5s 1 normal forwards;
+}
+
+@keyframes feature3Anim {
+	0% {
+		opacity: 0;
+		transform: translateY(-50px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .feature-icon {
