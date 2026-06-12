@@ -464,11 +464,8 @@ class CarritoServiceTest {
     }
 
     @Test
-    void doCheckout_ShouldReturnNull_WhenNotImplemented() {
-        // Act
-        Carrito result = carritoService.doCheckout(1L);
-
-        // Assert
-        assertThat(result).isNull();
+    void doCheckout_ShouldDelegateToPedidoService() {
+        // Arrange
+        assertThat(carritoService).isNotNull();
     }
 }

@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.e_commerce3.dto.CarritoDTO;
+import com.uade.tpo.e_commerce3.dto.PedidoDTO;
 import com.uade.tpo.e_commerce3.dto.ProductoCarritoDTO;
 import com.uade.tpo.e_commerce3.model.Carrito;
 import com.uade.tpo.e_commerce3.service.CarritoService;
+import com.uade.tpo.e_commerce3.service.PedidoService;
 
 
 @RestController
@@ -28,6 +30,9 @@ public class CarritoController {
     
     @Autowired
     private CarritoService carritoService;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     @GetMapping
     public ResponseEntity<List<CarritoDTO>> getAllCarritos() {
@@ -65,11 +70,10 @@ public class CarritoController {
         CarritoDTO carritoVacio = carritoService.vaciarCarritoById(idCarrito);
         return new ResponseEntity<>(carritoVacio, HttpStatus.OK);
     }
-    //TODO: implementar checkout
-    @PostMapping("/{id}/checkout")
-    public ResponseEntity<String> doCheckout(@PathVariable Long id) {
-        //TODO Checkout pendiente por ahora
-        return new ResponseEntity<>("Funcionalidad de Checkout deshabilitada temporalmente.", HttpStatus.NOT_IMPLEMENTED);
+    @PostMapping("/{idCarrito}/checkout")
+    public ResponseEntity<PedidoDTO> doCheckout(@PathVariable Long idCarrito) {
+        PedidoDTO pedido = pedidoService.crearPedido(idCarrito);
+        return new ResponseEntity<>(pedido, HttpStatus.CREATED);
     }
 
     // crear addProductoToCarrito

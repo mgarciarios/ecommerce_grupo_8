@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.e_commerce3.dto.CarritoDTO;
+import com.uade.tpo.e_commerce3.dto.PedidoDTO;
 import com.uade.tpo.e_commerce3.dto.ProductoCarritoDTO;
 import com.uade.tpo.e_commerce3.exception.ProductoNotFoundException;
 import com.uade.tpo.e_commerce3.model.Carrito;
@@ -31,6 +32,9 @@ public class CarritoService {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     public List<CarritoDTO> getAllCarritos() {
         return carritoRepository.findAll().stream()
@@ -149,9 +153,15 @@ public class CarritoService {
         return new CarritoDTO(carritoGuardado);
     }
 
-    public Carrito doCheckout(Long id) {
-        //TODO implementar doCheckout
-        return null;
+    public PedidoDTO doCheckout(Long idCarrito) {
+        PedidoDTO pedido = pedidoService.crearPedido(idCarrito);
+
+        Carrito carrito = carritoRepository.findById(idCarrito)
+                .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
+        carrito.getProductos().clear();
+        carritoRepository.save(carrito);
+
+        return pedido;
     }
 
 }
