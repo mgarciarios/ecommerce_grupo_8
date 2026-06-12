@@ -1,3 +1,5 @@
+/* src/components/css/NavBar.css */
+
 .navbar {
   display: flex;
   align-items: center;
@@ -5,11 +7,14 @@
   padding: 0 48px;
   height: 60px;
   width: 100%;
-  background: #0f0f0f;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  /* 1. CAMBIO: Usamos la variable para el fondo del navbar */
+  background: var(--bg-navbar, #0f0f0f);
+  /* 2. CAMBIO: El borde inferior ahora se adapta dinámicamente */
+  border-bottom: 1px solid var(--borde-navbar, rgba(255, 255, 255, 0.06));
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .navbar-brand {
@@ -17,10 +22,12 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: #fff;
+  /* 3. CAMBIO: El texto "Tienda" cambia según el modo */
+  color: var(--texto-navbar, #fff);
   font-weight: 700;
   font-size: 18px;
   letter-spacing: -0.3px;
+  transition: color 0.3s ease;
 }
 
 .navbar-brand-icon {
@@ -49,9 +56,8 @@
   gap: 4px;
   width: 40px;
   height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--borde-input, rgba(255, 255, 255, 0.12));
+  background: var(--bg-input, rgba(255, 255, 255, 0.04));
   cursor: pointer;
 }
 
@@ -60,13 +66,15 @@
   width: 18px;
   height: 2px;
   margin: 0 auto;
-  background: #fff;
+  /* 4. CAMBIO: Las rayitas del menú hamburguesa cambian de color */
+  background: var(--texto-navbar, #fff);
   border-radius: 999px;
 }
 
 .navbar-link {
   text-decoration: none;
-  color: #a1a1aa;
+  /* 5. CAMBIO: Los links inactivos usan el color de texto secundario */
+  color: var(--texto-secundario, #a1a1aa);
   font-size: 14px;
   font-weight: 500;
   padding: 8px 14px;
@@ -75,8 +83,9 @@
 }
 
 .navbar-link:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.06);
+  /* 6. CAMBIO: El hover se adapta al contraste del texto principal */
+  color: var(--texto-navbar, #fff);
+  background: var(--bg-hover-link, rgba(255, 255, 255, 0.06));
 }
 
 .navbar-link-active {
@@ -89,29 +98,30 @@
 }
 
 .navbar-search {
-  background: #1a1a1e;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* 7. CAMBIO: El fondo y el borde del buscador cambian de color */
+  background: var(--bg-input, #1a1a1e);
+  border: 1px solid var(--borde-input, rgba(255, 255, 255, 0.1));
   border-radius: 8px;
-  color: #fff;
+  color: var(--texto-navbar, #fff);
   font-size: 13px;
   padding: 8px 12px;
   width: 200px;
   outline: none;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
 }
 
 .navbar-search::placeholder {
-  color: #6b6b7b;
+  color: var(--texto-placeholder, #6b6b7b);
 }
 
 .navbar-search:focus {
   border-color: #7c3aed;
-  background: #22222a;
+  background: var(--bg-input-focus, #22222a);
 }
 
 .navbar-link-admin:hover {
   color: #fbbf24;
-  background: rgba(251, 191, 36, 0.1);
+  background: rgba(219, 155, 5, 0.1);
 }
 
 .navbar-logout-btn {
@@ -131,6 +141,7 @@
   background: rgba(255, 107, 107, 0.1);
 }
 
+/* --- RESPONSIVE / MEDIA QUERIES --- */
 @media (max-width: 980px) {
   .navbar {
     padding: 0 18px;
@@ -150,10 +161,11 @@
     align-items: stretch;
     gap: 6px;
     padding: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* 8. CAMBIO: El menú desplegable en celulares también cambia de color */
+    border: 1px solid var(--borde-navbar, rgba(255, 255, 255, 0.08));
     border-radius: 16px;
-    background: #121212;
-    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.35);
+    background: var(--bg-navbar, #121212);
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.15);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-6px);
@@ -190,4 +202,59 @@
   .navbar-brand {
     font-size: 16px;
   }
+}
+/* ==========================================================================
+   LÓGICA DE MODOS (CLARO / OSCURO) PARA EL NAVBAR
+   ========================================================================== */
+
+/* --- CUANDO SE ACTIVA EL MODO CLARO (.light) --- */
+.light .navbar {
+  background: #ffffff !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+.light .navbar-brand, 
+.light .navbar-link {
+  color: #1a1a1a !important;
+}
+.light .navbar-link:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #000000 !important;
+}
+.light .navbar-search {
+  background: #f4f4f5 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #1a1a1a !important;
+}
+.light .navbar-search::placeholder {
+  color: #a1a1aa !important;
+}
+.light .navbar-hamburger span {
+  background: #1a1a1a !important;
+}
+
+/* --- CUANDO SE ACTIVA EL MODO OSCURO (.dark) --- */
+.dark .navbar {
+  background: #18181b !important; /* Gris un toque más claro que el fondo general */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+.dark .navbar-brand {
+  color: #ffffff !important;
+}
+.dark .navbar-link {
+  color: #a1a1aa !important;
+}
+.dark .navbar-link:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff !important;
+}
+.dark .navbar-search {
+  background: #202024 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+.dark .navbar-search::placeholder {
+  color: #71717a !important;
+}
+.dark .navbar-hamburger span {
+  background: #ffffff !important;
 }
