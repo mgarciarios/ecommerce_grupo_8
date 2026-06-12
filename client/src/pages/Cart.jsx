@@ -5,7 +5,7 @@ import CartCard from '../components/CartCard';
 import {
   updateCartItemQuantity,
   removeItemFromCart,
-  clearUserCart,
+  checkoutCart,
   selectCartItems,
   selectCartTotal,
   selectCartStatus,
@@ -70,20 +70,12 @@ export default function Cart() {
     }
   };
 
-  const handleFinalizarCompra = () => {
-    dispatch(clearUserCart());
-    alert('Compra finalizada!');
-
-    const token = localStorage.getItem("token");
-    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
-    const carritoId = localUser?.idCarrito || localUser?.user?.idCarrito || localUser?.usuario?.idCarrito || localUser?.carrito?.id || localUser?.user?.carrito?.id;
-
-    if (token && carritoId) {
-      // Ruta correcta para vaciar todo el carrito
-      fetch(`http://localhost:8080/api/carrito/${carritoId}/productos`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      }).catch(err => console.error("Error BD al vaciar el carrito:", err));
+  const handleFinalizarCompra = async () => {
+    try {
+      const pedido = await dispatch(checkoutCart()).unwrap();
+      alert(`Compra finalizada! Pedido #${pedido.pedidoId} - Total: $${pedido.total.toFixed(2)}`);
+    } catch (err) {
+      alert(err);
     }
   };
 
