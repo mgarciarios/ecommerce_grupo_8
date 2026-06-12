@@ -25,6 +25,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
+   max-width: 100%;
 
   @media (max-width: 1024px) {
     font-size: 16px;
