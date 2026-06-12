@@ -197,9 +197,13 @@ export default function ProductoDetalle() {
             <p>{producto.descripcion}</p>
           </div>
 
-          {producto.categoria && (
+          {producto.categorias?.length > 0 && (
             <div className="detalle-categoria">
-              <span className="categoria-badge">{producto.categoria}</span>
+              {producto.categorias.map((categoria) => (
+                <span key={categoria} className="categoria-badge">
+                  {categoria}
+                </span>
+              ))}
             </div>
           )}
 
