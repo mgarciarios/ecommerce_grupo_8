@@ -164,3 +164,25 @@ main.product-list-page {
   box-sizing: border-box;          /* Evita desbordamientos por culpa del padding */
   display: block;                  /* Desactiva comportamientos inline extraños */
 }
+
+/* Cuando la app pasa a modo oscuro, redefinimos las variables de este archivo */
+.dark :root,
+.dark,
+.app-container.dark {
+  --bg: #121214 !important;        /* Cambia el fondo blanco por el gris oscuro */
+  --text: #a1a1aa !important;      /* Las descripciones se vuelven gris claro */
+  --text-h: #f5f5f5 !important;    /* Los títulos pasan a blanco */
+  --border: #2a2a30 !important;    /* Bordes más sutiles oscuros */
+}
+
+/* Forzamos al contenedor de la página a escuchar el cambio */
+.dark main.product-list-page {
+  background: #121214 !important;
+}
+
+/* Opcional: Si los títulos de los productos quedan oscuros, esto los ilumina */
+.dark .product-list h4, 
+.dark .product-list h1, 
+.dark .product-list h2 {
+  color: #f5f5f5 !important;
+}

@@ -284,3 +284,29 @@
     padding: 32px 24px;
   }
 }
+
+/* ==========================================================================
+   SOPORTE DE MODO OSCURO PARA LA LANDING (HERO Y BENEFICIOS)
+   ========================================================================== */
+
+/* 1. Cambiamos el fondo blanco de la sección de beneficios a gris oscuro */
+.dark .features {
+  background-color: #121214 !important; /* Mismo color de fondo de la app */
+  border-top: 1px solid #2a2a30 !important;
+  border-bottom: 1px solid #2a2a30 !important;
+}
+
+/* 2. Iluminamos los títulos principales y subtítulos de los beneficios */
+.dark .feature h3 {
+  color: #f5f5f5 !important;
+}
+
+.dark .feature p {
+  color: #a1a1aa !important; /* Gris claro para las descripciones */
+}
+
+/* 3. Estilizado para los circulitos contenedores de los iconos (púrpura sutil) */
+.dark .feature-icon {
+  background-color: rgba(170, 59, 255, 0.15) !important; /* Fondo púrpura traslúcido */
+  color: #aa3bff !important; /* Icono púrpura brillante */
+}
