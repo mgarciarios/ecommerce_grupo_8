@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import PurchaseCard from '../components/PurchaseCard';
 import {
   fetchPurchases,
   selectPurchases,
@@ -37,18 +38,10 @@ export default function Purchases() {
   }
 
   return (
-    <div>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
       <h1>Mis compras</h1>
       {pedidos.map((pedido) => (
-        <div key={pedido.pedidoId} style={{ border: '1px solid #ccc', margin: '1rem', padding: '1rem' }}>
-          <h3>Pedido #{pedido.pedidoId}</h3>
-          <p>Estado: {pedido.estado}</p>
-          <p>Fecha: {new Date(pedido.fechaPedido).toLocaleDateString()}</p>
-          {pedido.fechaRecepcion && (
-            <p>Recibido: {new Date(pedido.fechaRecepcion).toLocaleDateString()}</p>
-          )}
-          <p>Total: ${pedido.total.toFixed(2)}</p>
-        </div>
+        <PurchaseCard key={pedido.pedidoId} pedido={pedido} />
       ))}
     </div>
   );
