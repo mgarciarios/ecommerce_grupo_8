@@ -15,8 +15,10 @@ import com.uade.tpo.e_commerce3.dto.AuthResponse;
 import com.uade.tpo.e_commerce3.dto.LoginRequest;
 import com.uade.tpo.e_commerce3.dto.RegisterRequest;
 import com.uade.tpo.e_commerce3.dto.UsuarioDTO;
+import com.uade.tpo.e_commerce3.model.Carrito;
 import com.uade.tpo.e_commerce3.model.Role;
 import com.uade.tpo.e_commerce3.model.Usuario;
+import com.uade.tpo.e_commerce3.repository.CarritoRepository;
 import com.uade.tpo.e_commerce3.repository.UsuarioRepository;
 import com.uade.tpo.e_commerce3.security.JwtUtil;
 
@@ -33,6 +35,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final CarritoRepository carritoRepository;
 
     /**
      * Método que realiza el registro de un nuevo usuario en el sistema.
@@ -129,6 +132,11 @@ public class AuthenticationService {
         //   garantizando la consistencia de datos
         usuarioRepository.save(usuario);
 
+        // Creamos un carrito asociado al nuevo usuario
+        Carrito carrito = new Carrito();
+        carrito.setUsuarioId(usuario.getId());
+        carritoRepository.save(carrito);
+
         // ==================== PASO 4: RETORNO DE RESPUESTA ====================
         // Retorna un mensaje de confirmación al cliente informando que el registro fue exitoso.
         // En el futuro, se podría mejorar esta respuesta para incluir:
@@ -140,6 +148,7 @@ public class AuthenticationService {
             .nombreUsuario(usuario.getNombreUsuario())
             .token(null)
             .usuario(new UsuarioDTO(usuario))
+            .idCarrito(String.valueOf(carrito.getId()))
             .build();
     }
 
@@ -210,6 +219,13 @@ public class AuthenticationService {
         // (esto es una precaución adicional, aunque en teoría ya fue validado en PASO 1)
         Usuario user = usuarioRepository.findByMail(request.getMail()).orElseThrow();
         
+        // Buscamos el carrito del usuario; si por alguna razón no tiene uno (usuarios antiguos), lo creamos
+        Carrito carrito = carritoRepository.findByUsuarioId(user.getId()).orElseGet(() -> {
+            Carrito nuevoCarrito = new Carrito();
+            nuevoCarrito.setUsuarioId(user.getId());
+            return carritoRepository.save(nuevoCarrito);
+        });
+        
         // ==================== PASO 3: EXTRACCIÓN Y EXTRACCIÓN DE ROLES ====================
         // Obtiene la lista de roles/permisos del usuario autenticado
         //
@@ -253,6 +269,7 @@ public class AuthenticationService {
             .nombreUsuario(user.getNombreUsuario())
             .token(token)
             .usuario(new UsuarioDTO(user))
+            .idCarrito(String.valueOf(carrito.getId()))
             .build();
     }
 }

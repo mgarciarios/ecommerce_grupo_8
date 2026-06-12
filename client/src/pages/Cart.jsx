@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import CartCard from '../components/CartCard';
 import {
-  fetchCart,
   updateCartItemQuantity,
   removeItemFromCart,
   clearUserCart,
@@ -21,9 +20,11 @@ export default function Cart() {
   const status = useSelector(selectCartStatus);
   const error = useSelector(selectCartError);
 
-  useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
+  // Desactivamos el fetchCart() original (que probablemente apuntaba a json-server)
+  // ya que ahora el carrito se carga de la base de datos real desde NavBar.jsx
+  // useEffect(() => {
+  //   dispatch(fetchCart());
+  // }, [dispatch]);
 
   const handleUpdateCantidad = (id, delta) => {
     dispatch(updateCartItemQuantity({ id, delta }));
@@ -66,7 +67,7 @@ export default function Cart() {
 
     if (token && userId) {
       fetch(`http://localhost:8080/api/usuarios/${userId}/carrito`, {
-        method: 'DELETE', // Endpoint que usarías para vaciar todo tu carrito
+        method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       }).catch(err => console.error("Error BD al vaciar el carrito:", err));
     }

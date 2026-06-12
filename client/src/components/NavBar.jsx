@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../store/slices/userSlice'
 import { setFavorites } from '../store/slices/favoriteSlice'
+// IMPORTANTE: Asegurate de exportar setCartItems en tu cartSlice.js
+import { setCartItems } from '../store/slices/cartSlice'
 import './css/NavBar.css'
 import { isAdminUser } from '../utils/auth'
 
@@ -17,29 +19,58 @@ const NavBar = () => {
   const { isAuthenticated, user } = useSelector(state => state.user)
   const canAccessAdmin = isAuthenticated && user && isAdminUser()
 
-  // Cargar favoritos desde la base de datos al arrancar si hay un usuario logueado
+  // Cargar favoritos y carrito desde la base de datos al arrancar
   useEffect(() => {
-    const fetchFavoritos = async () => {
+    const fetchUserData = async () => {
       const token = localStorage.getItem("token");
       const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
       const activeUser = user && Object.keys(user).length > 0 ? user : localUser;
       const userId = activeUser?.id || activeUser?.usuario?.id || activeUser?.user?.id;
+      const carritoId = activeUser?.idCarrito || activeUser?.user?.idCarrito || activeUser?.usuario?.idCarrito || activeUser?.carrito?.id || activeUser?.user?.carrito?.id;
 
-      if (isAuthenticated && token && userId) {
-        try {
-          const res = await fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos`, {
-            headers: { "Authorization": `Bearer ${token}` }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            dispatch(setFavorites(data)); // Guarda los favoritos de la BD en Redux
+      if (token) {
+        // 1. Traer Favoritos
+        if (userId) {
+          try {
+            const resFav = await fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos`, {
+              headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (resFav.ok) {
+              const dataFav = await resFav.json();
+              dispatch(setFavorites(dataFav));
+            }
+          } catch (error) {
+            console.error("Error al traer favoritos:", error);
           }
-        } catch (error) {
-          console.error("Error al traer favoritos:", error);
+        }
+
+        // 2. Traer Carrito
+        if (carritoId) {
+          try {
+            const resCart = await fetch(`http://localhost:8080/api/carrito/${carritoId}`, {
+              headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (resCart.ok) {
+              const dataCart = await resCart.json();
+              
+              const productos = dataCart.productos || (Array.isArray(dataCart) ? dataCart : []);
+              const formattedCart = productos.map((p) => ({
+                id: p.productoId || p.id,
+                nombre: p.nombreProducto || p.nombre,
+                precio: p.precioUnitario || p.precio,
+                cantidad: p.cantidad,
+                foto: p.foto || null,
+                stock: p.stock ?? 99,
+              }));
+              dispatch(setCartItems(formattedCart)); // Guarda el carrito de la BD en Redux
+            }
+          } catch (error) {
+            console.error("Error al traer carrito:", error);
+          }
         }
       }
     };
-    fetchFavoritos();
+    fetchUserData();
   }, [isAuthenticated, user, dispatch]);
 
   const linkClass = (path) =>

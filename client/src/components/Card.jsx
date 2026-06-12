@@ -35,13 +35,18 @@ const Card = ({
     const token = localStorage.getItem("token");
     const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
     const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+    
+    // Ampliamos la búsqueda por si el ID del carrito viene anidado
+    const carritoId = localUser?.idCarrito || localUser?.user?.idCarrito || localUser?.usuario?.idCarrito || localUser?.carrito?.id || localUser?.user?.carrito?.id;
 
-    if (token && userId) {
-      fetch(`http://localhost:8080/api/usuarios/${userId}/carrito/${producto.id}`, {
+    if (token && carritoId) {
+      fetch(`http://localhost:8080/api/carrito/${carritoId}/productos`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cantidad: 1 })
+        body: JSON.stringify({ productoId: productId, cantidad: 1 })
       }).catch(err => console.error("Error BD al agregar al carrito:", err));
+    } else if (token && !carritoId) {
+      console.error("No se encontró el ID del carrito para este usuario");
     }
   };
 

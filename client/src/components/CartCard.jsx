@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import './css/CartCard.css';
 
 const normalizeImageUrl = (value) => {
-  if (!value) return 'https://via.placeholder.com/150?text=Sin+Imagen';
+  if (!value) return '/icons.svg';
   if (/^https?:\/\//i.test(value) || value.startsWith('data:')) return value;
   return `http://localhost:8080/${value.replace(/^\/+/, '')}`;
 };
@@ -16,7 +16,7 @@ export default function CartCard({ item, onUpdateCantidad, onRemove }) {
         className="cart-item-img"
         onError={(e) => {
           e.target.onerror = null;
-          e.target.src = 'https://via.placeholder.com/150?text=Sin+Imagen';
+          e.target.src = '/icons.svg';
         }}
       />
 

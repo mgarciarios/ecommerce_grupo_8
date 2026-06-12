@@ -185,7 +185,11 @@ const cartSlice = createSlice({
     status: 'idle',
     error: null,
   },
-  reducers: {},
+  reducers: {
+    setCartItems: (state, action) => {
+      state.items = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       // fetchCart
@@ -254,6 +258,8 @@ const cartSlice = createSlice({
       });
   },
 });
+
+export const { setCartItems } = cartSlice.actions;
 
 export const selectCartItems = (state) => state.cart?.items || [];
 export const selectCartTotal = (state) =>

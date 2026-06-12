@@ -44,15 +44,29 @@ export default function Login() {
         }),
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
+      let data = null;
+      
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        // Si no es JSON (ej. un error 500 en texto plano), lo guardamos como mensaje
+        data = { message: responseText || "Error del servidor (respuesta no JSON)" };
+      }
 
       if (!response.ok) {
         throw new Error(data.message || "Error al iniciar sesión");
       }
 
+      // Asegurarnos de no perder el idCarrito si viene suelto en la respuesta
+      const userData = data.usuario || data.user || data;
+      if (data.idCarrito && !userData.idCarrito) {
+        userData.idCarrito = data.idCarrito;
+      }
+
       // Usar Redux para guardar el token y usuario
       dispatch(login({
-        user: data.usuario || data, // Guardamos todos los datos del usuario que devuelve el backend
+        user: userData,
         token: data.token
       }));
 

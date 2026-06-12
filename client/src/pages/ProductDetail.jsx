@@ -21,7 +21,7 @@ export default function ProductoDetalle() {
 
   // FUNCIÓN PARA NORMALIZAR LA URL DE LA IMAGEN
   const normalizeImageUrl = (value) => {
-    if (!value) return 'https://via.placeholder.com/400?text=Sin+Imagen';
+    if (!value) return '/icons.svg';
     if (/^https?:\/\//i.test(value) || value.startsWith('data:')) {
       return value;
     }
@@ -83,13 +83,18 @@ export default function ProductoDetalle() {
     const token = localStorage.getItem("token");
     const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
     const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+    
+    // Ampliamos la búsqueda por si el ID del carrito viene anidado
+    const carritoId = localUser?.idCarrito || localUser?.user?.idCarrito || localUser?.usuario?.idCarrito || localUser?.carrito?.id || localUser?.user?.carrito?.id;
 
-    if (token && userId) {
-      fetch(`http://localhost:8080/api/usuarios/${userId}/carrito/${producto.id}`, {
+    if (token && carritoId) {
+      fetch(`http://localhost:8080/api/carrito/${carritoId}/productos`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cantidad })
+        body: JSON.stringify({ productoId: producto.id, cantidad: cantidad })
       }).catch(err => console.error("Error BD al agregar al carrito:", err));
+    } else if (token && !carritoId) {
+      console.error("No se encontró el ID del carrito para este usuario");
     }
   };
 
@@ -166,7 +171,7 @@ export default function ProductoDetalle() {
             alt={producto.nombre}
             onError={(e) => {
               e.target.onerror = null; // Corta el bucle de renderizado infinito de raíz
-              e.target.src = 'https://via.placeholder.com/400?text=Imagen+No+Disponible';
+              e.target.src = '/icons.svg';
             }}
           />
         </div>
