@@ -4,6 +4,7 @@ import counterReducer from './slices/counterSlice';
 import cartReducer from './slices/cartSlice';
 import favoriteReducer from './slices/favoriteSlice';
 
+
 // este es el store donde va a estar toda la info global que necesitan los todos componentes de la app
 // Crea el store global, agrupa todos los reducers (contextos o estados globales) en un solo objeto
 export const store = configureStore({
@@ -16,3 +17,4 @@ export const store = configureStore({
     // favoritos: favoritesReducer, // Gestiona el estado de los favoritos (si lo tienes)
   },
 });
+

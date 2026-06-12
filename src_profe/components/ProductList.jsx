@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import defaultImage from '../assets/imgXdefault.jpg';
 import Card from '../ejemplos/Card';
-import {useDispatch} from 'react-redux';
 import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
+import { useDispatch } from 'react-redux';
+
+
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -11,7 +13,7 @@ const ProductList = () => {
   const [error, setError] = useState(null);
   const [category, setCategory] = useState(null); // Estado para la categoría seleccionada
   const dispatch = useDispatch();
-
+ 
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -58,13 +60,16 @@ const ProductList = () => {
   }, [category]); // El efecto se vuelve a ejecutar cada vez que 'category' cambie
 
 
-  const handleAddToFavorites = (product) => {
+  const handleAddFavorite = (product) => {
+    // Aquí se ejecuta el dispatch de Redux para agregar un producto a favoritos, en lugar de usar la función addFavorite del contexto
     dispatch(addFavorite(product));
   }
 
-  const handleRemoveFromFavorites = (productId) => {
+  const handleRemoveFavorite = (productId) => {
+    // Aquí se ejecuta el dispatch de Redux para eliminar un producto de favoritos, en lugar de usar la función removeFavorite del contexto
     dispatch(removeFavorite(productId));
   }
+
 
   // --- Manejo de estados de carga y error ---
   // Si 'loading' es true, se muestra un mensaje de carga.
@@ -104,19 +109,16 @@ const ProductList = () => {
         {/* produts.map(product => ("muestra el producto con html") */}
         {products.map(product => (
           <>
-          <button onClick={handleAddToFavorites(product)}>
-            Add to Favorites
-          </button>
-          <button onClick={handleRemoveFromFavorites(product.id)}>
-            Remove from Favorites
-          </button>
+          <button onClick={() => handleAddFavorite(product)}>Agregar a favoritos</button>
+          <button onClick={() => handleRemoveFavorite(product.id)}>Eliminar de favoritos</button>
+
           <Link
             to={`/products-redux/${product.id}`}
             key={product.id}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
               <div style={{
-                border: '1px solid #ddd',
+                border: '1px solid #blue',
                 backgroundColor: 'lightgray',
                 borderRadius: '8px',
                 padding: '1rem',

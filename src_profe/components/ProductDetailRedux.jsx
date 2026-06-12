@@ -5,6 +5,7 @@ import { addToCart } from '../store/slices/cartSlice';
 import { styles } from './ProductDetailRedux.styles';
 import defaultImage from '../assets/imgXdefault.jpg';
 
+//este es igual que ProductDetail.jsx pero con Redux, en lugar de usar el contexto para manejar el carrito, se usa Redux
 const ProductDetailRedux = () => {
   // Hook para despachar acciones a Redux (agregar al carrito, eliminar del carrito, reset etc.)
   const dispatch = useDispatch();

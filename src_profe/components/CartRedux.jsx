@@ -1,35 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeFromCart, clearCart } from '../store/slices/cartSlice';
+import { removeFromCart, clearCart, fetchCartItems } from '../store/slices/cartSlice';
 import { styles } from './CartRedux.styles';
 import defaultImage from '../assets/imgXdefault.jpg';
 
+// hace exactamente lo mismo que Cart.jsx pero usando Redux en lugar de useContext para manejar el estado del carrito
 const CartRedux = () => {
-  // useSelector es un hook de React Redux que permite acceder al estado global del store index.js.
-  // state.cart.items accede a la propiedad items del slice cart del store global.
-  // cartItems contendrá el array de productos que están actualmente en el carrito.
-  
-  // con esta línea el componente se suscribe a cambios en state.cart.items, 
-  // cada vez que se modifica items de cartSlice, useSelector detecta el cambio 
-  // el componente CartRedux se re renderizar
-  const cartItems = useSelector((state) => state.cart.items);
-
-  // Si CUALQUIER cosa del contexto cambia, el componente SE RE-RENDERIZA
-  // const { cartItems, addToCart } = useContext(CartContext);
-  // con redux solo re-renderiza si STATE.CART.ITEMS cambió
-
-  // useDispatch Hook para despachar acciones a Redux (agregar, eliminar, vaciar carrito, etc.)
-  // dispatch con causa re renders
   const dispatch = useDispatch();
+  
+  // Obtener items, loading y error del estado global
+  // se suscribe a cambios en state.cart.items, cada vez que se modifica el estado del carrito (agregar, eliminar, limpiar), 
+  // el componente CartRedux se re renderiza automáticamente con el nuevo estado del carrito
+  const cartItems = useSelector((state) => state.cart.items);
+  // se suscribe a cambios en state.cart.loading y error, cada vez que se modifica el estado de carga del carrito (al obtener los items desde la API),
+  //  el componente CartRedux se re renderiza automáticamente con el nuevo estado de carga, mostrando el mensaje de "Cargando carrito..." mientras se obtienen los items desde la API
+  const loading = useSelector((state) => state.cart.loading);
+  const error = useSelector((state) => state.cart.error);
 
+  // Al montar el componente, se dispara la acción asincrónica para obtener los items del carrito
+  // dispatch(fetchCartItems()) envía la acción fetchCartItems a Redux, que a su vez ejecuta la función asincrónica definida en createAsyncThunk 
+  // para obtener los items del carrito desde la API.
+  useEffect(() => {
+    dispatch(fetchCartItems());
+    // dispatch esta en el array de dependencias para evitar warnings de React, aunque en este caso no es necesario porque dispatch no cambia, pero es una buena práctica incluirlo.
+  }, [dispatch]);
+
+
+  //TODO: ssanchez - llamar a la api de cartSlice
   const handleRemoveFromCart = (productId) => {
-    // Usar dispatch de Redux para eliminar un producto del carrito en lugar de la función removeFromCart de useContext
+    // dispara el reducer internto
     dispatch(removeFromCart(productId));
   };
 
+  //TODO: ssanchez - llamar a la api de cartSlice
   const handleClearCart = () => {
-    // Usar dispatch de Redux para vaciar el carrito en lugar de la función clearCart de useContext
+    // dispara reducer internto
     dispatch(clearCart());
   };
 
@@ -40,6 +46,24 @@ const CartRedux = () => {
   // cuando se ejecuta handleRemoveFromCart o handleClearCart, el estado del carrito se actualiza en el store global de Redux.
   // Esto hace que el componente CartRedux se vuelva a renderizar automáticamente con el nuevo estado del carrito, mostrando los cambios en la interfaz de usuario.
   const total = calculateTotal();
+
+  // Mostrar estado de carga
+  if (loading) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <p>Cargando carrito...</p>
+      </div>
+    );
+  }
+
+  // Mostrar error si existe
+  if (error) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <p style={{ color: '#ff4444' }}>Error: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>

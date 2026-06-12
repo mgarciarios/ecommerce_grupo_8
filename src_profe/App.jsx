@@ -16,6 +16,7 @@ import FormularioPagoReactForm from './formularios/FormularioPagoReactForm'
 import { CartProvider } from './hooks/useContext/CartProvider'
 import Card from './ejemplos/Card'
 import Counter from './components/Counter'
+import Favorite from './components/Favorite'
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/cart-redux" element={<CartRedux />} />
             <Route path="/counter" element={<Counter />} />
             <Route path="/login" element={<LoginJWTContext />} />
+            <Route path="/favorite" element={<Favorite />} />
             <Route path="/checkout" 
               element={
                 // protected route es un componente que verifica si el usuario está autenticado antes de permitir el acceso a la ruta. Si no está autenticado, redirige al login.

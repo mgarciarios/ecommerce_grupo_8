@@ -4,7 +4,7 @@ import { useCart } from '../hooks/useContext/CartProvider';
 import defaultImage from '../assets/imgXdefault.jpg';
 
 const ProductDetail = () => {
-  const { addToCart } = useCart();
+  const { addToCart, total } = useCart();
   
   // useParams es un hook de React Router que extrae los parámetros de la URL.
   // En este caso, desestructura el objeto devuelto para obtener el 'id' del producto.
