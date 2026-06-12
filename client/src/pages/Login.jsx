@@ -52,7 +52,7 @@ export default function Login() {
 
       // Usar Redux para guardar el token y usuario
       dispatch(login({
-        user: { nombreUsuario: data.nombreUsuario },
+        user: data.usuario || data, // Guardamos todos los datos del usuario que devuelve el backend
         token: data.token
       }));
 

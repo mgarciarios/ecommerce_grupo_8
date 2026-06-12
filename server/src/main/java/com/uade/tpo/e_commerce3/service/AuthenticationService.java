@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.e_commerce3.dto.AuthResponse;
 import com.uade.tpo.e_commerce3.dto.LoginRequest;
 import com.uade.tpo.e_commerce3.dto.RegisterRequest;
+import com.uade.tpo.e_commerce3.dto.UsuarioDTO;
 import com.uade.tpo.e_commerce3.model.Role;
 import com.uade.tpo.e_commerce3.model.Usuario;
 import com.uade.tpo.e_commerce3.repository.UsuarioRepository;
@@ -138,6 +139,7 @@ public class AuthenticationService {
             .mensaje("Usuario registrado exitosamente")
             .nombreUsuario(usuario.getNombreUsuario())
             .token(null)
+            .usuario(new UsuarioDTO(usuario))
             .build();
     }
 
@@ -250,6 +252,7 @@ public class AuthenticationService {
             .mensaje("Ingreso exitoso")
             .nombreUsuario(user.getNombreUsuario())
             .token(token)
+            .usuario(new UsuarioDTO(user))
             .build();
     }
 }

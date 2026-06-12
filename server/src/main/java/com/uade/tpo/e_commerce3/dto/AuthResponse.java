@@ -13,4 +13,5 @@ public class AuthResponse {
     private String mensaje;
     private String nombreUsuario;
     private String token;
+    private UsuarioDTO usuario;
 }

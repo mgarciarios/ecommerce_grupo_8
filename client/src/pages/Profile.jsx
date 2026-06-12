@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/userSlice";
 import "./css/Profile.css";
 
@@ -91,15 +91,64 @@ function Toast({ message }) {
 export default function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // 1. Obtenemos el usuario global desde el slice de Redux
+  const currentUser = useSelector((state) => state.user?.user);
+
   const [tab, setTab] = useState("info");
   const [toast, setToast] = useState(null);
 
+  // 2. Fallback: Si Redux está vacío (ej. al recargar), intentamos leer el localStorage
+  const localUser = JSON.parse(localStorage.getItem("usuario") || "{}");
+  const activeUser = currentUser && Object.keys(currentUser).length > 0 ? currentUser : localUser;
+
   const [info, setInfo] = useState({
-    nombre: "Juan",
-    apellido: "Pérez",
-    username: "juanperez",
-    email: "juan@email.com",
+    nombre: activeUser?.nombre || "",
+    apellido: activeUser?.apellido || "",
+    username: activeUser?.nombreUsuario || "", // Propiedad usada en tu Register/Login
+    email: activeUser?.mail || "",             // Propiedad usada en tu Register
   });
+
+  // 3. Obtener los datos faltantes haciendo una petición al backend
+  useEffect(() => {
+    const fetchUserData = async () => {
+      // Intentamos conseguir el ID del usuario que guardamos en el login
+      const userId = activeUser?.id || activeUser?.user?.id;
+      const token = localStorage.getItem("token");
+
+      if (!userId || !token) return;
+
+      try {
+        // ATENCIÓN: Reemplazá esta URL con tu endpoint real (ej: /api/usuarios o /api/users)
+        const response = await fetch(`http://localhost:8080/api/usuarios/${userId}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`, // Enviamos el token de seguridad
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Actualizamos el formulario con lo que trajimos de la BD
+          setInfo((prevInfo) => ({
+            ...prevInfo,
+            nombre: data.nombre || data.usuario?.nombre || prevInfo.nombre,
+            apellido: data.apellido || data.usuario?.apellido || prevInfo.apellido,
+            username: data.username || data.usuario?.username || prevInfo.username,
+            email: data.mail || data.usuario?.mail || prevInfo.email,
+          }));
+        } else {
+          console.error("Error al traer el perfil. Status:", response.status);
+        }
+      } catch (error) {
+        console.error("Error de conexión al traer el usuario:", error);
+      }
+    };
+
+    fetchUserData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // El array vacío asegura que esto se ejecute solo una vez al abrir el Perfil
 
   const [pwd, setPwd] = useState({
     actual: "",
