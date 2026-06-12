@@ -131,7 +131,7 @@ public class SecurityConfig {
                         //verifica que el usuario esté autenticado y tenga el rol ADMIN
                         .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
 
-                        .requestMatchers("/api/usuarios/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers("/api/usuarios/**").authenticated()
 
                         // Rutas de pedidos solo para usuarios autenticados
                         .requestMatchers("/api/pedidos/**").authenticated()
