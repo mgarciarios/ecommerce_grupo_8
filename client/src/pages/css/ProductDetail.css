@@ -30,17 +30,25 @@
 }
 
 .detalle-imagen {
-  background: #f5f5f3;
+  background: #ffffff;       /* 👈 Cambiado de #f5f5f3 a blanco puro */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center;      
+  justify-content: center;   
   padding: 2rem;
+  height: 400px;             
+  box-sizing: border-box;
+  border-right: 1px solid #e5e5e3; /* 👈 Opcional: una sutil línea divisoria con la info de la derecha */
 }
 
 .detalle-imagen img {
-  max-width: 100%;
-  height: auto;
+  display: block;            /* 👈 Quita el comportamiento "inline" que lo desalinea */
+  max-width: 100%;           /* Evita que se deforme a lo ancho */
+  max-height: 100%;          /* 👈 Clave: evita que sea más alta que el bloque gris */
+  width: auto;               /* Permite que escale manteniendo proporciones */
+  height: auto;              /* Permite que escale manteniendo proporciones */
+  object-fit: contain;       /* Asegura que encaje perfecto sin recortarse */
   border-radius: 8px;
+  margin: auto;              /* 👈 Fuerza el centrado absoluto en carcasas rebeldes */
 }
 
 .detalle-info {

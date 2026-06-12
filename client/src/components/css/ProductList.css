@@ -25,7 +25,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
-   max-width: 100%;
+  max-width: 100%;
 
   @media (max-width: 1024px) {
     font-size: 16px;
@@ -135,4 +135,12 @@ main.product-list-page {
   main.product-list-page {
     padding: 16px 12px;
   }
+}
+
+.product-list .card .card__image {
+  background: #ffffff !important;   /* 👈 Fusiona el fondo de la imagen con el lienzo blanco */
+  object-fit: contain !important;  /* 👈 Mantiene la proporción estricta de hardware sin estirar */
+  padding: 16px;                   /* 👈 Le otorga aire perimetral para que respiren los bordes */
+  box-sizing: border-box;          /* Evita desbordamientos por culpa del padding */
+  display: block;                  /* Desactiva comportamientos inline extraños */
 }
