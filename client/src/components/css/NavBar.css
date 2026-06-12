@@ -1,5 +1,3 @@
-/* src/components/css/NavBar.css */
-
 .navbar {
   display: flex;
   align-items: center;
@@ -257,4 +255,55 @@
 }
 .dark .navbar-hamburger span {
   background: #ffffff !important;
+}
+
+/* ==========================================================================
+   CORRECCIONES RESPONSIVE: MENÚ HAMBURGUESA Y BOTÓN MODO OSCURO (CORREGIDO)
+   ========================================================================== */
+
+@media (max-width: 980px) { /* Usamos el breakpoint real de tu menú móvil */
+
+  /* 1. Forzar el fondo y bordes del menú desplegable según el modo activo */
+  
+  /* Cuando la app está en Modo CLARO (.light) */
+  .light .navbar-links { 
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.06) !important;
+  }
+  
+  /* En Modo Claro, los links individuales del menú móvil */
+  .light .navbar-link {
+    color: #1a1a1a !important;
+  }
+  
+  .light .navbar-link:hover {
+    background: rgba(0, 0, 0, 0.04) !important;
+  }
+
+  /* Cuando la app está en Modo OSCURO (.dark) */
+  .dark .navbar-links {
+    background: #18181b !important; /* Mismo gris oscuro que el Navbar */
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .dark .navbar-link {
+    color: #a1a1aa !important;
+  }
+  
+  .dark .navbar-link:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+
+
+  /* 2. Centrar el botón de cambio de tema en celulares */
+  /* Buscamos la etiqueta button que está dentro de la lista desplegable */
+  .navbar-links button {
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 12px auto 6px auto !important; /* Margen superior e inferior con auto a los lados */
+    width: fit-content !important; /* Para que no se estire a lo ancho */
+  }
 }
