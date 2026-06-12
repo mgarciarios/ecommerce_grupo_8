@@ -33,7 +33,7 @@ export default function ProductsTable({ productos, onEditar, onEliminar, cargand
                   {producto.stock}
                 </span>
               </td>
-              <td>{producto.categoria?.nombre || 'Sin categoría'}</td>
+              <td>{producto.categorias?.join(', ') || 'Sin categoría'}</td>
               <td className="acciones">
                 <button
                   className="btn-accion btn-editar"

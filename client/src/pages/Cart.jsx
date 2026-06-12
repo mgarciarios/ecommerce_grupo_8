@@ -8,7 +8,7 @@ import {
   clearUserCart,
   selectCartItems,
   selectCartTotal,
-  selectCartStatus,
+  selectCartLoading,
   selectCartError,
 } from '../store/slices/cartSlice';
 import './css/Cart.css';
@@ -17,13 +17,13 @@ export default function Cart() {
   const dispatch = useDispatch();
   const items = useSelector(selectCartItems);
   const total = useSelector(selectCartTotal);
-  const status = useSelector(selectCartStatus);
+  const loading = useSelector(selectCartLoading);
   const error = useSelector(selectCartError);
 
-  // Desactivamos el fetchCart() original (que probablemente apuntaba a json-server)
+  // Desactivamos el fetchCartItems() original (que probablemente apuntaba a json-server)
   // ya que ahora el carrito se carga de la base de datos real desde NavBar.jsx
   // useEffect(() => {
-  //   dispatch(fetchCart());
+  //   dispatch(fetchCartItems());
   // }, [dispatch]);
 
   const handleUpdateCantidad = (id, delta) => {
@@ -87,7 +87,7 @@ export default function Cart() {
     }
   };
 
-  if (status === 'loading') {
+  if (loading) {
     return (
       <div className="cart-container">
         <p className="cart-loading">Cargando carrito...</p>

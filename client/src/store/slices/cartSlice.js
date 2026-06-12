@@ -17,8 +17,8 @@ const setStoredCartId = (id) => {
 
 const API_BASE = 'http://localhost:8080/api/carrito';
 
-export const fetchCart = createAsyncThunk(
-  'cart/fetchCart',
+export const fetchCartItems = createAsyncThunk(
+  'cart/fetchCartItems',
   async (_, { rejectWithValue }) => {
     if (!isAuthenticated()) return [];
 
@@ -182,7 +182,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState: {
     items: [],
-    status: 'idle',
+    loading: false,
     error: null,
   },
   reducers: {
@@ -192,17 +192,18 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // fetchCart
-      .addCase(fetchCart.pending, (state) => {
-        state.status = 'loading';
+      // fetchCartItems
+      .addCase(fetchCartItems.pending, (state) => {
+        state.loading = true;
         state.error = null;
       })
-      .addCase(fetchCart.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+      .addCase(fetchCartItems.fulfilled, (state, action) => {
+        state.loading = false;
         state.items = action.payload;
+        state.error = null;
       })
-      .addCase(fetchCart.rejected, (state, action) => {
-        state.status = 'failed';
+      .addCase(fetchCartItems.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload || 'Error al cargar el carrito';
       })
       // addItemToCart
@@ -266,7 +267,7 @@ export const selectCartTotal = (state) =>
   (state.cart?.items || []).reduce((sum, item) => sum + item.precio * item.cantidad, 0);
 export const selectCartCount = (state) =>
   (state.cart?.items || []).reduce((count, item) => count + item.cantidad, 0);
-export const selectCartStatus = (state) => state.cart?.status || 'idle';
+export const selectCartLoading = (state) => state.cart?.loading || false;
 export const selectCartError = (state) => state.cart?.error || null;
 
 export default cartSlice.reducer;
