@@ -27,7 +27,7 @@ const Card = ({
       id: producto.id,
       nombre: producto.nombre,
       precio: producto.precio,
-      foto: producto.foto,
+      foto: producto.foto || producto.imgLink || producto.imagen || producto.image || producto.img || null,
       cantidad: 1,
       stock: producto.stock ?? 99,
     }));

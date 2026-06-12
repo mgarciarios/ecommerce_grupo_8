@@ -54,13 +54,28 @@ const NavBar = () => {
               const dataCart = await resCart.json();
               
               const productos = dataCart.productos || (Array.isArray(dataCart) ? dataCart : []);
-              const formattedCart = productos.map((p) => ({
-                id: p.productoId || p.id,
-                nombre: p.nombreProducto || p.nombre,
-                precio: p.precioUnitario || p.precio,
-                cantidad: p.cantidad,
-                foto: p.foto || null,
-                stock: p.stock ?? 99,
+              const formattedCart = await Promise.all(productos.map(async (p) => {
+                const prodId = p.productoId || p.id || p.producto?.id;
+                let detalles = {};
+
+                // Vamos a buscar los detalles completos a la API de productos para no perder la foto ni el nombre
+                if (prodId) {
+                  try {
+                    const resProd = await fetch(`http://localhost:8080/api/productos/${prodId}`);
+                    if (resProd.ok) detalles = await resProd.json();
+                  } catch (e) {
+                    console.error("Error al obtener producto del carrito:", e);
+                  }
+                }
+
+                return {
+                  id: prodId,
+                  nombre: detalles.nombre || p.nombreProducto || p.nombre || p.producto?.nombre,
+                  precio: detalles.precio || p.precioUnitario || p.precio || p.producto?.precio,
+                  cantidad: p.cantidad,
+                  foto: detalles.foto || detalles.imgLink || p.foto || p.producto?.foto || null,
+                  stock: detalles.stock ?? p.stock ?? p.producto?.stock ?? 99,
+                }
               }));
               dispatch(setCartItems(formattedCart)); // Guarda el carrito de la BD en Redux
             }

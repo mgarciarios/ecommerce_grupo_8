@@ -74,7 +74,7 @@ export default function ProductoDetalle() {
       id: producto.id,
       nombre: producto.nombre,
       precio: producto.precio,
-      foto: producto.foto,
+      foto: producto.foto || producto.imgLink || producto.imagen || producto.image || producto.img || null,
       cantidad,
       stock: producto.stock,
     }));
@@ -167,7 +167,7 @@ export default function ProductoDetalle() {
         <div className="detalle-imagen">
           {/* IMAGEN CORREGIDA CON NORMALIZACIÓN Y APAGADO DE ERROR EN BUCLE */}
           <img 
-            src={normalizeImageUrl(producto.foto)} 
+            src={normalizeImageUrl(producto.foto || producto.imgLink || producto.imagen || producto.image || producto.img)} 
             alt={producto.nombre}
             onError={(e) => {
               e.target.onerror = null; // Corta el bucle de renderizado infinito de raíz
