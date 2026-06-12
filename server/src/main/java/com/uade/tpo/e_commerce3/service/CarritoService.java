@@ -3,6 +3,8 @@ package com.uade.tpo.e_commerce3.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,8 @@ import com.uade.tpo.e_commerce3.model.Carrito;
 import com.uade.tpo.e_commerce3.model.Producto;
 import com.uade.tpo.e_commerce3.model.ProductoCarrito;
 import com.uade.tpo.e_commerce3.repository.CarritoRepository;
-import com.uade.tpo.e_commerce3.repository.ProductoCarritoRepository;
 import com.uade.tpo.e_commerce3.repository.ProductoRepository;
+import com.uade.tpo.e_commerce3.repository.ProductoCarritoRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -28,13 +30,15 @@ public class CarritoService {
     private CarritoRepository carritoRepository;
 
     @Autowired
-    private ProductoCarritoRepository productoCarritoRepository;
-
-    @Autowired
     private ProductoRepository productoRepository;
 
     @Autowired
     private PedidoService pedidoService;
+
+    @Autowired
+    private ProductoCarritoRepository productoCarritoRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(CarritoService.class);
 
     public List<CarritoDTO> getAllCarritos() {
         return carritoRepository.findAll().stream()
@@ -154,12 +158,17 @@ public class CarritoService {
     }
 
     public PedidoDTO doCheckout(Long idCarrito) {
+        System.out.println("LA ID DEL CARRITO ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"+ idCarrito);
+        log.info("doCheckout - iniciando con idCarrito: {}", idCarrito);
         PedidoDTO pedido = pedidoService.crearPedido(idCarrito);
 
         Carrito carrito = carritoRepository.findById(idCarrito)
                 .orElseThrow(() -> new RuntimeException("Carrito no encontrado con id: " + idCarrito));
-        carrito.getProductos().clear();
-        carritoRepository.save(carrito);
+        log.info("doCheckout - productos en carrito antes de limpiar: {}", carrito.getProductos().size());
+
+        productoCarritoRepository.emptyByCarritoId(idCarrito);
+
+        System.out.println("LA ID DEL CARRITO "+ idCarrito);
 
         return pedido;
     }

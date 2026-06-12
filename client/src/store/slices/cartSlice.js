@@ -173,6 +173,7 @@ export const checkoutCart = createAsyncThunk(
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.log('checkoutCart - errorData:', errorData);
         return rejectWithValue(errorData.mensaje || errorData.message || 'Error al finalizar la compra');
       }
 

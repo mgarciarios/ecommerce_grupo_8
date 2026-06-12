@@ -2,6 +2,9 @@ package com.uade.tpo.e_commerce3.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,8 @@ import com.uade.tpo.e_commerce3.service.PedidoService;
 @RequestMapping("/api/carrito")
 public class CarritoController {
     
+    private static final Logger log = LoggerFactory.getLogger(CarritoController.class);
+
     @Autowired
     private CarritoService carritoService;
 
@@ -72,7 +77,9 @@ public class CarritoController {
     }
     @PostMapping("/{idCarrito}/checkout")
     public ResponseEntity<PedidoDTO> doCheckout(@PathVariable Long idCarrito) {
-        PedidoDTO pedido = pedidoService.crearPedido(idCarrito);
+        log.info("CONTROLLER doCheckout - recibida solicitud POST para idCarrito: {}", idCarrito);
+        PedidoDTO pedido = carritoService.doCheckout(idCarrito);
+        log.info("CONTROLLER doCheckout - completado, pedidoId: {}", pedido.getPedidoId());
         return new ResponseEntity<>(pedido, HttpStatus.CREATED);
     }
 
