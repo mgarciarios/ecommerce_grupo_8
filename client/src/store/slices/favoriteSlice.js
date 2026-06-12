@@ -29,11 +29,15 @@ const favoriteSlice = createSlice({
 
     clearFavorites: (state) => {
       state.items = [];
+    },
+
+    setFavorites: (state, action) => {
+      state.items = action.payload; // Sobreescribe los favoritos con los que vienen de la BD
     }
 
   }
 });
 
-export const { addFavorite, removeFavorite, clearFavorites } = favoriteSlice.actions;
+export const { addFavorite, removeFavorite, clearFavorites, setFavorites } = favoriteSlice.actions;
 
 export default favoriteSlice.reducer;

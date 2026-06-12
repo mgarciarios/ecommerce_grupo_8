@@ -31,14 +31,50 @@ const Card = ({
       cantidad: 1,
       stock: producto.stock ?? 99,
     }));
+
+    const token = localStorage.getItem("token");
+    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
+    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+
+    if (token && userId) {
+      fetch(`http://localhost:8080/api/usuarios/${userId}/carrito/${producto.id}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cantidad: 1 })
+      }).catch(err => console.error("Error BD al agregar al carrito:", err));
+    }
   };
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation(); 
+
+    const token = localStorage.getItem("token");
+    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
+    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+
+    if (!token || !userId) {
+      alert("Inicia sesion para marcar productos como favoritos");
+      return;
+    }
+
     if (esFav) {
       dispatch(removeFavorite(productId));
+      // Petición a la BD para borrar
+      if (token && userId) {
+        fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${productId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        }).catch(err => console.error("Error BD al borrar favorito:", err));
+      }
     } else {
       dispatch(addFavorite(infoProducto));
+      // Petición a la BD para agregar
+      if (token && userId) {
+        fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${productId}`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        }).catch(err => console.error("Error BD al agregar favorito:", err));
+      }
     }
   };
 

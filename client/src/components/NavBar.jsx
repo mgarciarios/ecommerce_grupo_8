@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../store/slices/userSlice'
+import { setFavorites } from '../store/slices/favoriteSlice'
 import './css/NavBar.css'
 import { isAdminUser } from '../utils/auth'
 
@@ -15,6 +16,31 @@ const NavBar = () => {
   // Obtener estado de autenticación y usuario de Redux
   const { isAuthenticated, user } = useSelector(state => state.user)
   const canAccessAdmin = isAuthenticated && user && isAdminUser()
+
+  // Cargar favoritos desde la base de datos al arrancar si hay un usuario logueado
+  useEffect(() => {
+    const fetchFavoritos = async () => {
+      const token = localStorage.getItem("token");
+      const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
+      const activeUser = user && Object.keys(user).length > 0 ? user : localUser;
+      const userId = activeUser?.id || activeUser?.usuario?.id || activeUser?.user?.id;
+
+      if (isAuthenticated && token && userId) {
+        try {
+          const res = await fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos`, {
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            dispatch(setFavorites(data)); // Guarda los favoritos de la BD en Redux
+          }
+        } catch (error) {
+          console.error("Error al traer favoritos:", error);
+        }
+      }
+    };
+    fetchFavoritos();
+  }, [isAuthenticated, user, dispatch]);
 
   const linkClass = (path) =>
     `navbar-link ${location.pathname === path ? 'navbar-link-active' : ''}`

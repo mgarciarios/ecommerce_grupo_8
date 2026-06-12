@@ -79,15 +79,49 @@ export default function ProductoDetalle() {
       stock: producto.stock,
     }));
     alert(`¡${producto?.nombre} agregado al carrito!`);
+
+    const token = localStorage.getItem("token");
+    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
+    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+
+    if (token && userId) {
+      fetch(`http://localhost:8080/api/usuarios/${userId}/carrito/${producto.id}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cantidad })
+      }).catch(err => console.error("Error BD al agregar al carrito:", err));
+    }
   };
 
  const handleFavoriteClick = () => {
   if (!producto) return;
   const esFav = favorites.some((f) => f.id === producto.id);
+  
+  const token = localStorage.getItem("token");
+  const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
+  const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+
+  if (!token || !userId) {
+    alert("Inicia sesion para marcar productos como favoritos");
+    return;
+  }
+
   if (esFav) {
     dispatch(removeFavorite(producto.id));
+    if (token && userId) {
+      fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${producto.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(err => console.error("Error BD:", err));
+    }
   } else {
     dispatch(addFavorite(producto));
+    if (token && userId) {
+      fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${producto.id}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(err => console.error("Error BD:", err));
+    }
   }
 };
 
@@ -260,10 +294,10 @@ export default function ProductoDetalle() {
                     border: favorites.some((f) => f.id === producto.id) ? '2px solid #ef5350' : '2px solid #333333',
                   }}
                   onMouseEnter={(e) => {
-                    if (!isFavorite(producto.id)) e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
+                    if (!favorites.some((f) => f.id === producto.id)) e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
                   }}
                   onMouseLeave={(e) => {
-                    if (!isFavorite(producto.id)) e.currentTarget.style.background = 'transparent';
+                    if (!favorites.some((f) => f.id === producto.id)) e.currentTarget.style.background = 'transparent';
                   }}
                 >
                     {favorites.some((f) => f.id === producto.id) ? '❤️ Quitar de favoritos' : '🖤 Añadir a favoritos'}

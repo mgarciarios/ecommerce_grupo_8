@@ -27,15 +27,49 @@ export default function Cart() {
 
   const handleUpdateCantidad = (id, delta) => {
     dispatch(updateCartItemQuantity({ id, delta }));
+
+    const token = localStorage.getItem("token");
+    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
+    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+
+    if (token && userId) {
+      fetch(`http://localhost:8080/api/usuarios/${userId}/carrito/${id}`, {
+        method: 'PUT', // Ajusta el método según tu API (PUT, PATCH o POST)
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cantidadDelta: delta }) // Ajusta el body si tu backend espera otro nombre
+      }).catch(err => console.error("Error BD al actualizar carrito:", err));
+    }
   };
 
   const handleRemove = (id) => {
     dispatch(removeItemFromCart(id));
+
+    const token = localStorage.getItem("token");
+    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
+    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+
+    if (token && userId) {
+      fetch(`http://localhost:8080/api/usuarios/${userId}/carrito/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(err => console.error("Error BD al eliminar del carrito:", err));
+    }
   };
 
   const handleFinalizarCompra = () => {
     dispatch(clearUserCart());
     alert('Compra finalizada!');
+
+    const token = localStorage.getItem("token");
+    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
+    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+
+    if (token && userId) {
+      fetch(`http://localhost:8080/api/usuarios/${userId}/carrito`, {
+        method: 'DELETE', // Endpoint que usarías para vaciar todo tu carrito
+        headers: { 'Authorization': `Bearer ${token}` }
+      }).catch(err => console.error("Error BD al vaciar el carrito:", err));
+    }
   };
 
   if (status === 'loading') {
