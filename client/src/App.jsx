@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import AdminPanel from './pages/AdminPanel';
 import FavoritesList from './pages/FavoritesList';
 import Cart from './pages/Cart';
+import Purchases from './pages/Purchases';
 import Search from './pages/Search';
 import NavBar from './components/NavBar';
 import { isAuthenticated, isAdminUser } from './utils/auth';
@@ -55,6 +56,7 @@ function AppContent() {
         <Route path="/favorites/:categoria" element={<FavoritesList />} />
         <Route path="/favorites" element={<FavoritesList />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/purchases" element={<Purchases />} />
         <Route path="/search" element={<Search />} />
         <Route path="*" element={<Navigate to="/productos" replace />} />
       </Routes>

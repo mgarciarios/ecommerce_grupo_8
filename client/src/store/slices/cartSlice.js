@@ -1,33 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { isAuthenticated, getToken } from '../../utils/auth';
-
-const CART_ID_KEY = 'cartId';
-
-const getStoredCartId = () => {
-  try {
-    return JSON.parse(localStorage.getItem(CART_ID_KEY));
-  } catch {
-    return null;
-  }
-};
-
-const setStoredCartId = (id) => {
-  localStorage.setItem(CART_ID_KEY, JSON.stringify(id));
-};
 
 const API_BASE = 'http://localhost:8080/api/carrito';
 
-export const fetchCartItems = createAsyncThunk(
-  'cart/fetchCartItems',
-  async (_, { rejectWithValue }) => {
-    if (!isAuthenticated()) return [];
+const getCarritoId = (state) => state.user?.user?.idCarrito;
+const isAuth = (state) => state.user?.isAuthenticated;
+const getAuthToken = (state) => state.user?.token;
 
-    const cartId = getStoredCartId();
+export const fetchCart = createAsyncThunk(
+  'cart/fetchCart',
+  async (_, { getState, rejectWithValue }) => {
+    const state = getState();
+    if (!isAuth(state)) return [];
+
+    const cartId = getCarritoId(state);
     if (!cartId) return [];
 
     try {
       const response = await fetch(`${API_BASE}/${cartId}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
+        headers: { Authorization: `Bearer ${getAuthToken(state)}` },
       });
 
       if (!response.ok) throw new Error('Error al cargar el carrito');
@@ -52,24 +42,25 @@ export const fetchCartItems = createAsyncThunk(
 export const addItemToCart = createAsyncThunk(
   'cart/addItemToCart',
   async (product, { getState, rejectWithValue }) => {
-    if (!isAuthenticated()) {
+    const state = getState();
+
+    if (!isAuth(state)) {
       return rejectWithValue('Debe iniciar sesión para agregar productos al carrito');
     }
 
-    const state = getState();
     const existing = state.cart.items.find((item) => item.id === product.id);
     const nuevaCantidad = existing
       ? existing.cantidad + product.cantidad
       : product.cantidad;
 
-    const cartId = getStoredCartId();
+    const cartId = getCarritoId(state);
     if (cartId) {
       try {
         await fetch(`${API_BASE}/${cartId}/productos`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${getToken()}`,
+            Authorization: `Bearer ${getAuthToken(state)}`,
           },
           body: JSON.stringify({
             productoId: product.id,
@@ -87,17 +78,19 @@ export const addItemToCart = createAsyncThunk(
 
 export const removeItemFromCart = createAsyncThunk(
   'cart/removeItemFromCart',
-  async (productId, { rejectWithValue }) => {
-    if (!isAuthenticated()) {
+  async (productId, { getState, rejectWithValue }) => {
+    const state = getState();
+
+    if (!isAuth(state)) {
       return rejectWithValue('Debe iniciar sesión');
     }
 
-    const cartId = getStoredCartId();
+    const cartId = getCarritoId(state);
     if (cartId) {
       try {
         await fetch(`${API_BASE}/${cartId}/productos/${productId}`, {
           method: 'DELETE',
-          headers: { Authorization: `Bearer ${getToken()}` },
+          headers: { Authorization: `Bearer ${getAuthToken(state)}` },
         });
       } catch (err) {
         return rejectWithValue(err.message);
@@ -111,11 +104,12 @@ export const removeItemFromCart = createAsyncThunk(
 export const updateCartItemQuantity = createAsyncThunk(
   'cart/updateCartItemQuantity',
   async ({ id, delta }, { getState, rejectWithValue }) => {
-    if (!isAuthenticated()) {
+    const state = getState();
+
+    if (!isAuth(state)) {
       return rejectWithValue('Debe iniciar sesión');
     }
 
-    const state = getState();
     const item = state.cart.items.find((i) => i.id === id);
     if (!item) return rejectWithValue('Producto no encontrado en el carrito');
 
@@ -124,7 +118,7 @@ export const updateCartItemQuantity = createAsyncThunk(
       return { remove: true, id };
     }
 
-    const cartId = getStoredCartId();
+    const cartId = getCarritoId(state);
     if (cartId) {
       try {
         const cantidadAReducir = delta < 0 ? Math.abs(delta) : 0;
@@ -133,7 +127,7 @@ export const updateCartItemQuantity = createAsyncThunk(
             `${API_BASE}/${cartId}/productos/${id}/reduce?cantidad=${cantidadAReducir}`,
             {
               method: 'PUT',
-              headers: { Authorization: `Bearer ${getToken()}` },
+              headers: { Authorization: `Bearer ${getAuthToken(state)}` },
             }
           );
         } else {
@@ -141,7 +135,7 @@ export const updateCartItemQuantity = createAsyncThunk(
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${getToken()}`,
+              Authorization: `Bearer ${getAuthToken(state)}`,
             },
             body: JSON.stringify({ productoId: id, cantidad: nuevaCantidad }),
           });
@@ -155,19 +149,56 @@ export const updateCartItemQuantity = createAsyncThunk(
   }
 );
 
+export const checkoutCart = createAsyncThunk(
+  'cart/checkoutCart',
+  async (_, { getState, rejectWithValue }) => {
+    const state = getState();
+    console.log('checkoutCart - state:', state);
+
+    if (!isAuth(state)) {
+      return rejectWithValue('Debe iniciar sesión para finalizar la compra');
+    }
+
+    const carritoId = getCarritoId(state);
+
+    if (!carritoId) {
+      return rejectWithValue('No se encontró el carrito');
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/${carritoId}/checkout`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.log('checkoutCart - errorData:', errorData);
+        return rejectWithValue(errorData.mensaje || errorData.message || 'Error al finalizar la compra');
+      }
+
+      return await response.json();
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 export const clearUserCart = createAsyncThunk(
   'cart/clearUserCart',
-  async (_, { rejectWithValue }) => {
-    if (!isAuthenticated()) {
+  async (_, { getState, rejectWithValue }) => {
+    const state = getState();
+
+    if (!isAuth(state)) {
       return rejectWithValue('Debe iniciar sesión');
     }
 
-    const cartId = getStoredCartId();
+    const cartId = getCarritoId(state);
     if (cartId) {
       try {
         await fetch(`${API_BASE}/${cartId}/productos`, {
           method: 'DELETE',
-          headers: { Authorization: `Bearer ${getToken()}` },
+          headers: { Authorization: `Bearer ${getAuthToken(state)}` },
         });
       } catch (err) {
         return rejectWithValue(err.message);
@@ -249,6 +280,19 @@ const cartSlice = createSlice({
       })
       .addCase(updateCartItemQuantity.rejected, (state, action) => {
         state.error = action.payload || 'Error al actualizar cantidad';
+      })
+      // checkoutCart
+      .addCase(checkoutCart.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(checkoutCart.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.items = [];
+      })
+      .addCase(checkoutCart.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload || 'Error al finalizar la compra';
       })
       // clearUserCart
       .addCase(clearUserCart.fulfilled, (state) => {

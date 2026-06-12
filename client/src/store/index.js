@@ -2,6 +2,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import favoriteReducer from './slices/favoriteSlice';
 import cartReducer from './slices/cartSlice';
+import purchaseReducer from './slices/purchaseSlice';
 import userReducer from './slices/userSlice';
 import themeReducer from './slices/themeSlice';
 
@@ -9,10 +10,10 @@ import themeReducer from './slices/themeSlice';
 // Crea el store global, agrupa todos los reducers (contextos o estados globales) en un solo objeto
 export const store = configureStore({
   reducer: { 
-    // cartReducer cumple la función de CartProvider en useContext
-    cart: cartReducer, // Gestiona el estado del carrito (si lo tienes)
-    favorite: favoriteReducer, // Gestiona el estado de los favoritos (si lo tienes)
-    user: userReducer, // Gestiona el estado del usuario (si lo tienes)
     theme: themeReducer, // Gestiona el estado del tema (si lo tienes)
+    cart: cartReducer,
+    favorite: favoriteReducer,
+    purchases: purchaseReducer,
+    user: userReducer,
   },
 });

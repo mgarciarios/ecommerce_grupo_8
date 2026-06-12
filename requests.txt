@@ -1,0 +1,23 @@
+POST /api/carrito
+curl -X POST http://localhost:8080/api/carrito \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{
+    "usuarioId": 1,
+    "productos": [
+      {"producto": {"id": 1}, "cantidad_producto": 2},
+      {"producto": {"id": 3}, "cantidad_producto": 1}
+    ]
+  }'
+
+POST /api/carrito/1/checkout
+curl -X POST http://localhost:8080/api/carrito/1/checkout \
+  -H "Authorization: Bearer <token>"
+
+GET /api/pedidos/1
+curl -X GET http://localhost:8080/api/pedidos/1 \
+  -H "Authorization: Bearer <token>"
+
+GET /api/pedidos/usuario/1
+curl -X GET http://localhost:8080/api/pedidos/usuario/1 \
+  -H "Authorization: Bearer <token>"

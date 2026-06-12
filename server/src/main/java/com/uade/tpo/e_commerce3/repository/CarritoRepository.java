@@ -8,5 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.uade.tpo.e_commerce3.model.Carrito;
 
 public interface CarritoRepository extends JpaRepository<Carrito, Long>{
+
+    //meotod findById(Long id) → heredado de JPA
     Optional<Carrito> findByUsuarioId(Long usuarioId);
 }

@@ -142,10 +142,11 @@ const NavBar = () => {
             <Link to="/register" className={linkClass('/register')} onClick={closeMenu}>Registro</Link>
           </li>
         )}
-        {isAuthenticated && (
+        {isAuthenticated &&  (
           <li>
             <Link to="/profile" className={linkClass('/profile')} onClick={closeMenu}>Perfil</Link>
-            <Link to="/favorites" className={linkClass('/favorites')} onClick={closeMenu}>Favoritos</Link>          
+            <Link to="/favorites" className={linkClass('/favorites')} onClick={closeMenu}>Favoritos</Link>
+            <Link to="/purchases" className={linkClass('/purchases')} onClick={closeMenu}>Mis Compras</Link>
           </li>
         )}
 

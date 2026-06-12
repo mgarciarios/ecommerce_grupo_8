@@ -2,6 +2,9 @@ package com.uade.tpo.e_commerce3.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,17 +20,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.e_commerce3.dto.CarritoDTO;
+import com.uade.tpo.e_commerce3.dto.PedidoDTO;
 import com.uade.tpo.e_commerce3.dto.ProductoCarritoDTO;
 import com.uade.tpo.e_commerce3.model.Carrito;
 import com.uade.tpo.e_commerce3.service.CarritoService;
+import com.uade.tpo.e_commerce3.service.PedidoService;
 
 
 @RestController
 @RequestMapping("/api/carrito")
 public class CarritoController {
     
+    private static final Logger log = LoggerFactory.getLogger(CarritoController.class);
+
     @Autowired
     private CarritoService carritoService;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     @GetMapping
     public ResponseEntity<List<CarritoDTO>> getAllCarritos() {
@@ -65,11 +75,12 @@ public class CarritoController {
         CarritoDTO carritoVacio = carritoService.vaciarCarritoById(idCarrito);
         return new ResponseEntity<>(carritoVacio, HttpStatus.OK);
     }
-    //TODO: implementar checkout
-    @PostMapping("/{id}/checkout")
-    public ResponseEntity<String> doCheckout(@PathVariable Long id) {
-        //TODO Checkout pendiente por ahora
-        return new ResponseEntity<>("Funcionalidad de Checkout deshabilitada temporalmente.", HttpStatus.NOT_IMPLEMENTED);
+    @PostMapping("/{idCarrito}/checkout")
+    public ResponseEntity<PedidoDTO> doCheckout(@PathVariable Long idCarrito) {
+        log.info("CONTROLLER doCheckout - recibida solicitud POST para idCarrito: {}", idCarrito);
+        PedidoDTO pedido = carritoService.doCheckout(idCarrito);
+        log.info("CONTROLLER doCheckout - completado, pedidoId: {}", pedido.getPedidoId());
+        return new ResponseEntity<>(pedido, HttpStatus.CREATED);
     }
 
     // crear addProductoToCarrito
