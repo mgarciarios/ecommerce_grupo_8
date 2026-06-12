@@ -6,8 +6,8 @@ const getCarritoId = (state) => state.user?.user?.idCarrito;
 const isAuth = (state) => state.user?.isAuthenticated;
 const getAuthToken = (state) => state.user?.token;
 
-export const fetchCart = createAsyncThunk(
-  'cart/fetchCart',
+export const fetchCartItems = createAsyncThunk(
+  'cart/fetchCartItems',
   async (_, { getState, rejectWithValue }) => {
     const state = getState();
     if (!isAuth(state)) return [];
