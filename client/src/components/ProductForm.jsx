@@ -21,7 +21,7 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
         descripcion: producto.descripcion || '',
         precio: producto.precio || '',
         stock: producto.stock || '',
-        categoria: producto.categoria?.id || '',
+        categoria: producto.categorias?.[0] || '',
       });
     }
   }, [producto]);
@@ -94,7 +94,7 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
         descripcion: formData.descripcion.trim(),
         precio: parseFloat(formData.precio),
         stock: parseInt(formData.stock),
-        categoriaId: formData.categoria,
+        categorias: [formData.categoria],
       };
 
       await onSubmit(datosEnvio, producto?.id);
@@ -206,7 +206,7 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
         >
           <option value="">Selecciona una categoría</option>
           {categorias.map((cat) => (
-            <option key={cat.id} value={cat.id}>
+            <option key={cat.id} value={cat.nombre}>
               {cat.nombre}
             </option>
           ))}

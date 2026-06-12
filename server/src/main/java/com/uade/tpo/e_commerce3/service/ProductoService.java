@@ -112,6 +112,25 @@ public class ProductoService {
     existingProducto.setNombre(producto.getNombre());
     existingProducto.setDescripcion(producto.getDescripcion());
     existingProducto.setPrecio(producto.getPrecio());
+    existingProducto.setStock(producto.getStock());
+    existingProducto.setFoto(producto.getFoto());
+
+    List<Categoria> categoriasEntity = new ArrayList<>();
+    if (producto.getCategorias() != null) {
+        for (String nombreCategoria : producto.getCategorias()) {
+            List<Categoria> existente = categoriaRepository.findByNombreIn(List.of(nombreCategoria));
+            if (existente.isEmpty()) {
+                Categoria nuevaCategoria = new Categoria();
+                nuevaCategoria.setNombre(nombreCategoria);
+                categoriaRepository.save(nuevaCategoria);
+                categoriasEntity.add(nuevaCategoria);
+            } else {
+                categoriasEntity.add(existente.get(0));
+            }
+        }
+    }
+    existingProducto.setCategorias(categoriasEntity);
+
     // 3. Guardamos la ENTIDAD y la convertimos a DTO para devolverla
     Producto productoGuardado = productoRepository.save(existingProducto);
     return new ProductoDTO(
