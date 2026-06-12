@@ -3,8 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../store/slices/userSlice'
 import { setFavorites } from '../store/slices/favoriteSlice'
-// IMPORTANTE: Asegurate de exportar setCartItems en tu cartSlice.js
 import { setCartItems } from '../store/slices/cartSlice'
+import ThemeToggle from './ThemeToggle'
 import './css/NavBar.css'
 import { isAdminUser } from '../utils/auth'
 
@@ -15,11 +15,9 @@ const NavBar = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   
-  // Obtener estado de autenticación y usuario de Redux
   const { isAuthenticated, user } = useSelector(state => state.user)
   const canAccessAdmin = isAuthenticated && user && isAdminUser()
 
-  // Cargar favoritos y carrito desde la base de datos al arrancar
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
@@ -29,7 +27,6 @@ const NavBar = () => {
       const carritoId = activeUser?.idCarrito || activeUser?.user?.idCarrito || activeUser?.usuario?.idCarrito || activeUser?.carrito?.id || activeUser?.user?.carrito?.id;
 
       if (token) {
-        // 1. Traer Favoritos
         if (userId) {
           try {
             const resFav = await fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos`, {
@@ -44,7 +41,6 @@ const NavBar = () => {
           }
         }
 
-        // 2. Traer Carrito
         if (carritoId) {
           try {
             const resCart = await fetch(`http://localhost:8080/api/carrito/${carritoId}`, {
@@ -52,13 +48,11 @@ const NavBar = () => {
             });
             if (resCart.ok) {
               const dataCart = await resCart.json();
-              
               const productos = dataCart.productos || (Array.isArray(dataCart) ? dataCart : []);
               const formattedCart = await Promise.all(productos.map(async (p) => {
                 const prodId = p.productoId || p.id || p.producto?.id;
                 let detalles = {};
 
-                // Vamos a buscar los detalles completos a la API de productos para no perder la foto ni el nombre
                 if (prodId) {
                   try {
                     const resProd = await fetch(`http://localhost:8080/api/productos/${prodId}`);
@@ -77,7 +71,7 @@ const NavBar = () => {
                   stock: detalles.stock ?? p.stock ?? p.producto?.stock ?? 99,
                 }
               }));
-              dispatch(setCartItems(formattedCart)); // Guarda el carrito de la BD en Redux
+              dispatch(setCartItems(formattedCart));
             }
           } catch (error) {
             console.error("Error al traer carrito:", error);
@@ -145,12 +139,10 @@ const NavBar = () => {
         {!isAuthenticated && (
           <li>
             <Link to="/login" className={linkClass('/login')} onClick={closeMenu}>Ingresar</Link>
-
             <Link to="/register" className={linkClass('/register')} onClick={closeMenu}>Registro</Link>
           </li>
-      
         )}
-        {isAuthenticated && /*isAdminUser() */ (
+        {isAuthenticated && (
           <li>
             <Link to="/profile" className={linkClass('/profile')} onClick={closeMenu}>Perfil</Link>
             <Link to="/favorites" className={linkClass('/favorites')} onClick={closeMenu}>Favoritos</Link>          
@@ -163,7 +155,6 @@ const NavBar = () => {
           </li>
         )}
 
-
         <li>
           <Link to="/cart" className={linkClass('/cart')} aria-label="Carrito" title="Carrito" onClick={closeMenu}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -172,6 +163,10 @@ const NavBar = () => {
               <path d="M1 1h4l2.68 10.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
             </svg>
           </Link>
+        </li>
+
+        <li className="navbar-theme-item" style={{ display: 'flex', alignItems: 'center', marginLeft: '10px' }}>
+          <ThemeToggle />
         </li>
       </ul>
     </nav>

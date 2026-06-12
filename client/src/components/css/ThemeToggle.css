@@ -1,0 +1,19 @@
+.theme-toggle-btn {
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-weight: 600;
+  background-color: transparent;
+  color: inherit; /* Toma el color de texto del contenedor padre */
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Si la app está en modo oscuro, cambiamos el hover del botón */
+.dark .theme-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
