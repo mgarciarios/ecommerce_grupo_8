@@ -1,8 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 // 1. Buscamos si ya hay una sesión guardada en el navegador al cargar la app
-const savedUser = JSON.parse(localStorage.getItem('user')) || null;
-const savedToken = localStorage.getItem('token') || null;
+let savedUser = null;
+let savedToken = null;
+
+try {
+  const raw = localStorage.getItem('user');
+  savedUser = raw ? JSON.parse(raw) : null;
+} catch {
+  savedUser = null;
+}
+
+try {
+  savedToken = localStorage.getItem('token') || null;
+} catch {
+  localStorage.removeItem('token');
+  savedToken = null;
+}
 
 const userSlice = createSlice({
   name: 'auth',

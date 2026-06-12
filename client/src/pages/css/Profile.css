@@ -194,6 +194,25 @@
   opacity: 0.9;
 }
 
+.profile-btn-logout {
+  width: 100%;
+  height: 38px;
+  background-color: transparent;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.75rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.profile-btn-logout:hover {
+  background-color: #dc2626;
+  color: #fff;
+}
+
 /* Animación de entrada sutil para el Toast */
 @keyframes fadeInUp {
   from {

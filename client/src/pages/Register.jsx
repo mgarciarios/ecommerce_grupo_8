@@ -120,7 +120,7 @@ export default function Register() {
       // Si el backend devuelve token en el registro, guardarlo en Redux
       if (data.token && data.user) {
         dispatch(login({
-          user: data.user,
+          user: { nombreUsuario: data.nombreUsuario },
           token: data.token
         }));
         navigate("/productos");

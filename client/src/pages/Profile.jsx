@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/slices/userSlice";
 import "./css/Profile.css";
 
 const IconUser = () => (
@@ -85,8 +87,10 @@ function Toast({ message }) {
   );
 }
 
+
 export default function Profile() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [tab, setTab] = useState("info");
   const [toast, setToast] = useState(null);
 
@@ -220,6 +224,17 @@ export default function Profile() {
 
             <button type="submit" className="profile-btn-primary">
               Guardar cambios
+            </button>
+
+            <button
+              type="button"
+              className="profile-btn-logout"
+              onClick={() => {
+                dispatch(logout());
+                navigate('/productos');
+              }}
+            >
+              Salir
             </button>
           </form>
         )}
