@@ -1,12 +1,21 @@
 // productService.js - Servicio para gestionar productos
 import { store } from '../store';
+import { getToken as getStoredToken } from '../utils/auth';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Función helper para obtener el token del Redux store
+// Función helper para obtener el token válido desde Redux o desde el storage
 const getToken = () => {
   const state = store.getState();
-  return state.user?.token || null;
+  return state.token || state.user?.token || getStoredToken() || null;
+};
+
+const readApiResponse = async (response) => {
+  const json = await response.json().catch(() => null);
+  if (json && typeof json === 'object' && 'data' in json) {
+    return json.data;
+  }
+  return json;
 };
 
 export const productService = {
@@ -57,7 +66,7 @@ export const productService = {
         throw new Error(errorData.message || 'Error al crear producto');
       }
 
-      return await response.json();
+      return await readApiResponse(response);
     } catch (error) {
       console.error('Error en createProducto:', error);
       throw error;
@@ -83,7 +92,7 @@ export const productService = {
         throw new Error(errorData.message || 'Error al actualizar producto');
       }
 
-      return await response.json();
+      return await readApiResponse(response);
     } catch (error) {
       console.error('Error en updateProducto:', error);
       throw error;
@@ -107,7 +116,7 @@ export const productService = {
         throw new Error(errorData.message || 'Error al eliminar producto');
       }
 
-      return await response.json();
+      return await readApiResponse(response);
     } catch (error) {
       console.error('Error en deleteProducto:', error);
       throw error;
