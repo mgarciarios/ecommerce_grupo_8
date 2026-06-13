@@ -28,46 +28,10 @@ export default function Cart() {
 
   const handleUpdateCantidad = (id, delta) => {
     dispatch(updateCartItemQuantity({ id, delta }));
-
-    const token = localStorage.getItem("token");
-    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
-    const carritoId = localUser?.idCarrito || localUser?.user?.idCarrito || localUser?.usuario?.idCarrito || localUser?.carrito?.id || localUser?.user?.carrito?.id;
-
-    if (token && carritoId) {
-      if (delta < 0) {
-        // Restar cantidad
-        fetch(`http://localhost:8080/api/carrito/${carritoId}/productos/${id}/reduce?cantidad=1`, {
-          method: 'PUT',
-          headers: { 'Authorization': `Bearer ${token}` }
-        }).catch(err => console.error("Error BD al reducir carrito:", err));
-      } else {
-        // Sumar cantidad (buscamos la cantidad actual sumada)
-        const item = items.find((i) => i.id === id);
-        const nuevaCantidad = item ? item.cantidad + delta : 1;
-        
-        fetch(`http://localhost:8080/api/carrito/${carritoId}/productos`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ productoId: id, cantidad: nuevaCantidad }) 
-        }).catch(err => console.error("Error BD al aumentar carrito:", err));
-      }
-    }
   };
 
   const handleRemove = (id) => {
     dispatch(removeItemFromCart(id));
-
-    const token = localStorage.getItem("token");
-    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
-    const carritoId = localUser?.idCarrito || localUser?.user?.idCarrito || localUser?.usuario?.idCarrito || localUser?.carrito?.id || localUser?.user?.carrito?.id;
-
-    if (token && carritoId) {
-      // Ruta correcta para eliminar un producto del carrito
-      fetch(`http://localhost:8080/api/carrito/${carritoId}/productos/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      }).catch(err => console.error("Error BD al eliminar del carrito:", err));
-    }
   };
 
   const handleFinalizarCompra = async () => {

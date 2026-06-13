@@ -25,14 +25,27 @@ export const fetchCartItems = createAsyncThunk(
       const data = await response.json();
       const productos = data.productos || [];
 
-      return productos.map((p) => ({
-        id: p.productoId,
-        nombre: p.nombreProducto,
-        precio: p.precioUnitario,
-        cantidad: p.cantidad,
-        foto: p.foto || null,
-        stock: p.stock ?? 99,
-      }));
+      // Agrupar productos para unificar visualmente cualquier duplicado en la base de datos
+      const agrupados = productos.reduce((acc, p) => {
+        // Agrupamos por nombre para que sea 100% a prueba de fallos, 
+        // sin importar qué ID devuelva la base de datos.
+        const claveUnica = p.nombreProducto || p.productoId;
+        if (acc[claveUnica]) {
+          acc[claveUnica].cantidad += p.cantidad;
+        } else {
+          acc[claveUnica] = {
+            id: p.productoId,
+            nombre: p.nombreProducto,
+            precio: p.precioUnitario,
+            cantidad: p.cantidad,
+            foto: p.foto || null,
+            stock: p.stock ?? 99,
+          };
+        }
+        return acc;
+      }, {});
+
+      return Object.values(agrupados);
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -48,11 +61,6 @@ export const addItemToCart = createAsyncThunk(
       return rejectWithValue('Debe iniciar sesión para agregar productos al carrito');
     }
 
-    const existing = state.cart.items.find((item) => item.id === product.id);
-    const nuevaCantidad = existing
-      ? existing.cantidad + product.cantidad
-      : product.cantidad;
-
     const cartId = getCarritoId(state);
     if (cartId) {
       try {
@@ -64,7 +72,7 @@ export const addItemToCart = createAsyncThunk(
           },
           body: JSON.stringify({
             productoId: product.id,
-            cantidad: nuevaCantidad,
+            cantidad: product.cantidad, // <-- ENVÍA EL DELTA, NO EL TOTAL
           }),
         });
       } catch (err) {
@@ -113,11 +121,6 @@ export const updateCartItemQuantity = createAsyncThunk(
     const item = state.cart.items.find((i) => i.id === id);
     if (!item) return rejectWithValue('Producto no encontrado en el carrito');
 
-    const nuevaCantidad = item.cantidad + delta;
-    if (nuevaCantidad < 1) {
-      return { remove: true, id };
-    }
-
     const cartId = getCarritoId(state);
     if (cartId) {
       try {
@@ -137,7 +140,7 @@ export const updateCartItemQuantity = createAsyncThunk(
               'Content-Type': 'application/json',
               Authorization: `Bearer ${getAuthToken(state)}`,
             },
-            body: JSON.stringify({ productoId: id, cantidad: nuevaCantidad }),
+          body: JSON.stringify({ productoId: id, cantidad: delta }), // <-- ENVÍA EL DELTA
           });
         }
       } catch (err) {
@@ -145,7 +148,7 @@ export const updateCartItemQuantity = createAsyncThunk(
       }
     }
 
-    return { id, cantidad: nuevaCantidad };
+    return { id, delta }; // Devolvemos el delta para sumarlo de forma segura
   }
 );
 
@@ -269,12 +272,13 @@ const cartSlice = createSlice({
       })
       // updateCartItemQuantity
       .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
-        if (action.payload?.remove) {
-          state.items = state.items.filter((item) => item.id !== action.payload.id);
-        } else if (action.payload) {
+        if (action.payload) {
           const item = state.items.find((i) => i.id === action.payload.id);
           if (item) {
-            item.cantidad = action.payload.cantidad;
+            item.cantidad += action.payload.delta; // Sumamos el delta de forma segura e independiente
+            if (item.cantidad <= 0) {
+              state.items = state.items.filter((i) => i.id !== action.payload.id); // Si llega a 0, se elimina
+            }
           }
         }
       })
