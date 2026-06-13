@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Definimos el estado inicial. Por defecto, el e-commerce arranca en claro ('light')
+// Intentamos recuperar el modo del localStorage. Si no existe, usamos 'light' por defecto.
 const initialState = {
-  mode: 'light', 
+  mode: localStorage.getItem('app-theme') || 'light', 
 };
 
 export const themeSlice = createSlice({
@@ -12,6 +12,7 @@ export const themeSlice = createSlice({
     // Esta función va a ser la encargada de alternar el estado
     toggleTheme: (state) => {
       state.mode = state.mode === 'light' ? 'dark' : 'light';
+      localStorage.setItem('app-theme', state.mode); // Guardamos la preferencia en el navegador
     },
   },
 });

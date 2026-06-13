@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux'; 
 import { FavoriteProvider } from './hooks/useContext/FavoriteProvider';
@@ -34,6 +35,17 @@ function AppContent() {
 
   // 1. Escuchamos el modo actual ('light' o 'dark') desde Redux
   const currentMode = useSelector((state) => state.theme.mode);
+
+  // Sincronizamos la clase en el body general del HTML
+  useEffect(() => {
+    if (currentMode === 'dark') {
+      document.body.classList.add('dark');
+      document.body.classList.remove('light');
+    } else {
+      document.body.classList.add('light');
+      document.body.classList.remove('dark');
+    }
+  }, [currentMode]);
 
   return (
     // 2. Envolvemos todo el contenido en este contenedor con la clase dinámica
