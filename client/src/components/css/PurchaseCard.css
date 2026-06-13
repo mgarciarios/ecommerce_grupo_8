@@ -1,0 +1,148 @@
+/* ==========================================================================
+   MODO CLARO (Por defecto)
+   ========================================================================== */
+.purchase-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background: #fff;
+}
+
+.purchase-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.purchase-card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #111;
+}
+
+.purchase-card-date {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.purchase-card-date.received {
+  margin-left: 1rem;
+}
+
+.purchase-card-badge {
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.purchase-card-body {
+  padding: 1rem;
+}
+
+.purchase-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.purchase-table thead tr {
+  border-bottom: 2px solid #e5e7eb;
+  text-align: left;
+}
+
+.purchase-table th,
+.purchase-table td {
+  padding: 0.5rem;
+  color: #333;
+}
+
+.purchase-table .col-cant {
+  text-align: center;
+}
+
+.purchase-table .col-precio,
+.purchase-table .col-subtotal {
+  text-align: right;
+}
+
+.purchase-table tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.purchase-product-link {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.purchase-product-link:hover {
+  text-decoration: underline;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.purchase-card-footer {
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+.purchase-footer-items {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.purchase-footer-total {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111;
+}
+
+/* ==========================================================================
+   MODO OSCURO (.dark) PARA PURCHASE CARD
+   ========================================================================== */
+.dark .purchase-card {
+  background: #18181b;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .purchase-card-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .purchase-card-title,
+.dark .purchase-footer-total,
+.dark .font-semibold {
+  color: #f4f4f5;
+}
+
+.dark .purchase-card-date,
+.dark .purchase-footer-items,
+.dark .purchase-table th,
+.dark .purchase-table td {
+  color: #a1a1aa;
+}
+
+.dark .purchase-table thead tr {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .purchase-table tbody tr {
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+}
+
+.dark .purchase-product-link {
+  color: #60a5fa; /* Azul un poco más claro para un contraste óptimo */
+}
+
+.dark .purchase-card-footer {
+  background: #202024;
+  border-top-color: rgba(255, 255, 255, 0.08);
+}

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import './css/PurchaseCard.css';
 
 const ESTADO_LABELS = {
   PENDIENTE: 'Pendiente',
@@ -34,71 +35,57 @@ export default function PurchaseCard({ pedido }) {
   const totalItems = pedido.items.reduce((sum, i) => sum + i.cantidad, 0);
 
   return (
-    <div style={{
-      border: '1px solid #e5e7eb',
-      borderRadius: '8px',
-      marginBottom: '1rem',
-      background: '#fff',
-    }}>
+    <div className="purchase-card">
       {/* Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '1rem',
-        borderBottom: '1px solid #e5e7eb',
-      }}>
+      <div className="purchase-card-header">
         <div>
-          <h3 style={{ margin: 0, fontSize: '1.1rem' }}>
+          <h3 className="purchase-card-title">
             Pedido #{pedido.pedidoId}
           </h3>
-          <span style={{ fontSize: '0.85rem', color: '#6b7280' }}>{fecha}</span>
+          <span className="purchase-card-date">{fecha}</span>
           {recepcion && (
-            <span style={{ fontSize: '0.85rem', color: '#6b7280', marginLeft: '1rem' }}>
+            <span className="purchase-card-date received">
               Recibido: {recepcion}
             </span>
           )}
         </div>
 
-        <span style={{
-          background: ESTADO_COLORS[pedido.estado] || '#6b7280',
-          color: '#fff',
-          padding: '0.25rem 0.75rem',
-          borderRadius: '999px',
-          fontSize: '0.8rem',
-          fontWeight: 600,
-        }}>
+        {/* Mantenemos el fondo del estado en línea porque depende de la variable JavaScript */}
+        <span 
+          className="purchase-card-badge"
+          style={{ background: ESTADO_COLORS[pedido.estado] || '#6b7280' }}
+        >
           {ESTADO_LABELS[pedido.estado] || pedido.estado}
         </span>
       </div>
 
       {/* Product detail */}
-      <div style={{ padding: '1rem' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <div className="purchase-card-body">
+        <table className="purchase-table">
           <thead>
-            <tr style={{ borderBottom: '2px solid #e5e7eb', textAlign: 'left' }}>
-              <th style={{ padding: '0.5rem' }}>Producto</th>
-              <th style={{ padding: '0.5rem', textAlign: 'center' }}>Cant.</th>
-              <th style={{ padding: '0.5rem', textAlign: 'right' }}>P. Unit.</th>
-              <th style={{ padding: '0.5rem', textAlign: 'right' }}>Subtotal</th>
+            <tr>
+              <th className="col-producto">Producto</th>
+              <th className="col-cant">Cant.</th>
+              <th className="col-precio">P. Unit.</th>
+              <th className="col-subtotal">Subtotal</th>
             </tr>
           </thead>
           <tbody>
             {pedido.items.map((item) => (
-              <tr key={item.pedidoProductoId} style={{ borderBottom: '1px solid #f3f4f6' }}>
-                <td style={{ padding: '0.5rem' }}>
+              <tr key={item.pedidoProductoId}>
+                <td className="col-producto">
                   <Link
                     to={`/producto/${item.productoId}`}
-                    style={{ color: '#2563eb', textDecoration: 'none' }}
+                    className="purchase-product-link"
                   >
                     {item.nombreProducto}
                   </Link>
                 </td>
-                <td style={{ padding: '0.5rem', textAlign: 'center' }}>{item.cantidad}</td>
-                <td style={{ padding: '0.5rem', textAlign: 'right' }}>
+                <td className="col-cant">{item.cantidad}</td>
+                <td className="col-precio">
                   ${item.precioUnitario.toFixed(2)}
                 </td>
-                <td style={{ padding: '0.5rem', textAlign: 'right', fontWeight: 600 }}>
+                <td className="col-subtotal font-semibold">
                   ${(item.precioUnitario * item.cantidad).toFixed(2)}
                 </td>
               </tr>
@@ -108,18 +95,11 @@ export default function PurchaseCard({ pedido }) {
       </div>
 
       {/* Footer */}
-      <div style={{
-        padding: '0.75rem 1rem',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        background: '#f9fafb',
-        borderTop: '1px solid #e5e7eb',
-      }}>
-        <span style={{ fontSize: '0.9rem', color: '#4b5563' }}>
+      <div className="purchase-card-footer">
+        <span className="purchase-footer-items">
           {totalItems} {totalItems === 1 ? 'producto' : 'productos'}
         </span>
-        <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>
+        <span className="purchase-footer-total">
           ${pedido.total.toFixed(2)}
         </span>
       </div>
