@@ -285,6 +285,7 @@ export default function ProductoDetalle() {
               }}>
                 <button
                   type="button"
+                  className={`detalle-btn-favorito ${favorites.some((f) => f.id === producto.id) ? 'is-fav' : ''}`}
                   onClick={handleFavoriteClick}
                   style={{
                     width: 'max-content', // Tu configuración actual
@@ -309,7 +310,11 @@ export default function ProductoDetalle() {
                     if (!favorites.some((f) => f.id === producto.id)) e.currentTarget.style.background = 'transparent';
                   }}
                 >
-                    {favorites.some((f) => f.id === producto.id) ? '❤️ Quitar de favoritos' : '🖤 Añadir a favoritos'}
+                  <span className="emoji-light">{favorites.some((f) => f.id === producto.id) ? '❤️' : '🖤'}</span>
+                  <span className="emoji-dark">{favorites.some((f) => f.id === producto.id) ? '❤️' : '🤍'}</span>
+                  <span>
+                    {favorites.some((f) => f.id === producto.id) ? ' Quitar de favoritos' : ' Añadir a favoritos'}
+                  </span>
                 </button>
               </div>
               <div className="detalle-acciones">

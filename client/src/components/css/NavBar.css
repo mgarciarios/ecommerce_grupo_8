@@ -92,7 +92,7 @@
 }
 
 .navbar-link-admin {
-  color: #fbbf24;
+  color: #f0b51e;
 }
 
 .navbar-search {
@@ -230,6 +230,15 @@
   background: #1a1a1a !important;
 }
 
+/* Recuperar el color dorado del botón Admin en modo claro */
+.light .navbar-link.navbar-link-admin {
+  color: #f0b51e !important;
+}
+.light .navbar-link.navbar-link-admin:hover {
+  color: #fbbf24 !important;
+  background: rgba(219, 155, 5, 0.1) !important;
+}
+
 /* --- CUANDO SE ACTIVA EL MODO OSCURO (.dark) --- */
 .dark .navbar {
   background: #18181b !important; /* Gris un toque más claro que el fondo general */
@@ -255,6 +264,15 @@
 }
 .dark .navbar-hamburger span {
   background: #ffffff !important;
+}
+
+/* Recuperar el color dorado del botón Admin en modo oscuro */
+.dark .navbar-link.navbar-link-admin {
+  color: #f0b51e !important;
+}
+.dark .navbar-link.navbar-link-admin:hover {
+  color: #fbbf24 !important;
+  background: rgba(219, 155, 5, 0.1) !important;
 }
 
 /* ==========================================================================

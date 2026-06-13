@@ -51,15 +51,24 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1px solid #8a3ffc;
-  background: #fff;
-  color: #8a3ffc;
+  border: none;
+  color: #ffffff;
   cursor: pointer;
   font-weight: bold;
   font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Botón "-" (primer botón del grupo) */
+.cart-item-qty button:first-of-type {
+  background: #ef4444; /* Rojo */
+}
+
+/* Botón "+" (último botón del grupo) */
+.cart-item-qty button:last-of-type {
+  background: #22c55e; /* Verde */
 }
 
 .cart-item-qty button:disabled {
@@ -93,4 +102,31 @@
 
 .cart-item-remove:hover {
   text-decoration: underline;
+}
+
+/* ==========================================================================
+   MODO OSCURO (.dark) PARA CART CARD
+   ========================================================================== */
+
+.dark .cart-item {
+  background: #18181b;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .cart-item-img {
+  background: #ffffff !important;
+}
+
+.dark .cart-item-name,
+.dark .cart-item-qty span,
+.dark .cart-item-subtotal {
+  color: #f4f4f5;
+}
+
+.dark .cart-item-price {
+  color: #a1a1aa;
+}
+
+.dark .cart-item-remove {
+  color: #ef4444; /* Rojo más claro/brillante para modo oscuro */
 }

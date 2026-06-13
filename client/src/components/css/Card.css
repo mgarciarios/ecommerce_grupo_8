@@ -132,3 +132,61 @@
 .card__button:active {
   transform: scale(0.98);
 }
+
+/* ==========================================================================
+   MODO OSCURO (.dark) PARA LAS CARDS
+   ========================================================================== */
+
+.dark .card {
+  background: #18181b; /* Gris muy oscuro, casi negro */
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Mantenemos el fondo de la caja de la imagen blanco en modo oscuro */
+.dark .card__image,
+.dark .product-list .card .card__image {
+  background: #ffffff !important; /* Fondo blanco para que las imágenes (ej: JPGs) se fusionen sin mostrar bordes */
+}
+
+/* Títulos de los productos más claros (blanco tiza) */
+.dark .card__text-block h4, 
+.dark .card__text-block a,
+.dark .card__text-block link {
+  color: #f4f4f5 !important;
+}
+
+/* Descripciones legibles en gris claro */
+.dark .card__text-block p {
+  color: #a1a1aa !important;
+}
+
+/* ==========================================================================
+   ACLARAR BOTÓN DE FAVORITOS EN MODO OSCURO
+   ========================================================================== */
+.dark .card__favorite-btn:not(.is-fav) {
+  color: #f4f4f5 !important;        /* Texto blanco/claro */
+  border-color: #a1a1aa !important; /* Borde gris claro */
+}
+
+.dark .card__favorite-btn:not(.is-fav):hover {
+  background: rgba(255, 255, 255, 0.1) !important; /* Hover sutil claro */
+}
+
+/* ==========================================================================
+   TRUCO PARA ALTERNAR EL EMOJI DE FAVORITOS (BLANCO/NEGRO)
+   ========================================================================== */
+.emoji-dark {
+  display: none; /* Por defecto (modo claro), ocultamos el corazón blanco */
+}
+
+.dark .emoji-light {
+  display: none; /* En modo oscuro, ocultamos el corazón negro */
+}
+.dark .emoji-dark {
+  display: inline; /* En modo oscuro, mostramos el corazón blanco */
+}

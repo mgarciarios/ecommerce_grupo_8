@@ -133,3 +133,61 @@
 .favorite__remove:hover {
   background: #fef2f2;
 }
+
+/* ==========================================================================
+   MODO OSCURO (.dark) PARA FAVORITOS
+   ========================================================================== */
+
+.dark .favorite__title {
+  color: #f4f4f5;
+}
+
+.dark .favorite__empty {
+  background: #18181b;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .favorite__empty p {
+  color: #a1a1aa;
+}
+
+.dark .favorite__link {
+  background: #3f3f46;
+  color: #ffffff;
+}
+
+.dark .favorite__link:hover {
+  background: #52525b;
+}
+
+.dark .favorite__card {
+  background: #18181b;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .favorite__card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .favorite__image {
+  background: #ffffff !important;
+}
+
+.dark .favorite__name {
+  color: #f4f4f5;
+}
+
+.dark .favorite__price {
+  color: #22c55e; /* Verde un poco más brillante para que resalte en oscuro */
+}
+
+.dark .favorite__remove {
+  background: transparent;
+  color: #ef4444; /* Rojo más claro/brillante para modo oscuro */
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .favorite__remove:hover {
+  background: rgba(239, 68, 68, 0.1); /* Hover de color rojo sutil y translúcido */
+}

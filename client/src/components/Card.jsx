@@ -151,7 +151,8 @@ const Card = ({
               if (!esFav) e.currentTarget.style.background = 'transparent';
             }}
           >
-            <span>{esFav ? '❤️' : '🖤'}</span>
+            <span className="emoji-light">{esFav ? '❤️' : '🖤'}</span>
+            <span className="emoji-dark">{esFav ? '❤️' : '🤍'}</span>
             <span>
               {esFav ? 'Quitar de favoritos' : 'Añadir a favoritos'}
             </span>

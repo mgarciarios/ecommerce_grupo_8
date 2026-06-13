@@ -35,7 +35,8 @@
   align-items: center;      
   justify-content: center;   
   padding: 2rem;
-  height: 400px;             
+  height: 100%;              /* 👈 Ocupa todo el alto disponible en la columna */
+  min-height: 400px;         /* 👈 Mantiene un mínimo para que no colapse si hay poco texto */
   box-sizing: border-box;
   border-right: 1px solid #e5e5e3; /* 👈 Opcional: una sutil línea divisoria con la info de la derecha */
 }
@@ -277,4 +278,83 @@
   .detalle-info {
     padding: 2rem;
   }
+}
+
+/* ==========================================================================
+   MODO OSCURO (.dark) PARA PRODUCT DETAIL
+   ========================================================================== */
+
+.dark .detalle-card {
+  background: #18181b;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .detalle-imagen {
+  background: #ffffff !important;
+  border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Textos */
+.dark .detalle-info h1,
+.dark .detalle-descripcion h3 {
+  color: #f4f4f5;
+}
+
+.dark .detalle-descripcion p,
+.dark .detalle-breadcrumb,
+.dark .detalle-cantidad label {
+  color: #a1a1aa;
+}
+
+.dark .detalle-breadcrumb a {
+  color: #f4f4f5;
+}
+
+.dark .precio-actual {
+  color: #22c55e; /* Verde brillante que destaca mejor sobre el fondo oscuro */
+}
+
+.dark .precio-anterior {
+  color: #71717a;
+}
+
+.dark .categoria-badge {
+  background: #27272a;
+  color: #a1a1aa;
+}
+
+/* Botón de cantidad (el número en el medio) */
+.dark .cantidad-control span {
+  color: #f4f4f5 !important;
+}
+
+/* Botones de acción general */
+.dark .btn-comprar {
+  background: #3f3f46;
+  color: #ffffff;
+}
+.dark .btn-comprar:hover {
+  background: #52525b;
+}
+
+.dark .btn-seguir {
+  background: transparent;
+  color: #f4f4f5;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.dark .btn-seguir:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ==========================================================================
+   BOTÓN DE FAVORITOS EN MODO OSCURO
+   ========================================================================== */
+
+.dark .detalle-btn-favorito:not(.is-fav) {
+  color: #f4f4f5 !important;
+  border-color: #a1a1aa !important;
+}
+
+.dark .detalle-btn-favorito:not(.is-fav):hover {
+  background: rgba(255, 255, 255, 0.1) !important;
 }
