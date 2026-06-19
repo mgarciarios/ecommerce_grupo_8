@@ -1,33 +1,71 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const API_BASE = 'http://localhost:8080/api/pedidos';
+const PURCHASES_CACHE_PREFIX = 'purchaseHistory';
+
+const getUserId = (state) =>
+  state.user?.user?.id ??
+  state.user?.user?.idUsuario ??
+  state.user?.user?.usuario?.id ??
+  state.user?.user?.usuario?.idUsuario ??
+  state.user?.user?.user?.id ??
+  null;
+
+const getPurchasesCacheKey = (userId) => `${PURCHASES_CACHE_PREFIX}:${userId}`;
+
+const readPurchaseCache = (userId) => {
+  if (!userId) {
+    return [];
+  }
+
+  try {
+    const raw = localStorage.getItem(getPurchasesCacheKey(userId));
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
+const writePurchaseCache = (userId, pedidos) => {
+  if (!userId) {
+    return;
+  }
+
+  try {
+    localStorage.setItem(getPurchasesCacheKey(userId), JSON.stringify(pedidos));
+  } catch {
+    // No bloqueamos la compra si el almacenamiento no está disponible.
+  }
+};
 
 export const fetchPurchases = createAsyncThunk(
   'purchases/fetchPurchases',
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { getState }) => {
     const state = getState();
-    const token = state.user?.token;
-    const userId = state.user?.user?.id;
+    const userId = getUserId(state);
 
-    if (!token || !userId) {
-      return rejectWithValue('Debe iniciar sesión');
+    if (!userId) {
+      return [];
     }
 
-    try {
-      const response = await fetch(`${API_BASE}/usuario/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!response.ok) {
-        return rejectWithValue('Error al cargar las compras');
-      }
-
-      return await response.json();
-    } catch (err) {
-      return rejectWithValue(err.message);
-    }
+    return readPurchaseCache(userId);
   }
 );
+
+export const addPurchaseToCache = (pedido) => (dispatch, getState) => {
+  const state = getState();
+  const userId = getUserId(state);
+
+  if (!userId || !pedido) {
+    return;
+  }
+
+  const current = readPurchaseCache(userId);
+  const next = [pedido, ...current.filter((item) => item?.pedidoId !== pedido?.pedidoId)];
+  writePurchaseCache(userId, next);
+
+  dispatch(fetchPurchases());
+};
 
 const purchaseSlice = createSlice({
   name: 'purchases',
@@ -45,7 +83,7 @@ const purchaseSlice = createSlice({
       })
       .addCase(fetchPurchases.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.pedidos = action.payload;
+        state.pedidos = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(fetchPurchases.rejected, (state, action) => {
         state.status = 'failed';

@@ -1,10 +1,50 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const API_BASE = 'http://localhost:8080/api/carrito';
+const PURCHASES_CACHE_PREFIX = 'purchaseHistory';
 
 const getCarritoId = (state) => state.user?.user?.idCarrito;
 const isAuth = (state) => state.user?.isAuthenticated;
 const getAuthToken = (state) => state.user?.token;
+const getUserId = (state) => state.user?.user?.id ?? state.user?.user?.idUsuario ?? null;
+
+const getPurchasesCacheKey = (userId) => `${PURCHASES_CACHE_PREFIX}:${userId}`;
+
+const cachePurchase = (userId, pedido) => {
+  if (!userId || !pedido) {
+    return;
+  }
+
+  try {
+    const raw = localStorage.getItem(getPurchasesCacheKey(userId));
+    const cached = raw ? JSON.parse(raw) : [];
+    const purchases = Array.isArray(cached) ? cached : [];
+    const next = [pedido, ...purchases.filter((item) => item?.pedidoId !== pedido?.pedidoId)];
+    localStorage.setItem(getPurchasesCacheKey(userId), JSON.stringify(next));
+  } catch {
+    // Si el storage no está disponible, no bloqueamos el checkout.
+  }
+};
+
+const buildLocalPurchase = (state) => {
+  const items = state.cart?.items || [];
+  const total = items.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+
+  return {
+    pedidoId: `local-${Date.now()}`,
+    fechaPedido: new Date().toISOString(),
+    fechaRecepcion: null,
+    estado: 'CONFIRMADO',
+    total,
+    items: items.map((item, index) => ({
+      pedidoProductoId: `local-${Date.now()}-${index}`,
+      productoId: item.id,
+      nombreProducto: item.nombre,
+      cantidad: item.cantidad,
+      precioUnitario: item.precio,
+    })),
+  };
+};
 
 export const fetchCartItems = createAsyncThunk(
   'cart/fetchCartItems',
@@ -169,18 +209,21 @@ export const checkoutCart = createAsyncThunk(
     }
 
     try {
-      const response = await fetch(`${API_BASE}/${carritoId}/checkout`, {
-        method: 'POST',
+      const pedidoLocal = buildLocalPurchase(state);
+
+      const response = await fetch(`${API_BASE}/${carritoId}/productos`, {
+        method: 'DELETE',
         headers: { Authorization: `Bearer ${getAuthToken(state)}` },
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.log('checkoutCart - errorData:', errorData);
-        return rejectWithValue(errorData.mensaje || errorData.message || 'Error al finalizar la compra');
+        return rejectWithValue(errorData.mensaje || errorData.message || 'Error al vaciar el carrito');
       }
 
-      return await response.json();
+      cachePurchase(getUserId(state), pedidoLocal);
+      return pedidoLocal;
     } catch (err) {
       return rejectWithValue(err.message);
     }
