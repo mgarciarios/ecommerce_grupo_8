@@ -6,10 +6,108 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- MODO OSCURO (Gris Oscuro Confortable) --- */
+/* --- MODO OSCURO --- */
+
+/* 1. Fondo global */
+.app-container.dark,
+.app-container.dark ~ body,
+:root:has(.app-container.dark) body {
+  background-color: #121214 !important;
+}
+
 .app-container.dark {
   background-color: #121214; 
   color: #f5f5f5;
   min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 2. Tarjetas oscuras (Quitamos 'form' de acá para eliminar ese recuadro interno molesto) */
+.app-container.dark .profile-card,
+.app-container.dark .product-card,
+.app-container.dark .card-contenedor,
+.app-container.dark .main-container,
+.app-container.dark [class*="card"],
+.app-container.dark .login-container > div { 
+  background-color: #1a1a1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Forzamos que si hay un elemento 'form' interno, sea completamente transparente y sin bordes */
+.app-container.dark form {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important; /* Evita que te desfase los márgenes internos que ya tenías */
+}
+
+/* 3. CORRECCIÓN DE TEXTO (Rescatamos el "Bienvenido" use la etiqueta que use) */
+.app-container.dark [class*="card"] h1,
+.app-container.dark [class*="card"] h2,
+.app-container.dark [class*="card"] h3,
+.app-container.dark [class*="card"] p,
+.app-container.dark [class*="card"] label,
+.app-container.dark [class*="card"] span,
+.app-container.dark [class*="card"] a,
+.app-container.dark form *,                  /* Fuerza blanco a todo lo que esté dentro de un form */
+.app-container.dark .login-container * {      /* Fuerza blanco a todo lo que esté en la pantalla de login */
+  color: #ffffff !important;
+}
+
+/* Mantener links de abajo legibles */
+.app-container.dark [class*="card"] a,
+.app-container.dark form a {
+  color: #3b82f6 !important; /* Les damos un toque azul sutil para que se entienda que son links */
+}
+
+/* 4. Inputs y campos de texto (Global para Perfil y Login) */
+.app-container.dark [class*="card"] input,
+.app-container.dark [class*="card"] .form-control,
+.app-container.dark form input,
+.app-container.dark form .form-control {
+  background-color: #222226 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+}
+
+/* Forzar que los iconos internos de los inputs queden claros */
+.app-container.dark [class*="card"] input ~ *,
+.app-container.dark form input ~ * {
+  color: #a1a1aa !important;
+}
+
+.app-container.dark [class*="card"] ::placeholder,
+.app-container.dark form ::placeholder {
+  color: #71717a !important;
+}
+
+/* ==========================================================================
+   PESTAÑAS (TABS) EN MODO OSCURO
+   ========================================================================== */
+
+/* Unificamos transiciones para evitar desajustes visuales */
+.app-container.dark .profile-card button {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 1. Pestaña ACTIVA */
+.app-container.dark .profile-card button[class*="active"],
+.app-container.dark .profile-card [class*="tab"].active,
+.app-container.dark .profile-card button:not([disabled]):has(~ .active) {
+  color: #121214 !important; 
+}
+
+/* 2. Pestaña INACTIVA */
+.app-container.dark .profile-card button:not(.active),
+.app-container.dark .profile-card [class*="tab"]:not(.active) {
+  color: #a1a1aa !important; 
+  background-color: transparent !important;
+}
+
+/* 3. Ajuste para fondos inline blancos */
+.app-container.dark .profile-card *[style*="background-color: white"] *,
+.app-container.dark .profile-card *[style*="background-color: rgb(255, 255, 255)"] * {
+  color: #121214 !important;
 }

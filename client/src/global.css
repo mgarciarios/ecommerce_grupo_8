@@ -11,3 +11,27 @@ body,
 * {
   box-sizing: border-box;
 }
+
+
+/* ==========================================================================
+   RESETEO SEGURO PARA ELIMINAR EL BLANCO EN MODO OSCURO
+   ========================================================================== */
+
+/* 1. Obligamos a los cimientos del navegador a oscurecerse si la app es dark */
+html, 
+body {
+  background-color: #121214; /* Color oscuro por defecto para evitar destellos */
+}
+
+/* 2. El truco maestro: Volvemos transparentes los divs contenedores 
+      que envuelven a la tarjeta del perfil cuando está activo el modo oscuro */
+.app-container.dark div:not(.profile-card):not([class*="card"]):not(.form-control) {
+  background-color: transparent !important;
+}
+
+/* 3. Por si las dudas la pantalla del perfil usa un elemento <main> o <section> */
+.app-container.dark main,
+.app-container.dark section,
+.app-container.dark .profile-page {
+  background-color: transparent !important;
+}
