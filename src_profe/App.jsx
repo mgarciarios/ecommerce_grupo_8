@@ -17,6 +17,8 @@ import { CartProvider } from './hooks/useContext/CartProvider'
 import Card from './ejemplos/Card'
 import Counter from './components/Counter'
 import Favorite from './components/Favorite'
+import LoginJWT from './components/LoginJWT'
+import { DebugAuth } from './components/DebugAuth'
 
 function App() {
   return (
@@ -25,7 +27,10 @@ function App() {
         <BrowserRouter>
           {/* aquí se definen todas las rutas o links de la app, que luego serán usadas en diferentes componentes */}
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<LoginJWT />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/debug-auth" element={<DebugAuth />} />
+
             {/* <a href="/ProductList.html">Link a productos</a> */}
             <Route path="/products" element={<ProductList />} />
             <Route path="/products/:id" element={<ProductDetail />} />

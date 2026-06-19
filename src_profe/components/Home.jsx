@@ -16,6 +16,8 @@ const Home = () => {
       {/* <Link to="/cart">Ir al carrito</Link> */}
       <br />
       <Link to="/counter">Ir al contador</Link>
+      <br />
+      <Link to="/debug-auth">Debug Auth</Link>
     </div>
   );
 };

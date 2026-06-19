@@ -38,6 +38,7 @@ const cartSlice = createSlice({
   // TODO: ssanchez - agregar llamadas a la API para incrementar y decrementar 
   // acciones internas (síncronas) para agregar, eliminar y limpiar el carrito
   reducers: {
+    //TODO: ssanchez - llamar a la api de cartSlice
     addToCart: (state, action) => {
       //state.total datos de total
       const product = action.payload;
@@ -60,7 +61,7 @@ const cartSlice = createSlice({
       state.items = state.items.filter(item => item.id !== action.payload);
     },
     
-    clearCart: (state) => {
+    clearCart: (state) => { 
       state.items = [];
     }
   },

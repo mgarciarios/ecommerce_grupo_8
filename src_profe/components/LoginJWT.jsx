@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../store/slices/authSlice';
 
 const LoginJWT = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  // Obtener el estado de autenticación desde Redux
+  const { isAuthenticated, isLoading, error } = useSelector(state => state.auth);
+  
+  //credentials es un estado local que guarda el email y password que el usuario ingresa en el formulario
   const [credentials, setCredentials] = useState({
     email: '',
     password: ''
   });
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
+  // handleChange actualiza el estado local de credentials cada vez que el usuario escribe en los campos de email o password
   const handleChange = (e) => {
     setCredentials({
       ...credentials,
@@ -18,32 +24,23 @@ const LoginJWT = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  // handleSubmit se ejecuta al enviar el formulario, dispara la acción de loginUser con las credenciales
+  const handleSubmit = (e) => {
+    //e.preventDefault() evita que el formulario se envíe de forma tradicional, lo que recargaría la página. En su lugar, manejamos el envío con JavaScript.
     e.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    try {
-      // Reemplazar con tu URL de API real
-      const response = await axios.post('http://localhost:3000/api/auth/login', credentials);
-      
-      if (response.data.token) {
-        // Guardar el token en localStorage
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('isAuthenticated', 'true');
-        
-        // Configurar el token para futuras peticiones
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-        
-        // Redirigir al usuario
-        navigate('/checkout');
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Error al iniciar sesión. Por favor, intente nuevamente.');
-    } finally {
-      setIsLoading(false);
-    }
+    // Disparar la acción de login con Redux
+    dispatch(loginUser(credentials));
   };
+
+  // Redirigir cuando el login sea exitoso
+  useEffect(() => {
+    if (isAuthenticated) {
+      // se limpian los campos porque el usuario ya está autenticado, no es necesario mantener esa info en el estado local
+      setCredentials({ email: '', password: '' });
+      // Redirigir al home
+      navigate('/home');
+    }
+  }, [isAuthenticated]);
 
   return (
     <div style={{ 
