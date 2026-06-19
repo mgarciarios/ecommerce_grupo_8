@@ -1,35 +1,22 @@
-const getStoredToken = () => localStorage.getItem('token') || sessionStorage.getItem('token');
-
-const decodeJwtPayload = (token) => {
-  if (!token) return null;
-
-  try {
-    const payload = token.split('.')[1];
-    if (!payload) return null;
-
-    const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
-    const decoded = atob(normalized);
-
-    return JSON.parse(
-      decodeURIComponent(
-        decoded
-          .split('')
-          .map((char) => `%${`00${char.charCodeAt(0).toString(16)}`.slice(-2)}`)
-          .join('')
-      )
-    );
-  } catch (error) {
-    console.error('No se pudo decodificar el token JWT:', error);
-    return null;
-  }
+// NUEVO: Modificamos cómo verificamos la existencia de sesión.
+// Ahora nos basamos en si existe el objeto 'user' en el storage.
+const getStoredUser = () => {
+  const userString = localStorage.getItem('user');
+  return userString ? JSON.parse(userString) : null;
 };
 
-export const isAuthenticated = () => Boolean(getStoredToken());
+// NUEVO: Eliminamos decodeJwtPayload() ya que no podemos leer el JWT
+
+export const isAuthenticated = () => Boolean(getStoredUser());
 
 export const isAdminUser = () => {
-  const token = getStoredToken();
-  const payload = decodeJwtPayload(token);
-  const roles = String(payload?.roles || payload?.role || '')
+  // NUEVO: En lugar de decodificar el token, buscamos el rol en el usuario guardado
+  const user = getStoredUser();
+  if (!user) return false;
+
+  // Adaptamos la lógica para leer los roles desde el objeto user
+  // Asegúrate de que el backend envíe la propiedad 'role' o 'roles' dentro de los datos del usuario al loguearse.
+  const roles = String(user.roles || user.role || '')
     .split(',')
     .map((role) => role.trim().toUpperCase())
     .filter(Boolean);
@@ -37,4 +24,6 @@ export const isAdminUser = () => {
   return roles.includes('ADMIN') || roles.includes('ROLE_ADMIN');
 };
 
-export const getToken = () => getStoredToken();
+// NUEVO: Exportar un método obsoleto que retorne null para no romper componentes 
+// que aún intenten llamar a getToken() mientras migramos.
+export const getToken = () => null;

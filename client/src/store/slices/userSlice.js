@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 // 1. Buscamos si ya hay una sesión guardada en el navegador al cargar la app
 let savedUser = null;
-let savedToken = null;
+// NUEVO: Eliminamos toda la lógica de savedToken
 
 try {
   const raw = localStorage.getItem('user');
@@ -11,46 +11,40 @@ try {
   savedUser = null;
 }
 
-try {
-  savedToken = localStorage.getItem('token') || null;
-} catch {
-  localStorage.removeItem('token');
-  savedToken = null;
-}
+// NUEVO: Ya no intentamos leer el token de localStorage
 
 const userSlice = createSlice({
   name: 'auth',
   initialState: {
     user: savedUser,                 // Datos del usuario o null
-    token: savedToken,               // Token de acceso o null
-    isAuthenticated: !!savedToken,   // true si hay token, false si no
+    // NUEVO: Eliminamos la propiedad token
+    isAuthenticated: !!savedUser,    // NUEVO: true si hay usuario, false si no
   },
 
   reducers: {
     // Se ejecuta cuando el usuario hace login exitosamente
     login: (state, action) => {
-      const { user, token } = action.payload; // Recibimos usuario y token
+      // NUEVO: Solo recibimos el user, ignoramos el token
+      const { user } = action.payload; 
 
       // Actualizamos el estado de Redux
       state.user = user;
-      state.token = token;
       state.isAuthenticated = true;
 
       // Guardamos en el navegador para que no se pierda al recargar
       localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('token', token);
+      // NUEVO: Eliminamos localStorage.setItem('token', ...)
     },
 
     // Se ejecuta cuando el usuario cierra sesión
     logout: (state) => {
       // Limpiamos el estado de Redux
       state.user = null;
-      state.token = null;
       state.isAuthenticated = false;
 
       // Borramos los datos del navegador
       localStorage.removeItem('user');
-      localStorage.removeItem('token');
+      // NUEVO: Eliminamos localStorage.removeItem('token')
     }
   }
 });
