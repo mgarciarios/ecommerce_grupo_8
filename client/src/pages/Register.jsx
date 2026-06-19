@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { login } from "../store/slices/userSlice";
 import "./css/Register.css";
 
 export default function Register() {
@@ -17,7 +15,6 @@ export default function Register() {
   });
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -68,6 +65,7 @@ export default function Register() {
       // Llamada al endpoint de registro
       const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -117,18 +115,8 @@ export default function Register() {
 
       console.log("✅ Registro exitoso:", data);
       
-      // Si el backend devuelve token en el registro, guardarlo en Redux
-      if (data.token && data.user) {
-        dispatch(login({
-          user: data.user,
-          token: data.token
-        }));
-        navigate("/productos");
-      } else {
-        // Si no hay token, mostrar mensaje y redirigir a login
-        alert("Registro exitoso. Ahora podés iniciar sesión.");
-        navigate("/login");
-      }
+      alert("Registro exitoso. Ahora podés iniciar sesión.");
+      navigate("/login");
 
     } catch (err) {
       console.error("🚨 ERROR CAPTURADO:", err);

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux'; 
+import { useDispatch, useSelector } from 'react-redux'; 
 import { FavoriteProvider } from './hooks/useContext/FavoriteProvider';
 import Landing from './pages/Landing';
 import ProductDetail from './pages/ProductDetail';
@@ -13,15 +13,22 @@ import Cart from './pages/Cart';
 import Purchases from './pages/Purchases';
 import Search from './pages/Search';
 import NavBar from './components/NavBar';
-import { isAuthenticated, isAdminUser } from './utils/auth';
+import { checkSession } from './store/slices/userSlice';
+import { isAdminUser } from './utils/auth';
 import './App.css';
 
 function AdminRoute({ children }) {
-  if (!isAuthenticated()) {
+  const { user, isAuthenticated, authChecked } = useSelector((state) => state.user);
+
+  if (!authChecked) {
+    return null;
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  if (!isAdminUser()) {
+  if (!isAdminUser(user)) {
     return <Navigate to="/productos" replace />;
   }
 
@@ -30,11 +37,16 @@ function AdminRoute({ children }) {
 
 function AppContent() {
   const location = useLocation();
+  const dispatch = useDispatch();
   const hideNavBarRoutes = ['/login', '/register'];
   const shouldHideNavBar = hideNavBarRoutes.includes(location.pathname);
 
   // 1. Escuchamos el modo actual ('light' o 'dark') desde Redux
   const currentMode = useSelector((state) => state.theme.mode);
+
+  useEffect(() => {
+    dispatch(checkSession());
+  }, [dispatch]);
 
   // Sincronizamos la clase en el body general del HTML
   useEffect(() => {

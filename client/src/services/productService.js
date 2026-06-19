@@ -1,14 +1,6 @@
 // productService.js - Servicio para gestionar productos
-import { store } from '../store';
-import { getToken as getStoredToken } from '../utils/auth';
 
 const API_BASE_URL = 'http://localhost:8080/api';
-
-// Función helper para obtener el token válido desde Redux o desde el storage
-const getToken = () => {
-  const state = store.getState();
-  return state.token || state.user?.token || getStoredToken() || null;
-};
 
 const readApiResponse = async (response) => {
   const json = await response.json().catch(() => null);
@@ -50,13 +42,11 @@ export const productService = {
   // Crear un nuevo producto
   createProducto: async (productoData) => {
     try {
-      const token = getToken();
-      
       const response = await fetch(`${API_BASE_URL}/productos`, {
         method: 'POST',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(productoData),
       });
@@ -76,13 +66,11 @@ export const productService = {
   // Actualizar un producto
   updateProducto: async (id, productoData) => {
     try {
-      const token = getToken();
-      
       const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
         method: 'PUT',
+        credentials: "include",
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(productoData),
       });
@@ -102,13 +90,9 @@ export const productService = {
   // Eliminar un producto
   deleteProducto: async (id) => {
     try {
-      const token = getToken();
-      
       const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        credentials: "include",
       });
 
       if (!response.ok) {

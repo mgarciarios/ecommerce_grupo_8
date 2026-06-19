@@ -6,16 +6,15 @@ export const fetchPurchases = createAsyncThunk(
   'purchases/fetchPurchases',
   async (_, { getState, rejectWithValue }) => {
     const state = getState();
-    const token = state.user?.token;
     const userId = state.user?.user?.id;
 
-    if (!token || !userId) {
+    if (!state.user?.isAuthenticated || !userId) {
       return rejectWithValue('Debe iniciar sesión');
     }
 
     try {
       const response = await fetch(`${API_BASE}/usuario/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include",
       });
 
       if (!response.ok) {

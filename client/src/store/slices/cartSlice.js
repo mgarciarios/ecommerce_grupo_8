@@ -4,8 +4,6 @@ const API_BASE = 'http://localhost:8080/api/carrito';
 
 const getCarritoId = (state) => state.user?.user?.idCarrito;
 const isAuth = (state) => state.user?.isAuthenticated;
-const getAuthToken = (state) => state.user?.token;
-
 export const fetchCartItems = createAsyncThunk(
   'cart/fetchCartItems',
   async (_, { getState, rejectWithValue }) => {
@@ -17,8 +15,9 @@ export const fetchCartItems = createAsyncThunk(
 
     try {
       const response = await fetch(`${API_BASE}/${cartId}`, {
-        headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+        credentials: "include",
       });
+      
 
       if (!response.ok) throw new Error('Error al cargar el carrito');
 
@@ -66,9 +65,9 @@ export const addItemToCart = createAsyncThunk(
       try {
         await fetch(`${API_BASE}/${cartId}/productos`, {
           method: 'POST',
+          credentials: "include",
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${getAuthToken(state)}`,
           },
           body: JSON.stringify({
             productoId: product.id,
@@ -98,7 +97,7 @@ export const removeItemFromCart = createAsyncThunk(
       try {
         await fetch(`${API_BASE}/${cartId}/productos/${productId}`, {
           method: 'DELETE',
-          headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+          credentials: "include",
         });
       } catch (err) {
         return rejectWithValue(err.message);
@@ -130,15 +129,15 @@ export const updateCartItemQuantity = createAsyncThunk(
             `${API_BASE}/${cartId}/productos/${id}/reduce?cantidad=${cantidadAReducir}`,
             {
               method: 'PUT',
-              headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+              credentials: "include",
             }
           );
         } else {
           await fetch(`${API_BASE}/${cartId}/productos`, {
             method: 'POST',
+            credentials: "include",
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${getAuthToken(state)}`,
             },
           body: JSON.stringify({ productoId: id, cantidad: delta }), // <-- ENVÍA EL DELTA
           });
@@ -171,7 +170,7 @@ export const checkoutCart = createAsyncThunk(
     try {
       const response = await fetch(`${API_BASE}/${carritoId}/checkout`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -201,7 +200,7 @@ export const clearUserCart = createAsyncThunk(
       try {
         await fetch(`${API_BASE}/${cartId}/productos`, {
           method: 'DELETE',
-          headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+          credentials: "include",
         });
       } catch (err) {
         return rejectWithValue(err.message);

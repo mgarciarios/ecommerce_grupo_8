@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../store/slices/userSlice";
@@ -14,13 +14,6 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      // navigate("/productos");
-    }
-  }, [navigate]);
-
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -35,6 +28,7 @@ export default function Login() {
     try {
       const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -66,8 +60,7 @@ export default function Login() {
 
       // Usar Redux para guardar el token y usuario
       dispatch(login({
-        user: userData,
-        token: data.token
+        user: userData
       }));
 
       console.log("Login exitoso:", data);

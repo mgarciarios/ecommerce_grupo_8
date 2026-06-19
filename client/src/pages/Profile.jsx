@@ -114,15 +114,14 @@ export default function Profile() {
     const fetchUserData = async () => {
       // Intentamos conseguir el ID del usuario que guardamos en el login
       const userId = activeUser?.id || activeUser?.user?.id;
-      const token = localStorage.getItem("token");
 
-      if (!userId || !token) return;
+      if (!userId) return;
 
       try {
         // ATENCIÓN: Reemplazá esta URL con tu endpoint real (ej: /api/usuarios o /api/users)
         const response = await fetch(`http://localhost:8080/api/usuarios/${userId}`, {
+          credentials: "include",
           headers: {
-            "Authorization": `Bearer ${token}`, // Enviamos el token de seguridad
             "Content-Type": "application/json"
           }
         });
@@ -278,7 +277,11 @@ export default function Profile() {
             <button
               type="button"
               className="profile-btn-logout"
-              onClick={() => {
+              onClick={async () => {
+                await fetch('http://localhost:8080/api/auth/logout', {
+                  method: 'POST',
+                  credentials: 'include',
+                }).catch((error) => console.error('Error al cerrar sesion:', error));
                 dispatch(logout());
                 navigate('/productos');
               }}

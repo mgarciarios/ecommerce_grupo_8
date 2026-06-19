@@ -6,17 +6,16 @@ import './css/Favorite.css';
 export default function Favorite({ categoria }) {
   const dispatch = useDispatch();
   const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
 
   const handleRemoveFromFavorite = (productId) => {
-    const token = localStorage.getItem("token");
-    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
-    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+    const userId = user?.id || user?.usuario?.id || user?.user?.id;
 
     // Petición a la BD para borrar
-    if (token && userId) {
+    if (isAuthenticated && userId) {
       fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${productId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: "include",
       }).catch(err => console.error("Error BD:", err));
     }
 

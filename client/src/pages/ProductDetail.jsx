@@ -13,6 +13,8 @@ export default function ProductoDetalle() {
   
   const dispatch = useDispatch();
   const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const userId = user?.id || user?.usuario?.id || user?.user?.id;
 
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
@@ -85,29 +87,25 @@ export default function ProductoDetalle() {
   if (!producto) return;
   const esFav = favorites.some((f) => f.id === producto.id);
   
-  const token = localStorage.getItem("token");
-  const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
-  const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
-
-  if (!token || !userId) {
+  if (!isAuthenticated || !userId) {
     alert("Inicia sesion para marcar productos como favoritos");
     return;
   }
 
   if (esFav) {
     dispatch(removeFavorite(producto.id));
-    if (token && userId) {
+    if (userId) {
       fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${producto.id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: "include",
       }).catch(err => console.error("Error BD:", err));
     }
   } else {
     dispatch(addFavorite(producto));
-    if (token && userId) {
+    if (userId) {
       fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${producto.id}`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: "include",
       }).catch(err => console.error("Error BD:", err));
     }
   }

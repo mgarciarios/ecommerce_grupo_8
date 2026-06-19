@@ -1,44 +1,50 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-// 1. Buscamos si ya hay una sesión guardada en el navegador al cargar la app
-let savedUser = null;
-let savedToken = null;
+export const checkSession = createAsyncThunk('auth/checkSession', async (_, { rejectWithValue }) => {
+  try {
+    const response = await fetch('http://localhost:8080/api/auth/me', {
+      credentials: 'include',
+    });
 
-try {
-  const raw = localStorage.getItem('user');
-  savedUser = raw ? JSON.parse(raw) : null;
-} catch {
-  savedUser = null;
-}
+    if (!response.ok) {
+      return rejectWithValue('No hay sesion activa');
+    }
 
-try {
-  savedToken = localStorage.getItem('token') || null;
-} catch {
-  localStorage.removeItem('token');
-  savedToken = null;
-}
+    const data = await response.json();
+    const userData = data.usuario || data.user || data;
+
+    if (data.idCarrito && !userData.idCarrito) {
+      userData.idCarrito = data.idCarrito;
+    }
+
+    return userData;
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
+});
 
 const userSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: savedUser,                 // Datos del usuario o null
-    token: savedToken,               // Token de acceso o null
-    isAuthenticated: !!savedToken,   // true si hay token, false si no
+    user: null,
+    token: null,
+    isAuthenticated: false,
+    authChecked: false,
   },
 
   reducers: {
     // Se ejecuta cuando el usuario hace login exitosamente
     login: (state, action) => {
-      const { user, token } = action.payload; // Recibimos usuario y token
+      const { user } = action.payload;
 
       // Actualizamos el estado de Redux
       state.user = user;
-      state.token = token;
+      state.token = null;
       state.isAuthenticated = true;
+      state.authChecked = true;
 
-      // Guardamos en el navegador para que no se pierda al recargar
       localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('token', token);
+      localStorage.removeItem('token');
     },
 
     // Se ejecuta cuando el usuario cierra sesión
@@ -47,11 +53,30 @@ const userSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
+      state.authChecked = true;
 
       // Borramos los datos del navegador
       localStorage.removeItem('user');
       localStorage.removeItem('token');
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(checkSession.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.token = null;
+        state.isAuthenticated = true;
+        state.authChecked = true;
+        localStorage.setItem('user', JSON.stringify(action.payload));
+        localStorage.removeItem('token');
+      })
+      .addCase(checkSession.rejected, (state) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+        state.authChecked = true;
+        localStorage.removeItem('token');
+      });
   }
 });
 

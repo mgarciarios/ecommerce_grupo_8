@@ -16,21 +16,20 @@ const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   
   const { isAuthenticated, user } = useSelector(state => state.user)
-  const canAccessAdmin = isAuthenticated && user && isAdminUser()
+  const canAccessAdmin = isAuthenticated && user && isAdminUser(user)
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
       const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
       const activeUser = user && Object.keys(user).length > 0 ? user : localUser;
       const userId = activeUser?.id || activeUser?.usuario?.id || activeUser?.user?.id;
       const carritoId = activeUser?.idCarrito || activeUser?.user?.idCarrito || activeUser?.usuario?.idCarrito || activeUser?.carrito?.id || activeUser?.user?.carrito?.id;
 
-      if (token) {
+      if (isAuthenticated) {
         if (userId) {
           try {
             const resFav = await fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos`, {
-              headers: { "Authorization": `Bearer ${token}` }
+              credentials: "include",
             });
             if (resFav.ok) {
               const dataFav = await resFav.json();
@@ -44,7 +43,7 @@ const NavBar = () => {
         if (carritoId) {
           try {
             const resCart = await fetch(`http://localhost:8080/api/carrito/${carritoId}`, {
-              headers: { "Authorization": `Bearer ${token}` }
+              credentials: "include",
             });
             if (resCart.ok) {
               const dataCart = await resCart.json();
@@ -92,6 +91,10 @@ const NavBar = () => {
   }
 
   const handleLogout = () => {
+    fetch('http://localhost:8080/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include',
+    }).catch((error) => console.error('Error al cerrar sesion:', error));
     dispatch(logout())
     closeMenu()
     navigate('/productos')
@@ -150,9 +153,15 @@ const NavBar = () => {
           </li>
         )}
 
-        {isAuthenticated && isAdminUser() && (
+        {isAuthenticated && canAccessAdmin && (
           <li>
             <Link to="/AdminPanel" className={`navbar-link navbar-link-admin ${location.pathname === '/AdminPanel' ? 'navbar-link-active' : ''}`} onClick={closeMenu}>Admin</Link>
+          </li>
+        )}
+
+        {isAuthenticated && (
+          <li>
+            <button type="button" className="navbar-logout-btn" onClick={handleLogout}>Salir</button>
           </li>
         )}
 

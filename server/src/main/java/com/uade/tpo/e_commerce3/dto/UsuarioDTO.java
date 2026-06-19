@@ -13,6 +13,7 @@ public class UsuarioDTO {
     private String mail;
     private String nombre;
     private String apellido;
+    private String role;
 
     public UsuarioDTO(Usuario usuario) {
         this.id = usuario.getId();
@@ -20,5 +21,6 @@ public class UsuarioDTO {
         this.mail = usuario.getMail();
         this.nombre = usuario.getNombre();
         this.apellido = usuario.getApellido();
+        this.role = usuario.getRole() != null ? usuario.getRole().name() : null;
     }
 }

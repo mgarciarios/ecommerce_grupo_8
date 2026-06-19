@@ -15,6 +15,7 @@ const Card = ({
   const dispatch = useDispatch();
   const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
   const cartItems = useSelector(selectCartItems);
+  const { isAuthenticated, user } = useSelector((state) => state.user);
 
   const productId = id ?? producto?.id;
   const esFav = favorites.some((item) => item.id === productId);
@@ -36,11 +37,9 @@ const Card = ({
   const handleFavoriteClick = (e) => {
     e.stopPropagation(); 
 
-    const token = localStorage.getItem("token");
-    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
-    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
+    const userId = user?.id || user?.usuario?.id || user?.user?.id;
 
-    if (!token || !userId) {
+    if (!isAuthenticated || !userId) {
       alert("Inicia sesion para marcar productos como favoritos");
       return;
     }
@@ -48,19 +47,19 @@ const Card = ({
     if (esFav) {
       dispatch(removeFavorite(productId));
       // Petición a la BD para borrar
-      if (token && userId) {
+      if (userId) {
         fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${productId}`, {
           method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
+          credentials: "include",
         }).catch(err => console.error("Error BD al borrar favorito:", err));
       }
     } else {
       dispatch(addFavorite(infoProducto));
       // Petición a la BD para agregar
-      if (token && userId) {
+      if (userId) {
         fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${productId}`, {
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` }
+          credentials: "include",
         }).catch(err => console.error("Error BD al agregar favorito:", err));
       }
     }
