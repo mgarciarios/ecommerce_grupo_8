@@ -4,6 +4,7 @@ import { useProducts } from '../hooks/useProducts';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
 import { addItemToCart } from '../store/slices/cartSlice';
+import { isAuthenticated } from '../utils/auth';
 import './css/ProductDetail.css';
 
 export default function ProductoDetalle() {
@@ -18,6 +19,7 @@ export default function ProductoDetalle() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [cantidad, setCantidad] = useState(1);
+  const isLoggedIn = isAuthenticated();
 
   // FUNCIÓN PARA NORMALIZAR LA URL DE LA IMAGEN
   const normalizeImageUrl = (value) => {
@@ -70,6 +72,12 @@ export default function ProductoDetalle() {
   };
 
   const agregarAlCarrito = () => {
+    if (!isLoggedIn) {
+      alert('Debes iniciar sesión para agregar productos al carrito.');
+      navigate('/login');
+      return;
+    }
+
     dispatch(addItemToCart({
       id: producto.id,
       nombre: producto.nombre,
@@ -301,7 +309,10 @@ export default function ProductoDetalle() {
                 </button>
               </div>
               <div className="detalle-acciones">
-                <button onClick={agregarAlCarrito} className="btn-comprar">
+                <button
+                  onClick={agregarAlCarrito}
+                  className="btn-comprar"
+                >
                   Agregar al carrito
                 </button>
                 <button onClick={() => navigate('/productos')} className="btn-seguir">

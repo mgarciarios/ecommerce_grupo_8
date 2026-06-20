@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
 import { addItemToCart, selectCartItems } from '../store/slices/cartSlice';
+import { isAuthenticated } from '../utils/auth';
 import './css/Card.css';
 
 const Card = ({
@@ -19,10 +20,17 @@ const Card = ({
   const productId = id ?? producto?.id;
   const esFav = favorites.some((item) => item.id === productId);
   const inCart = cartItems.some((item) => item.id === productId);
+  const isLoggedIn = isAuthenticated();
   const infoProducto = producto || { id: productId, nombre: userName, foto: producto?.foto };
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
+    if (!isLoggedIn) {
+      alert('Debes iniciar sesión para agregar productos al carrito.');
+      navigate('/login');
+      return;
+    }
+
     dispatch(addItemToCart({
       id: producto.id,
       nombre: producto.nombre,
@@ -76,7 +84,7 @@ const Card = ({
     return `http://localhost:8080/${value.replace(/^\/+/, '')}`;
   };
 
-  const text = inCart ? 'En el Carrito' : 'Añadir al Carrito';
+  const text = inCart ? 'En el Carrito' : 'Agregar al carrito';
   const buttonClass = inCart ? 'card__button--following' : 'card__button--not-following';
   const imageSrc = normalizeImageUrl(producto?.foto);
 
@@ -145,6 +153,8 @@ const Card = ({
         <button
           className={`card__button ${buttonClass}`}
           onClick={handleAddToCart}
+          disabled={inCart}
+          title={!isLoggedIn ? 'Inicia sesión para agregar al carrito' : ''}
         >
           {text}
         </button>
