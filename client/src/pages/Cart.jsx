@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import CartCard from '../components/CartCard';
 import {
+  fetchCartItems, // ¡NUEVO!: Debemos importar la acción
   updateCartItemQuantity,
   removeItemFromCart,
   checkoutCart,
@@ -20,11 +21,11 @@ export default function Cart() {
   const loading = useSelector(selectCartLoading);
   const error = useSelector(selectCartError);
 
-  // Desactivamos el fetchCartItems() original (que probablemente apuntaba a json-server)
-  // ya que ahora el carrito se carga de la base de datos real desde NavBar.jsx
-  // useEffect(() => {
-  //   dispatch(fetchCartItems());
-  // }, [dispatch]);
+  // NUEVO: Descomentamos el useEffect para que vaya a buscar los 
+  // productos a la base de datos real apenas el usuario entra a la página
+  useEffect(() => {
+    dispatch(fetchCartItems());
+  }, [dispatch]);
 
   const handleUpdateCantidad = (id, delta) => {
     dispatch(updateCartItemQuantity({ id, delta }));

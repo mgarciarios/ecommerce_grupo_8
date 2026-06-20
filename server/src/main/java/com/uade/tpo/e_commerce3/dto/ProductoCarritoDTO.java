@@ -28,11 +28,16 @@ public class ProductoCarritoDTO {
     
     private Double precioUnitario;  // Solo lectura
 
+    // NUEVO: Agregamos el campo para la URL de la imagen
+    private String foto; 
+
     public ProductoCarritoDTO(ProductoCarrito pc) {
         this.id = pc.getId();
         this.productoId = pc.getProducto().getId();
         this.nombreProducto = pc.getProducto().getNombre();
         this.cantidad = pc.getCantidad_producto();
         this.precioUnitario = pc.getProducto().getPrecio();
+        // NUEVO: Obtenemos la foto del modelo Producto y se la pasamos al DTO
+        this.foto = pc.getProducto().getFoto(); 
     }
 }
