@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PurchaseCard from '../components/PurchaseCard';
+import './css/Purchases.css';
 import {
   fetchPurchases,
   selectPurchases,
@@ -38,11 +39,13 @@ export default function Purchases() {
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
-      <h1>Mis compras</h1>
-      {pedidos.map((pedido) => (
-        <PurchaseCard key={pedido.pedidoId} pedido={pedido} />
-      ))}
+    <div className="purchases-container">
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
+        <h1>Mis compras</h1>
+        {pedidos.map((pedido) => (
+          <PurchaseCard key={pedido.pedidoId} pedido={pedido} />
+        ))}
+      </div>
     </div>
   );
 }

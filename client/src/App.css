@@ -1,3 +1,8 @@
+/* Agrega esto en tu CSS global (ej: App.css o index.css) */
+body {
+  padding-top: 60px; /* La misma medida que el height de tu .navbar */
+}
+
 /* --- MODO CLARO --- */
 .app-container.light {
   background-color: #f9f9f9;
