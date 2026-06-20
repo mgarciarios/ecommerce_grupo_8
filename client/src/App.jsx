@@ -13,6 +13,7 @@ import Cart from './pages/Cart';
 import Purchases from './pages/Purchases';
 import Search from './pages/Search';
 import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 import { isAuthenticated, isAdminUser } from './utils/auth';
 import './App.css';
 
@@ -72,6 +73,7 @@ function AppContent() {
         <Route path="/search" element={<Search />} />
         <Route path="*" element={<Navigate to="/productos" replace />} />
       </Routes>
+      <Footer mode={currentMode} />
     </div>
   );
 }
