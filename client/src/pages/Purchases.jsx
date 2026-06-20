@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PurchaseCard from '../components/PurchaseCard';
-import './css/Purchases.css';
 import {
   fetchPurchases,
   selectPurchases,
