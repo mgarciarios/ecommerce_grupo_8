@@ -120,14 +120,14 @@ body {
   color: #a1a1aa !important;
 }
 
-.app-container.dark .login-btn-primary,
-.app-container.dark .register-btn-primary {
+.app-container.dark form:not(.product-form) .login-btn-primary,
+.app-container.dark form:not(.product-form) .register-btn-primary {
   background-color: #ffffff !important;
   color: #111111 !important;
 }
 
-.app-container.dark .login-btn-primary:hover:not(:disabled),
-.app-container.dark .register-btn-primary:hover:not(:disabled) {
+.app-container.dark form:not(.product-form) .login-btn-primary:hover:not(:disabled),
+.app-container.dark form:not(.product-form) .register-btn-primary:hover:not(:disabled) {
   background-color: #e5e5e5 !important;
 }
 
