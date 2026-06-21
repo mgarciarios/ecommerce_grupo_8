@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux'; 
+import { useSelector } from 'react-redux';
 import { FavoriteProvider } from './hooks/useContext/FavoriteProvider';
+import { useFavorites } from './hooks/useFavorites';
 import Landing from './pages/Landing';
 import ProductDetail from './pages/ProductDetail';
 import Login from './pages/Login';
@@ -33,6 +34,8 @@ function AppContent() {
   const location = useLocation();
   const hideNavBarRoutes = ['/login', '/register'];
   const shouldHideNavBar = hideNavBarRoutes.includes(location.pathname);
+
+  useFavorites();
 
   // 1. Escuchamos el modo actual ('light' o 'dark') desde Redux
   const currentMode = useSelector((state) => state.theme.mode);
