@@ -8,6 +8,7 @@ const normalizeImageUrl = (value) => {
 };
 
 export default function CartCard({ item, onUpdateCantidad, onRemove }) {
+  console.log("Datos reales del ítem en el carrito:", item);
   return (
     <div className="cart-item">
       <img
@@ -39,7 +40,7 @@ export default function CartCard({ item, onUpdateCantidad, onRemove }) {
         <button
           type="button"
           onClick={() => onUpdateCantidad(item.id, 1)}
-          disabled={item.cantidad >= item.stock}
+          disabled={item.stock !== undefined && item.cantidad >= item.stock}
         >
           +
         </button>

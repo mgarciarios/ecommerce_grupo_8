@@ -65,6 +65,7 @@ export const fetchCartItems = createAsyncThunk(
 
       const data = await response.json();
       const productos = data.productos || [];
+      console.log("👉 PRODUCTOS CRUDOS DEL BACKEND:", productos);
 
       // Agrupar productos para unificar visualmente cualquier duplicado en la base de datos
       const agrupados = productos.reduce((acc, p) => {
@@ -80,7 +81,7 @@ export const fetchCartItems = createAsyncThunk(
             precio: p.precioUnitario,
             cantidad: p.cantidad,
             foto: p.foto || null,
-            stock: p.stock ?? 99,
+            stock: p.stock,
           };
         }
         return acc;
@@ -323,9 +324,13 @@ const cartSlice = createSlice({
         if (action.payload) {
           const item = state.items.find((i) => i.id === action.payload.id);
           if (item) {
-            item.cantidad += action.payload.delta; // Sumamos el delta de forma segura e independiente
+            //El freno definitivo por si mandan un click extra:
+            if (action.payload.delta > 0 && item.cantidad >= item.stock) {
+              return; 
+            }
+            item.cantidad += action.payload.delta;
             if (item.cantidad <= 0) {
-              state.items = state.items.filter((i) => i.id !== action.payload.id); // Si llega a 0, se elimina
+              state.items = state.items.filter((i) => i.id !== action.payload.id);
             }
           }
         }
