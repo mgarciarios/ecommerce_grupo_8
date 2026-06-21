@@ -4,6 +4,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,9 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.e_commerce3.dto.AuthResponse;
+import com.uade.tpo.e_commerce3.dto.ChangePasswordRequest;
 import com.uade.tpo.e_commerce3.dto.LoginRequest;
 import com.uade.tpo.e_commerce3.dto.RegisterRequest;
 import com.uade.tpo.e_commerce3.dto.UsuarioDTO;
+import com.uade.tpo.e_commerce3.exception.PasswordMismatchException;
 import com.uade.tpo.e_commerce3.model.Carrito;
 import com.uade.tpo.e_commerce3.model.Role;
 import com.uade.tpo.e_commerce3.model.Usuario;
@@ -30,6 +35,8 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class AuthenticationService {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationService.class);
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -271,5 +278,36 @@ public class AuthenticationService {
             .usuario(new UsuarioDTO(user))
             .idCarrito(String.valueOf(carrito.getId()))
             .build();
+    }
+
+    public void changePassword(ChangePasswordRequest request, String mail) {
+        log.info("[changePassword] Usuario '{}' solicita cambio de contraseña", mail);
+        log.info("[changePassword] oldPassword recibido (longitud={}), newPassword (longitud={}), confirmPassword (longitud={})",
+                request.getOldPassword().length(), request.getNewPassword().length(), request.getConfirmPassword().length());
+
+        log.info("[changePassword] Construyendo UsernamePasswordAuthenticationToken con principal='{}' y credentials=[PROTEGIDO]", mail);
+        log.info("[changePassword] El AuthenticationManager delegará en DaoAuthenticationProvider, que usará BCryptPasswordEncoder.matches() para comparar el hash");
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(mail, request.getOldPassword()));
+            log.info("[changePassword] AuthenticationManager.authenticate() OK — la contraseña actual coincide");
+        } catch (BadCredentialsException e) {
+            log.warn("[changePassword] AuthenticationManager.authenticate() lanzó BadCredentialsException — contraseña actual incorrecta para '{}'", mail);
+            throw new PasswordMismatchException("La contraseña actual es incorrecta");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            log.warn("[changePassword] newPassword y confirmPassword no coinciden para '{}'", mail);
+            throw new PasswordMismatchException("La nueva contraseña y su confirmación no coinciden");
+        }
+
+        Usuario user = usuarioRepository.findByMail(mail)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        log.info("[changePassword] Codificando newPassword con BCryptPasswordEncoder (mismo método que en register)");
+        user.setContrasena(passwordEncoder.encode(request.getNewPassword()));
+        usuarioRepository.save(user);
+        log.info("[changePassword] Contraseña actualizada y persistida en BD para '{}'", mail);
     }
 }

@@ -112,24 +112,20 @@ export default function Profile() {
   // 3. Obtener los datos faltantes haciendo una petición al backend
   useEffect(() => {
     const fetchUserData = async () => {
-      // Intentamos conseguir el ID del usuario que guardamos en el login
       const userId = activeUser?.id || activeUser?.user?.id;
-      const token = localStorage.getItem("token");
-
-      if (!userId || !token) return;
+      if (!userId) return;
 
       try {
-        // ATENCIÓN: Reemplazá esta URL con tu endpoint real (ej: /api/usuarios o /api/users)
         const response = await fetch(`http://localhost:8080/api/usuarios/${userId}`, {
+          credentials: "include",
           headers: {
-            "Authorization": `Bearer ${token}`, // Enviamos el token de seguridad
             "Content-Type": "application/json"
           }
         });
 
         if (response.ok) {
           const data = await response.json();
-          
+
           // Actualizamos el formulario con lo que trajimos de la BD
           setInfo((prevInfo) => ({
             ...prevInfo,
@@ -170,7 +166,7 @@ export default function Profile() {
     showToast("Datos actualizados correctamente");
   };
 
-  const handlePwdSave = (e) => {
+  const handlePwdSave = async (e) => {
     e.preventDefault();
     if (!pwd.actual || !pwd.nueva || !pwd.confirmar) {
       alert("Por favor completá todos los campos.");
@@ -180,8 +176,39 @@ export default function Profile() {
       alert("Las contraseñas nuevas no coinciden.");
       return;
     }
-    setPwd({ actual: "", nueva: "", confirmar: "" });
-    showToast("Contraseña actualizada correctamente");
+
+    const body = {
+      oldPassword: pwd.actual,
+      newPassword: pwd.nueva,
+      confirmPassword: pwd.confirmar,
+    };
+    console.log("[changePassword] Enviando petición a /api/auth/change-password", {
+      endpoint: "PUT /api/auth/change-password",
+      oldPasswordLength: body.oldPassword.length,
+      newPasswordLength: body.newPassword.length,
+    });
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/change-password", {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (response.ok) {
+        console.log("[changePassword] Éxito:", await response.text());
+        setPwd({ actual: "", nueva: "", confirmar: "" });
+        showToast("Contraseña actualizada correctamente");
+      } else {
+        const errorText = await response.text();
+        alert(errorText || "Error al cambiar la contraseña.");
+      }
+    } catch (error) {
+      alert("Error de conexión al cambiar la contraseña.");
+    }
   };
 
   const initials = `${info.nombre[0] || ""}${info.apellido[0] || ""}`.toUpperCase();
