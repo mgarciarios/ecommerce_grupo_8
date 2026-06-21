@@ -48,11 +48,12 @@
 }
 
 /* Forzamos que si hay un elemento 'form' interno, sea completamente transparente y sin bordes */
-.app-container.dark form {
+/* Excluimos .product-form para que mantenga su apariencia de tarjeta */
+.app-container.dark form:not(.product-form) {
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  padding: 0 !important; /* Evita que te desfase los márgenes internos que ya tenías */
+  padding: 0 !important;
 }
 
 /* 3. CORRECCIÓN DE TEXTO (Rescatamos el "Bienvenido" use la etiqueta que use) */
@@ -63,8 +64,8 @@
 .app-container.dark [class*="card"] label,
 .app-container.dark [class*="card"] span,
 .app-container.dark [class*="card"] a,
-.app-container.dark form *,                  /* Fuerza blanco a todo lo que esté dentro de un form */
-.app-container.dark .login-container * {      /* Fuerza blanco a todo lo que esté en la pantalla de login */
+.app-container.dark form:not(.product-form) *,   /* Fuerza blanco a todo dentro de forms (excepto product-form) */
+.app-container.dark .login-container * {          /* Fuerza blanco a todo lo que esté en la pantalla de login */
   color: #ffffff !important;
 }
 
@@ -77,8 +78,8 @@
 /* 4. Inputs y campos de texto (Global para Perfil y Login) */
 .app-container.dark [class*="card"] input,
 .app-container.dark [class*="card"] .form-control,
-.app-container.dark form input,
-.app-container.dark form .form-control {
+.app-container.dark form:not(.product-form) input,
+.app-container.dark form:not(.product-form) .form-control {
   background-color: #222226 !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #ffffff !important;
@@ -86,12 +87,12 @@
 
 /* Forzar que los iconos internos de los inputs queden claros */
 .app-container.dark [class*="card"] input ~ *,
-.app-container.dark form input ~ * {
+.app-container.dark form:not(.product-form) input ~ * {
   color: #a1a1aa !important;
 }
 
 .app-container.dark [class*="card"] ::placeholder,
-.app-container.dark form ::placeholder {
+.app-container.dark form:not(.product-form) ::placeholder {
   color: #71717a !important;
 }
 

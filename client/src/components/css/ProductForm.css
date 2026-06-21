@@ -5,6 +5,8 @@
   background: #FFFFFF;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .product-form h2 {
@@ -96,6 +98,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
+  min-width: 0;
+}
+
+.form-row > .form-group {
+  min-width: 0;
 }
 
 @media (max-width: 600px) {
@@ -105,6 +112,17 @@
 
   .product-form {
     padding: 20px;
+  }
+}
+
+/* Cuando el formulario está dentro de un contenedor estrecho (ej. panel admin) */
+@media (max-width: 450px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .product-form {
+    padding: 16px;
   }
 }
 

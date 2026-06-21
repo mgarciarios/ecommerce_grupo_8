@@ -1,10 +1,14 @@
 .products-table-container {
   overflow-x: auto;
   background-color: #FFFFFF;
+  /* Extiende la tabla hasta los bordes del card (cancela el padding del padre) */
+  margin: 0 -24px -24px -24px;
+  border-radius: 0 0 8px 8px;
 }
 
 .products-table {
   width: 100%;
+  min-width: 560px; /* ancho mínimo antes de activar scroll horizontal */
   border-collapse: collapse;
   font-size: 14px;
 }
@@ -41,7 +45,7 @@
 }
 
 .descripcion-truncada {
-  max-width: 200px;
+  max-width: 160px;
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -138,7 +142,7 @@
 
 /* Contenedor de la tabla */
 .dark .products-table-container {
-  background-color: transparent;
+  background-color: #1a1a24;
 }
 
 /* Encabezado de la tabla */
