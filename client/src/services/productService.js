@@ -56,13 +56,8 @@ export const productService = {
       
       const response = await fetch(`${API_BASE_URL}/productos`, {
         method: 'POST',
-        // NUEVO: Incluimos credenciales para que viaje la cookie 'jwt'
-        credentials: 'include', 
-        headers: {
-          'Content-Type': 'application/json',
-          // NUEVO: Eliminamos 'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(productoData),
+        credentials: 'include',
+        body: productoData, // FormData — browser sets Content-Type to multipart/form-data
       });
 
       if (!response.ok) {
@@ -82,11 +77,8 @@ export const productService = {
     try {
       const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
         method: 'PUT',
-        credentials: 'include', // NUEVO
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productoData),
+        credentials: 'include',
+        body: productoData, // FormData — browser sets Content-Type to multipart/form-data
       });
 
       if (!response.ok) {

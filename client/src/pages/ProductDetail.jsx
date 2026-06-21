@@ -24,7 +24,7 @@ export default function ProductoDetalle() {
   // FUNCIÓN PARA NORMALIZAR LA URL DE LA IMAGEN
   const normalizeImageUrl = (value) => {
     if (!value) return '/icons.svg';
-    if (/^https?:\/\//i.test(value) || value.startsWith('data:')) {
+    if (/^https?:\/\//i.test(value) || value.startsWith('data:') || value.startsWith('/')) {
       return value;
     }
     return `http://localhost:8080/${value.replace(/^\/+/, '')}`;

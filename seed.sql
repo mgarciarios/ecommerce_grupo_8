@@ -119,8 +119,8 @@ INSERT INTO usuarios (id, nombre_usuario, nombre, apellido, mail, contrasena, ro
 (1, 'admin',        'Carlos',    'González',   'admin@ecommerce.com',     '$2b$10$QsOvtRtfWBMVsrS/t/shrOmkwe0HkwXEdipCDKokjXG8yqc0PeUu.', 'ADMIN'),
 (2, 'mlopez',       'María',     'López',      'maria.lopez@email.com',   '$2b$10$QsOvtRtfWBMVsrS/t/shrOmkwe0HkwXEdipCDKokjXG8yqc0PeUu.', 'USER'),
 (3, 'jperez',       'Juan',      'Pérez',      'juan.perez@email.com',    '$2b$10$QsOvtRtfWBMVsrS/t/shrOmkwe0HkwXEdipCDKokjXG8yqc0PeUu.', 'USER'),
-(4, 'lrodriguez',   'Lucía',     'Rodríguez',  'lucia.rodriguez@email.com','$2b$10$QsOvtRtfWBMVsrS/t/shrOmkwe0HkwXEdipCDKokjXG8yqc0PeUu.', 'VENDEDOR'),
-(5, 'pgarcia',      'Pedro',     'García',     'pedro.garcia@email.com',   '$2b$10$QsOvtRtfWBMVsrS/t/shrOmkwe0HkwXEdipCDKokjXG8yqc0PeUu.', 'VENDEDOR'),
+(4, 'lrodriguez',   'Lucía',     'Rodríguez',  'lucia.rodriguez@email.com','$2b$10$QsOvtRtfWBMVsrS/t/shrOmkwe0HkwXEdipCDKokjXG8yqc0PeUu.', 'USER'),
+(5, 'pgarcia',      'Pedro',     'García',     'pedro.garcia@email.com',   '$2b$10$QsOvtRtfWBMVsrS/t/shrOmkwe0HkwXEdipCDKokjXG8yqc0PeUu.', 'USER'),
 (6, 'amartinez',    'Ana',       'Martínez',   'ana.martinez@email.com',   '$2b$10$QsOvtRtfWBMVsrS/t/shrOmkwe0HkwXEdipCDKokjXG8yqc0PeUu.', 'USER');
 
 -- ============================================================

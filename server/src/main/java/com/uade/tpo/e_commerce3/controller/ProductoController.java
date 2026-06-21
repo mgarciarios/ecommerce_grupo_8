@@ -9,7 +9,6 @@ import com.uade.tpo.e_commerce3.dto.ProductoEliminadoDTO;
 import com.uade.tpo.e_commerce3.model.Categoria;
 import com.uade.tpo.e_commerce3.service.ProductoService;
 
-import jakarta.validation.Valid;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.springframework.beans.factory.annotation.Value;
 
 
 
@@ -32,6 +38,9 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+
+    @Value("${app.upload.dir}")
+    private String uploadDir;
 
     //http://localhost:8080/api/productos -> devuelve la lista de productos
     @GetMapping
@@ -75,8 +84,21 @@ public class ProductoController {
     /*http://localhost:8080/api/productos -> crea un nuevo producto con los datos enviados en el cuerpo 
      de la petición*/
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<ProductoDTO>> saveProducto(@Valid @RequestBody ProductoDTO productoDTO) {
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<ApiResponse<ProductoDTO>> saveProducto(
+            @RequestParam String nombre,
+            @RequestParam String descripcion,
+            @RequestParam Double precio,
+            @RequestParam Integer stock,
+            @RequestParam String categorias,
+            @RequestParam(required = false) MultipartFile imagen) {
+
+        String fotoPath = null;
+        if (imagen != null && !imagen.isEmpty()) {
+            fotoPath = guardarImagen(imagen);
+        }
+
+        ProductoDTO productoDTO = new ProductoDTO(null, nombre, descripcion, precio, stock, fotoPath, List.of(categorias));
         ProductoDTO nuevoProducto = productoService.saveProducto(productoDTO);
         ApiResponse<ProductoDTO> response = ApiResponse.<ProductoDTO>builder()
             .mensaje("El producto " + nuevoProducto.getNombre() + " fue creado exitosamente")
@@ -85,8 +107,22 @@ public class ProductoController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductoDTO>> updateProducto(@PathVariable Long id, @Valid @RequestBody ProductoDTO productoDTO) {
+    @PutMapping(path = "/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<ApiResponse<ProductoDTO>> updateProducto(
+            @PathVariable Long id,
+            @RequestParam String nombre,
+            @RequestParam String descripcion,
+            @RequestParam Double precio,
+            @RequestParam Integer stock,
+            @RequestParam String categorias,
+            @RequestParam(required = false) MultipartFile imagen) {
+
+        String fotoPath = null;
+        if (imagen != null && !imagen.isEmpty()) {
+            fotoPath = guardarImagen(imagen);
+        }
+
+        ProductoDTO productoDTO = new ProductoDTO(null, nombre, descripcion, precio, stock, fotoPath, List.of(categorias));
         ProductoDTO productoActualizado = productoService.updateProducto(id, productoDTO);
         ApiResponse<ProductoDTO> response = ApiResponse.<ProductoDTO>builder()
             .mensaje("El producto " + productoActualizado.getNombre() + " fue actualizado exitosamente")
@@ -103,6 +139,21 @@ public class ProductoController {
             .data(productoActualizado)
             .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private String guardarImagen(MultipartFile imagen) {
+        try {
+            Path dir = Paths.get(uploadDir);
+            if (!Files.exists(dir)) {
+                Files.createDirectories(dir);
+            }
+            String nombreArchivo = imagen.getOriginalFilename();
+            Path filePath = dir.resolve(nombreArchivo);
+            Files.write(filePath, imagen.getBytes());
+            return "/img/" + nombreArchivo;
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar la imagen: " + e.getMessage(), e);
+        }
     }
 
     @GetMapping("/search")

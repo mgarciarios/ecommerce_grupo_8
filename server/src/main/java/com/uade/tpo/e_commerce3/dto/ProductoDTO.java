@@ -34,7 +34,7 @@ public class ProductoDTO {
     @Min(value = 0, message = "El stock no puede ser negativo")
     private Integer stock;
     
-    @Pattern(regexp = "^(https?://)?.*\\.(jpg|jpeg|png|gif|webp)$", message = "La foto debe ser una URL válida de imagen")
+    @Pattern(regexp = "^(/img/|https?://).*\\.(jpg|jpeg|png|gif|webp)$", message = "La foto debe ser una ruta local (/img/...) o URL válida de imagen")
     private String foto;
     
     @NotEmpty(message = "Debe seleccionar al menos una categoría")

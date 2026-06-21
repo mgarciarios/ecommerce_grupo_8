@@ -10,6 +10,7 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
     categoria: '',
   });
 
+  const [imagen, setImagen] = useState(null);
   const [errores, setErrores] = useState({});
   const [enviando, setEnviando] = useState(false);
 
@@ -89,13 +90,15 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
     setEnviando(true);
 
     try {
-      const datosEnvio = {
-        nombre: formData.nombre.trim(),
-        descripcion: formData.descripcion.trim(),
-        precio: parseFloat(formData.precio),
-        stock: parseInt(formData.stock),
-        categorias: [formData.categoria],
-      };
+      const datosEnvio = new FormData();
+      datosEnvio.append('nombre', formData.nombre.trim());
+      datosEnvio.append('descripcion', formData.descripcion.trim());
+      datosEnvio.append('precio', parseFloat(formData.precio));
+      datosEnvio.append('stock', parseInt(formData.stock));
+      datosEnvio.append('categorias', formData.categoria);
+      if (imagen) {
+        datosEnvio.append('imagen', imagen);
+      }
 
       await onSubmit(datosEnvio, producto?.id);
     } catch (error) {
@@ -115,6 +118,7 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
       stock: '',
       categoria: '',
     });
+    setImagen(null);
     setErrores({});
   };
 
@@ -212,6 +216,24 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
           ))}
         </select>
         {errores.categoria && <span id="categoria-error" className="error-mensaje">{errores.categoria}</span>}
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="imagen">Imagen del Producto</label>
+        <input
+          type="file"
+          id="imagen"
+          name="imagen"
+          accept="image/jpeg,image/png,image/gif,image/webp"
+          onChange={(e) => setImagen(e.target.files[0] || null)}
+        />
+        {imagen && (
+          <img
+            src={URL.createObjectURL(imagen)}
+            alt="Vista previa"
+            style={{ maxWidth: '200px', marginTop: '8px', borderRadius: '6px' }}
+          />
+        )}
       </div>
 
       <div className="form-botones">
