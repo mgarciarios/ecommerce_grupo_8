@@ -35,22 +35,24 @@ export default function ProductsTable({ productos, onEditar, onEliminar, cargand
               </td>
               <td>{producto.categorias?.join(', ') || 'Sin categoría'}</td>
               <td className="acciones">
-                <button
-                  className="btn-accion btn-editar"
-                  onClick={() => onEditar(producto.id)}
-                  disabled={cargando}
-                  title="Editar producto"
-                >
-                  ✏️
-                </button>
-                <button
-                  className="btn-accion btn-eliminar"
-                  onClick={() => onEliminar(producto.id)}
-                  disabled={cargando}
-                  title="Eliminar producto"
-                >
-                  🗑️
-                </button>
+                <div className="acciones-wrapper">
+                  <button
+                    className="btn-accion btn-editar"
+                    onClick={() => onEditar(producto.id)}
+                    disabled={cargando}
+                    title="Editar producto"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    className="btn-accion btn-eliminar"
+                    onClick={() => onEliminar(producto.id)}
+                    disabled={cargando}
+                    title="Eliminar producto"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

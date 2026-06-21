@@ -71,7 +71,7 @@
   color: #721c24;
 }
 
-.acciones {
+.acciones-wrapper {
   display: flex;
   gap: 8px;
 }
