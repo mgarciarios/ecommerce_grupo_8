@@ -44,11 +44,17 @@ body {
 .app-container.dark .product-card,
 .app-container.dark .card-contenedor,
 .app-container.dark .main-container,
-.app-container.dark .login-container > div { 
+.app-container.dark .login-card,
+.app-container.dark .register-card { 
   background-color: #1a1a1e !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 12px !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.app-container.dark .login-wrap,
+.app-container.dark .register-wrap {
+  background-color: transparent !important;
 }
 
 /* Forzamos que si hay un elemento 'form' interno, sea completamente transparente y sin bordes */
@@ -76,14 +82,17 @@ body {
 .app-container.dark .product-card span,
 .app-container.dark .product-card a,
 .app-container.dark form:not(.product-form) *,   /* Fuerza blanco a todo dentro de forms (excepto product-form) */
-.app-container.dark .login-container * {          /* Fuerza blanco a todo lo que esté en la pantalla de login */
+.app-container.dark .login-wrap *,
+.app-container.dark .register-wrap * {          /* Fuerza blanco a todo lo que esté en la pantalla de login/registro */
   color: #ffffff !important;
 }
 
 /* Mantener links de abajo legibles */
 .app-container.dark .profile-card a,
 .app-container.dark .product-card a,
-.app-container.dark form a {
+.app-container.dark form a,
+.app-container.dark .login-wrap a,
+.app-container.dark .register-wrap a {
   color: #3b82f6 !important; /* Les damos un toque azul sutil para que se entienda que son links */
 }
 
@@ -102,8 +111,34 @@ body {
 /* Forzar que los iconos internos de los inputs queden claros */
 .app-container.dark .profile-card input ~ *,
 .app-container.dark .product-card input ~ *,
-.app-container.dark form:not(.product-form) input ~ * {
+.app-container.dark form:not(.product-form) input ~ *,
+.app-container.dark .login-input-icon,
+.app-container.dark .register-input-icon,
+.app-container.dark .login-input-wrap svg,
+.app-container.dark .register-input-wrap svg,
+.app-container.dark .register-input-prefix {
   color: #a1a1aa !important;
+}
+
+.app-container.dark .login-btn-primary,
+.app-container.dark .register-btn-primary {
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+
+.app-container.dark .login-btn-primary:hover:not(:disabled),
+.app-container.dark .register-btn-primary:hover:not(:disabled) {
+  background-color: #e5e5e5 !important;
+}
+
+.app-container.dark .login-logo,
+.app-container.dark .register-logo {
+  background-color: #ffffff !important;
+}
+
+.app-container.dark .login-logo svg,
+.app-container.dark .register-logo svg {
+  stroke: #111111 !important;
 }
 
 .app-container.dark .profile-card ::placeholder,
