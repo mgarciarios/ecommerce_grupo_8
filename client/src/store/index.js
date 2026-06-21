@@ -2,7 +2,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import favoriteReducer from './slices/favoriteSlice';
 import cartReducer from './slices/cartSlice';
-import purchaseReducer from './slices/purchaseSlice';
 import userReducer from './slices/userSlice';
 import themeReducer from './slices/themeSlice';
 
@@ -13,7 +12,6 @@ export const store = configureStore({
     theme: themeReducer, // Gestiona el estado del tema (si lo tienes)
     cart: cartReducer,
     favorite: favoriteReducer,
-    purchases: purchaseReducer,
     user: userReducer,
   },
 });

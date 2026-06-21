@@ -218,20 +218,17 @@ export const checkoutCart = createAsyncThunk(
     }
 
     try {
-      const pedidoLocal = buildLocalPurchase(state);
-
-      const response = await fetch(`${API_BASE}/${carritoId}/productos`, {
-        method: 'DELETE',
-        credentials: 'include', // NUEVO
+      const response = await fetch(`${API_BASE}/${carritoId}/checkout`, {
+        method: 'POST',
+        credentials: 'include',
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        return rejectWithValue(errorData.mensaje || errorData.message || 'Error al vaciar el carrito');
+        return rejectWithValue(errorData.mensaje || errorData.message || 'Error al finalizar la compra');
       }
 
-      cachePurchase(getUserId(state), pedidoLocal);
-      return pedidoLocal;
+      return response.json();
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -252,7 +249,7 @@ export const clearUserCart = createAsyncThunk(
       try {
         await fetch(`${API_BASE}/${cartId}/productos`, {
           method: 'DELETE',
-          credentials: 'include', // NUEVO
+          credentials: 'include', 
         });
       } catch (err) {
         return rejectWithValue(err.message);

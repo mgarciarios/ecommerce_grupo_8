@@ -1,31 +1,32 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PurchaseCard from '../components/PurchaseCard';
-import {
-  fetchPurchases,
-  selectPurchases,
-  selectPurchasesStatus,
-  selectPurchasesError,
-} from '../store/slices/purchaseSlice';
 
 export default function Purchases() {
-  const dispatch = useDispatch();
-  const pedidos = useSelector(selectPurchases);
-  const status = useSelector(selectPurchasesStatus);
-  const error = useSelector(selectPurchasesError);
+  const [pedidos, setPedidos] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchPurchases());
-  }, [dispatch]);
+    const localUser = JSON.parse(localStorage.getItem("user") || "{}");
+    const userId = localUser?.id;
+    if (!userId) {
+      setPedidos([]);
+      return;
+    }
 
-  if (status === 'loading') {
-    return <p>Cargando compras...</p>;
-  }
+    fetch(`http://localhost:8080/api/pedidos/usuario/${userId}`, {
+      credentials: "include",
+    })
+      .then(res => {
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+        return res.json();
+      })
+      .then(data => setPedidos(data))
+      .catch(err => setError(err.message));
+  }, []);
 
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+  if (error) return <p>Error: {error}</p>;
+  if (pedidos === null) return <p>Cargando compras...</p>;
 
   if (pedidos.length === 0) {
     return (
