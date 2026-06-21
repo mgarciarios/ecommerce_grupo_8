@@ -5,6 +5,7 @@
   padding: 0 48px;
   height: 60px;
   width: 100%;
+  flex-shrink: 0; /* Asegura que no se achique si el contenido es mayor a 100vh */
   /* 1. CAMBIO: Usamos la variable para el fondo del navbar */
   background: var(--bg-navbar, #0f0f0f);
   /* 2. CAMBIO: El borde inferior ahora se adapta dinámicamente */

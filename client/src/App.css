@@ -13,7 +13,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.app-container.light > *:not(.app-footer) {
+.app-container.light > *:not(.app-footer):not(nav) {
   flex: 1 0 auto;
 }
 
@@ -35,7 +35,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.app-container.dark > *:not(.app-footer) {
+.app-container.dark > *:not(.app-footer):not(nav) {
   flex: 1 0 auto;
 }
 
