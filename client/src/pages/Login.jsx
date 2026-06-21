@@ -15,8 +15,9 @@ export default function Login() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    // CAMBIO: Ahora verificamos si hay 'user' en lugar de 'token'
+    const user = localStorage.getItem("user");
+    if (user) {
       // navigate("/productos");
     }
   }, [navigate]);
@@ -35,6 +36,7 @@ export default function Login() {
     try {
       const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
+        credentials: "include", // ¡ESTA ES LA LÍNEA MÁGICA QUE FALTA!
         headers: {
           "Content-Type": "application/json",
         },
@@ -64,10 +66,10 @@ export default function Login() {
         userData.idCarrito = data.idCarrito;
       }
 
-      // Usar Redux para guardar el token y usuario
+      // CAMBIO: Usar Redux para guardar solo el usuario, el token lo gestiona la cookie sola
       dispatch(login({
-        user: userData,
-        token: data.token
+        user: userData
+        // Eliminamos la linea: token: data.token
       }));
 
       console.log("Login exitoso:", data);

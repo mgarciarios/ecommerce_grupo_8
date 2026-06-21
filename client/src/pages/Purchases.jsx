@@ -38,11 +38,13 @@ export default function Purchases() {
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
-      <h1>Mis compras</h1>
-      {pedidos.map((pedido) => (
-        <PurchaseCard key={pedido.pedidoId} pedido={pedido} />
-      ))}
+    <div className="purchases-container">
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
+        <h1>Mis compras</h1>
+        {pedidos.map((pedido) => (
+          <PurchaseCard key={pedido.pedidoId} pedido={pedido} />
+        ))}
+      </div>
     </div>
   );
 }

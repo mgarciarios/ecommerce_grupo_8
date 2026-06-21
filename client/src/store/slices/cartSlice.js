@@ -5,7 +5,7 @@ const PURCHASES_CACHE_PREFIX = 'purchaseHistory';
 
 const getCarritoId = (state) => state.user?.user?.idCarrito;
 const isAuth = (state) => state.user?.isAuthenticated;
-const getAuthToken = (state) => state.user?.token;
+// NUEVO: Eliminamos la función getAuthToken porque ya no usamos token estático
 const getUserId = (state) => state.user?.user?.id ?? state.user?.user?.idUsuario ?? null;
 
 const getPurchasesCacheKey = (userId) => `${PURCHASES_CACHE_PREFIX}:${userId}`;
@@ -57,7 +57,8 @@ export const fetchCartItems = createAsyncThunk(
 
     try {
       const response = await fetch(`${API_BASE}/${cartId}`, {
-        headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+        // NUEVO: Agregamos credentials y quitamos el header Authorization
+        credentials: 'include', 
       });
 
       if (!response.ok) throw new Error('Error al cargar el carrito');
@@ -104,18 +105,26 @@ export const addItemToCart = createAsyncThunk(
     const cartId = getCarritoId(state);
     if (cartId) {
       try {
-        await fetch(`${API_BASE}/${cartId}/productos`, {
+        const response = await fetch(`${API_BASE}/${cartId}/productos`, {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${getAuthToken(state)}`,
           },
           body: JSON.stringify({
             productoId: product.id,
-            cantidad: product.cantidad, // <-- ENVÍA EL DELTA, NO EL TOTAL
+            cantidad: product.cantidad, 
           }),
         });
+
+        // NUEVO: Verificamos si el status HTTP es de error (ej: 403, 500)
+        if (!response.ok) {
+           const errorMsg = await response.text();
+           throw new Error(`Error ${response.status}: ${errorMsg || 'No autorizado'}`);
+        }
+
       } catch (err) {
+        // Ahora sí, si response.ok es falso, caerá aquí y Redux mostrará el error real
         return rejectWithValue(err.message);
       }
     }
@@ -138,7 +147,8 @@ export const removeItemFromCart = createAsyncThunk(
       try {
         await fetch(`${API_BASE}/${cartId}/productos/${productId}`, {
           method: 'DELETE',
-          headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+          credentials: 'include', // NUEVO: Habilitar envío de cookies
+          // NUEVO: Eliminado el header Authorization
         });
       } catch (err) {
         return rejectWithValue(err.message);
@@ -170,17 +180,17 @@ export const updateCartItemQuantity = createAsyncThunk(
             `${API_BASE}/${cartId}/productos/${id}/reduce?cantidad=${cantidadAReducir}`,
             {
               method: 'PUT',
-              headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+              credentials: 'include', // NUEVO
             }
           );
         } else {
           await fetch(`${API_BASE}/${cartId}/productos`, {
             method: 'POST',
+            credentials: 'include', // NUEVO
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${getAuthToken(state)}`,
             },
-          body: JSON.stringify({ productoId: id, cantidad: delta }), // <-- ENVÍA EL DELTA
+            body: JSON.stringify({ productoId: id, cantidad: delta }), 
           });
         }
       } catch (err) {
@@ -188,7 +198,7 @@ export const updateCartItemQuantity = createAsyncThunk(
       }
     }
 
-    return { id, delta }; // Devolvemos el delta para sumarlo de forma segura
+    return { id, delta };
   }
 );
 
@@ -196,7 +206,6 @@ export const checkoutCart = createAsyncThunk(
   'cart/checkoutCart',
   async (_, { getState, rejectWithValue }) => {
     const state = getState();
-    console.log('checkoutCart - state:', state);
 
     if (!isAuth(state)) {
       return rejectWithValue('Debe iniciar sesión para finalizar la compra');
@@ -213,12 +222,11 @@ export const checkoutCart = createAsyncThunk(
 
       const response = await fetch(`${API_BASE}/${carritoId}/productos`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+        credentials: 'include', // NUEVO
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.log('checkoutCart - errorData:', errorData);
         return rejectWithValue(errorData.mensaje || errorData.message || 'Error al vaciar el carrito');
       }
 
@@ -244,7 +252,7 @@ export const clearUserCart = createAsyncThunk(
       try {
         await fetch(`${API_BASE}/${cartId}/productos`, {
           method: 'DELETE',
-          headers: { Authorization: `Bearer ${getAuthToken(state)}` },
+          credentials: 'include', // NUEVO
         });
       } catch (err) {
         return rejectWithValue(err.message);

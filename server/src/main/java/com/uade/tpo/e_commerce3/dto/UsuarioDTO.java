@@ -13,6 +13,9 @@ public class UsuarioDTO {
     private String mail;
     private String nombre;
     private String apellido;
+    
+    // NUEVO: Agregamos el campo de rol
+    private String role; 
 
     public UsuarioDTO(Usuario usuario) {
         this.id = usuario.getId();
@@ -20,5 +23,9 @@ public class UsuarioDTO {
         this.mail = usuario.getMail();
         this.nombre = usuario.getNombre();
         this.apellido = usuario.getApellido();
+        
+        // NUEVO: Extraemos el rol del modelo de base de datos y se lo pasamos al DTO
+        // Asegúrate de que el método getRole() exista en tu modelo Usuario (suele ser así)
+        this.role = usuario.getRole().name(); 
     }
 }

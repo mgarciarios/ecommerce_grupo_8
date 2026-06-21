@@ -89,33 +89,34 @@ export default function ProductoDetalle() {
     alert(`¡${producto?.nombre} agregado al carrito!`);
   };
 
- const handleFavoriteClick = () => {
+  const handleFavoriteClick = () => {
   if (!producto) return;
   const esFav = favorites.some((f) => f.id === producto.id);
   
-  const token = localStorage.getItem("token");
+  // Eliminamos la búsqueda del token
   const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
   const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
 
-  if (!token || !userId) {
+  // Ahora solo validamos que exista el usuario
+  if (!userId) {
     alert("Inicia sesion para marcar productos como favoritos");
     return;
   }
 
   if (esFav) {
     dispatch(removeFavorite(producto.id));
-    if (token && userId) {
+    if (userId) {
       fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${producto.id}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include' // Agregamos credentials y quitamos headers
       }).catch(err => console.error("Error BD:", err));
     }
   } else {
     dispatch(addFavorite(producto));
-    if (token && userId) {
+    if (userId) {
       fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${producto.id}`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include' // Agregamos credentials y quitamos headers
       }).catch(err => console.error("Error BD:", err));
     }
   }

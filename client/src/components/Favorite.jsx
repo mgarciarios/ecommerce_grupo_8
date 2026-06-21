@@ -8,15 +8,18 @@ export default function Favorite({ categoria }) {
   const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
 
   const handleRemoveFromFavorite = (productId) => {
-    const token = localStorage.getItem("token");
+    // NUEVO: Eliminamos la búsqueda del token en localStorage
     const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
     const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
 
     // Petición a la BD para borrar
-    if (token && userId) {
+    // NUEVO: Ahora solo comprobamos que exista el userId
+    if (userId) {
       fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${productId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        // NUEVO: Incluimos credentials para que el navegador envíe la cookie sola
+        credentials: 'include', 
+        // NUEVO: Eliminamos por completo el header 'Authorization'
       }).catch(err => console.error("Error BD:", err));
     }
 

@@ -68,6 +68,7 @@ export default function Register() {
       // Llamada al endpoint de registro
       const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

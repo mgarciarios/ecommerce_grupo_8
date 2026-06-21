@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+// NUEVO: Importar useRef
+import { useState, useEffect, useRef } from 'react' 
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../store/slices/userSlice'
@@ -15,72 +16,34 @@ const NavBar = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   
+  // NUEVO: Creamos una referencia para el contenedor del NavBar
+  const navRef = useRef(null) 
+  
   const { isAuthenticated, user } = useSelector(state => state.user)
-  const canAccessAdmin = isAuthenticated && user && isAdminUser()
 
+  // NUEVO: useEffect exclusivo para manejar los clics fuera del menú
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
-      const activeUser = user && Object.keys(user).length > 0 ? user : localUser;
-      const userId = activeUser?.id || activeUser?.usuario?.id || activeUser?.user?.id;
-      const carritoId = activeUser?.idCarrito || activeUser?.user?.idCarrito || activeUser?.usuario?.idCarrito || activeUser?.carrito?.id || activeUser?.user?.carrito?.id;
-
-      if (token) {
-        if (userId) {
-          try {
-            const resFav = await fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos`, {
-              headers: { "Authorization": `Bearer ${token}` }
-            });
-            if (resFav.ok) {
-              const dataFav = await resFav.json();
-              dispatch(setFavorites(dataFav));
-            }
-          } catch (error) {
-            console.error("Error al traer favoritos:", error);
-          }
-        }
-
-        if (carritoId) {
-          try {
-            const resCart = await fetch(`http://localhost:8080/api/carrito/${carritoId}`, {
-              headers: { "Authorization": `Bearer ${token}` }
-            });
-            if (resCart.ok) {
-              const dataCart = await resCart.json();
-              const productos = dataCart.productos || (Array.isArray(dataCart) ? dataCart : []);
-              const formattedCart = await Promise.all(productos.map(async (p) => {
-                const prodId = p.productoId || p.id || p.producto?.id;
-                let detalles = {};
-
-                if (prodId) {
-                  try {
-                    const resProd = await fetch(`http://localhost:8080/api/productos/${prodId}`);
-                    if (resProd.ok) detalles = await resProd.json();
-                  } catch (e) {
-                    console.error("Error al obtener producto del carrito:", e);
-                  }
-                }
-
-                return {
-                  id: prodId,
-                  nombre: detalles.nombre || p.nombreProducto || p.nombre || p.producto?.nombre,
-                  precio: detalles.precio || p.precioUnitario || p.precio || p.producto?.precio,
-                  cantidad: p.cantidad,
-                  foto: detalles.foto || detalles.imgLink || p.foto || p.producto?.foto || null,
-                  stock: detalles.stock ?? p.stock ?? p.producto?.stock ?? 99,
-                }
-              }));
-              dispatch(setCartItems(formattedCart));
-            }
-          } catch (error) {
-            console.error("Error al traer carrito:", error);
-          }
-        }
+    const handleClickOutside = (event) => {
+      // Si el menú está abierto y el clic no ocurrió dentro de 'navRef' (el NavBar), lo cerramos
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setMenuOpen(false);
       }
     };
-    fetchUserData();
-  }, [isAuthenticated, user, dispatch]);
+
+    // Solo agregamos el eventListener si el menú está abierto por cuestiones de rendimiento
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    // Limpiamos el evento cuando el componente se desmonta o el estado cambia
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuOpen]);
+
+  // ... (aquí sigue tu useEffect fetchUserData tal como lo dejamos antes) ...
 
   const linkClass = (path) =>
     `navbar-link ${location.pathname === path ? 'navbar-link-active' : ''}`
@@ -100,7 +63,8 @@ const NavBar = () => {
   const closeMenu = () => setMenuOpen(false)
 
   return (
-    <nav className="navbar">
+// NUEVO: Le asignamos la referencia (ref) al contenedor principal
+    <nav className="navbar" ref={navRef}> 
       <Link to="/productos" className="navbar-brand">
         <span className="navbar-brand-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

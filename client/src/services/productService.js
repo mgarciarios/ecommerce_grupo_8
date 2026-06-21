@@ -1,14 +1,11 @@
 // productService.js - Servicio para gestionar productos
-import { store } from '../store';
-import { getToken as getStoredToken } from '../utils/auth';
+// NUEVO: Ya no necesitamos importar store ni getToken porque el token viaja en la cookie
+// import { store } from '../store';
+// import { getToken as getStoredToken } from '../utils/auth';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Función helper para obtener el token válido desde Redux o desde el storage
-const getToken = () => {
-  const state = store.getState();
-  return state.token || state.user?.token || getStoredToken() || null;
-};
+// NUEVO: Eliminamos la función getToken() por completo
 
 const readApiResponse = async (response) => {
   const json = await response.json().catch(() => null);
@@ -19,10 +16,13 @@ const readApiResponse = async (response) => {
 };
 
 export const productService = {
-  // Obtener todos los productos
+  // Obtener todos los productos (Ruta pública, puede o no llevar credenciales, pero las incluimos por si acaso)
   getProductos: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/productos`);
+      const response = await fetch(`${API_BASE_URL}/productos`, {
+        // NUEVO: Le dice al navegador que envíe las cookies (incluida nuestra cookie HttpOnly 'jwt')
+        credentials: 'include' 
+      });
       if (!response.ok) {
         throw new Error('Error al obtener productos');
       }
@@ -36,7 +36,9 @@ export const productService = {
   // Obtener un producto por ID
   getProductoById: async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/productos/${id}`);
+      const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
+        credentials: 'include' // NUEVO
+      });
       if (!response.ok) {
         throw new Error(`Producto ${id} no encontrado`);
       }
@@ -50,13 +52,15 @@ export const productService = {
   // Crear un nuevo producto
   createProducto: async (productoData) => {
     try {
-      const token = getToken();
+      // NUEVO: Ya no obtenemos el token de Redux/localStorage
       
       const response = await fetch(`${API_BASE_URL}/productos`, {
         method: 'POST',
+        // NUEVO: Incluimos credenciales para que viaje la cookie 'jwt'
+        credentials: 'include', 
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          // NUEVO: Eliminamos 'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(productoData),
       });
@@ -76,13 +80,11 @@ export const productService = {
   // Actualizar un producto
   updateProducto: async (id, productoData) => {
     try {
-      const token = getToken();
-      
       const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
         method: 'PUT',
+        credentials: 'include', // NUEVO
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(productoData),
       });
@@ -102,13 +104,10 @@ export const productService = {
   // Eliminar un producto
   deleteProducto: async (id) => {
     try {
-      const token = getToken();
-      
       const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        credentials: 'include', // NUEVO
+        // NUEVO: No hacen falta headers de autorización manuales
       });
 
       if (!response.ok) {
@@ -130,7 +129,9 @@ export const productService = {
       params.append('query', query)
       categorias.forEach((cat) => params.append('categorias', cat))
 
-      const response = await fetch(`${API_BASE_URL}/productos/search?${params.toString()}`)
+      const response = await fetch(`${API_BASE_URL}/productos/search?${params.toString()}`, {
+        credentials: 'include' // NUEVO
+      })
       if (!response.ok) {
         throw new Error('Error al buscar productos')
       }
@@ -145,7 +146,9 @@ export const productService = {
   // Obtener todas las categorías
   getCategorias: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/productos/categorias`);
+      const response = await fetch(`${API_BASE_URL}/productos/categorias`, {
+        credentials: 'include' // NUEVO
+      });
       if (!response.ok) {
         throw new Error('Error al obtener categorías');
       }
