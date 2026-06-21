@@ -64,3 +64,17 @@
     font-size: 22px;
   }
 }
+
+/* --- MODO OSCURO --- */
+.app-container.dark .search-page h1 {
+  color: #ffffff;
+}
+
+.app-container.dark .search-count {
+  background: #27272a;
+  color: #e4e4e7;
+}
+
+.app-container.dark .search-empty {
+  color: #d4d4d8;
+}

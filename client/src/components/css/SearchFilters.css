@@ -76,3 +76,30 @@
     padding: 16px 20px;
   }
 }
+
+/* --- MODO OSCURO --- */
+.app-container.dark .search-filters {
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.app-container.dark .search-filters-title {
+  color: #ffffff;
+}
+
+.app-container.dark .filter-group-label {
+  color: #a1a1aa;
+}
+
+.app-container.dark .filter-checkbox {
+  color: #e4e4e7;
+}
+
+.app-container.dark .filter-checkbox:hover {
+  background: #27272a;
+}
+
+@media (max-width: 720px) {
+  .app-container.dark .search-filters {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+}
