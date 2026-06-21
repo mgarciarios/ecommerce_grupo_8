@@ -180,3 +180,85 @@
 .btn-cancelar:hover {
   background-color: #c0392b;
 }
+
+/* ==========================================================================
+   MODO OSCURO — ADMIN PANEL
+   ========================================================================== */
+
+/* Fondo general de la página */
+.dark .admin-panel {
+  background: linear-gradient(135deg, #0d0d0f 0%, #12121a 100%);
+}
+
+/* Header */
+.dark .admin-header {
+  color: #e2e8f0;
+}
+
+.dark .admin-header h1 {
+  color: #a78bfa;
+}
+
+.dark .admin-header p {
+  color: #94a3b8;
+}
+
+/* Banner de error */
+.dark .error-banner {
+  background-color: #3b1219;
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* Banner de éxito */
+.dark .success-banner {
+  background-color: #052e16;
+  border-color: #14532d;
+  color: #86efac;
+}
+
+/* Sección de tabla */
+.dark .table-section {
+  background: #1a1a24;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.dark .table-header {
+  border-bottom-color: #a78bfa;
+}
+
+.dark .table-header h2 {
+  color: #a78bfa;
+}
+
+/* Badge "Total: X producto(s)" */
+.dark .cantidad {
+  background-color: #a78bfa;
+  color: #0d0d0f;
+}
+
+/* Spinner de carga */
+.dark .cargando {
+  color: #a78bfa;
+}
+
+.dark .cargando::after {
+  border-color: #a78bfa;
+  border-top-color: transparent;
+}
+
+/* Mensaje sin productos */
+.dark .sin-productos {
+  color: #71717a;
+}
+
+/* Botón cancelar */
+.dark .btn-cancelar {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.dark .btn-cancelar:hover {
+  background-color: #991b1b;
+}

@@ -163,3 +163,88 @@ input[type='number']::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+/* ==========================================================================
+   MODO OSCURO — PRODUCT FORM
+   ========================================================================== */
+
+/* Tarjeta principal del formulario */
+.dark .product-form {
+  background: #1e1e2a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.dark .product-form h2 {
+  color: #a78bfa;
+}
+
+/* Labels */
+.dark .form-group label {
+  color: #c4b5fd;
+}
+
+/* Inputs, textareas y selects */
+.dark .form-group input,
+.dark .form-group textarea,
+.dark .form-group select {
+  background-color: #12121a;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+}
+
+.dark .form-group input::placeholder,
+.dark .form-group textarea::placeholder {
+  color: #52525b;
+}
+
+.dark .form-group input:focus,
+.dark .form-group textarea:focus,
+.dark .form-group select:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+  background-color: #1a1a26;
+}
+
+/* Input con error */
+.dark .form-group input.input-error,
+.dark .form-group textarea.input-error,
+.dark .form-group select.input-error {
+  border-color: #ef4444;
+  background-color: #2d1b1b;
+  color: #fca5a5;
+}
+
+/* Mensaje de error */
+.dark .error-mensaje {
+  color: #f87171;
+}
+
+/* Error general */
+.dark .error-general {
+  background-color: #2d1b1b;
+  color: #f87171;
+  border-left-color: #ef4444;
+}
+
+/* Botón secundario */
+.dark .btn-secundario {
+  background-color: #27272f;
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .btn-secundario:hover:not(:disabled) {
+  background-color: #3f3f50;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Botón primario (ya tiene color sólido, lo mantenemos pero lo ajustamos) */
+.dark .btn-primary {
+  background-color: #7c3aed;
+  color: #ffffff;
+}
+
+.dark .btn-primary:hover:not(:disabled) {
+  background-color: #6d28d9;
+}

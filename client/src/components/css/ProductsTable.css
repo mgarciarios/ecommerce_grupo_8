@@ -131,3 +131,81 @@
     font-size: 14px;
   }
 }
+
+/* ==========================================================================
+   MODO OSCURO — PRODUCTS TABLE
+   ========================================================================== */
+
+/* Contenedor de la tabla */
+.dark .products-table-container {
+  background-color: transparent;
+}
+
+/* Encabezado de la tabla */
+.dark .products-table thead {
+  background-color: #2d1f5e;
+  border-bottom-color: #7c3aed;
+}
+
+.dark .products-table th {
+  color: #e2e8f0;
+}
+
+/* Celdas de datos */
+.dark .products-table td {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+  color: #a1a1aa;
+}
+
+/* Texto bold de nombre del producto */
+.dark .products-table tbody td strong {
+  color: #e2e8f0;
+}
+
+/* Hover de filas */
+.dark .products-table tbody tr:hover {
+  background-color: rgba(124, 58, 237, 0.08);
+}
+
+/* Precio */
+.dark .precio {
+  color: #34d399;
+}
+
+/* Badge de stock normal */
+.dark .stock {
+  background-color: #052e16;
+  color: #86efac;
+}
+
+/* Badge de stock bajo */
+.dark .stock.bajo {
+  background-color: #3b1219;
+  color: #fca5a5;
+}
+
+/* Botones de acción */
+.dark .btn-accion {
+  background-color: #27272f;
+  color: #a1a1aa;
+}
+
+.dark .btn-editar {
+  background-color: #1e1e40;
+  color: #818cf8;
+}
+
+.dark .btn-editar:hover:not(:disabled) {
+  background-color: #2d2d5e;
+  color: #a5b4fc;
+}
+
+.dark .btn-eliminar {
+  background-color: #2d1b1b;
+  color: #f87171;
+}
+
+.dark .btn-eliminar:hover:not(:disabled) {
+  background-color: #3b1f1f;
+  color: #fca5a5;
+}
