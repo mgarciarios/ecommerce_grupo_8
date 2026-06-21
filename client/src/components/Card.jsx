@@ -120,28 +120,6 @@ const handleFavoriteClick = (e) => {
             type="button"
             className={`card__favorite-btn ${esFav ? 'is-fav' : ''}`}
             onClick={handleFavoriteClick}
-            style={{
-              width: 'max-content', 
-              padding: '8px 12px',
-              borderRadius: '6px',
-              fontSize: '0.6rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              transition: 'all 0.3s ease',
-              background: esFav ? '#ffebee' : 'transparent',
-              color: esFav ? '#c62828' : '#000000',
-              border: esFav ? '2px solid #ef5350' : '2px solid #333333',
-            }}
-            onMouseEnter={(e) => {
-              if (!esFav) e.currentTarget.style.background = 'rgba(0, 0, 0, 0.05)';
-            }}
-            onMouseLeave={(e) => {
-              if (!esFav) e.currentTarget.style.background = 'transparent';
-            }}
           >
             <span className="emoji-light">{esFav ? '❤️' : '🖤'}</span>
             <span className="emoji-dark">{esFav ? '❤️' : '🤍'}</span>

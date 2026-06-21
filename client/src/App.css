@@ -39,12 +39,11 @@ body {
   flex: 1 0 auto;
 }
 
-/* 2. Tarjetas oscuras (Quitamos 'form' de acá para eliminar ese recuadro interno molesto) */
+/* 2. Tarjetas oscuras — solo los contenedores raíz de las cards */
 .app-container.dark .profile-card,
 .app-container.dark .product-card,
 .app-container.dark .card-contenedor,
 .app-container.dark .main-container,
-.app-container.dark [class*="card"],
 .app-container.dark .login-container > div { 
   background-color: #1a1a1e !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -61,28 +60,38 @@ body {
   padding: 0 !important;
 }
 
-/* 3. CORRECCIÓN DE TEXTO (Rescatamos el "Bienvenido" use la etiqueta que use) */
-.app-container.dark [class*="card"] h1,
-.app-container.dark [class*="card"] h2,
-.app-container.dark [class*="card"] h3,
-.app-container.dark [class*="card"] p,
-.app-container.dark [class*="card"] label,
-.app-container.dark [class*="card"] span,
-.app-container.dark [class*="card"] a,
+/* 3. CORRECCIÓN DE TEXTO dentro de las tarjetas de perfil y login */
+.app-container.dark .profile-card h1,
+.app-container.dark .profile-card h2,
+.app-container.dark .profile-card h3,
+.app-container.dark .profile-card p,
+.app-container.dark .profile-card label,
+.app-container.dark .profile-card span,
+.app-container.dark .profile-card a,
+.app-container.dark .product-card h1,
+.app-container.dark .product-card h2,
+.app-container.dark .product-card h3,
+.app-container.dark .product-card p,
+.app-container.dark .product-card label,
+.app-container.dark .product-card span,
+.app-container.dark .product-card a,
 .app-container.dark form:not(.product-form) *,   /* Fuerza blanco a todo dentro de forms (excepto product-form) */
 .app-container.dark .login-container * {          /* Fuerza blanco a todo lo que esté en la pantalla de login */
   color: #ffffff !important;
 }
 
 /* Mantener links de abajo legibles */
-.app-container.dark [class*="card"] a,
+.app-container.dark .profile-card a,
+.app-container.dark .product-card a,
 .app-container.dark form a {
   color: #3b82f6 !important; /* Les damos un toque azul sutil para que se entienda que son links */
 }
 
 /* 4. Inputs y campos de texto (Global para Perfil y Login) */
-.app-container.dark [class*="card"] input,
-.app-container.dark [class*="card"] .form-control,
+.app-container.dark .profile-card input,
+.app-container.dark .profile-card .form-control,
+.app-container.dark .product-card input,
+.app-container.dark .product-card .form-control,
 .app-container.dark form:not(.product-form) input,
 .app-container.dark form:not(.product-form) .form-control {
   background-color: #222226 !important;
@@ -91,12 +100,14 @@ body {
 }
 
 /* Forzar que los iconos internos de los inputs queden claros */
-.app-container.dark [class*="card"] input ~ *,
+.app-container.dark .profile-card input ~ *,
+.app-container.dark .product-card input ~ *,
 .app-container.dark form:not(.product-form) input ~ * {
   color: #a1a1aa !important;
 }
 
-.app-container.dark [class*="card"] ::placeholder,
+.app-container.dark .profile-card ::placeholder,
+.app-container.dark .product-card ::placeholder,
 .app-container.dark form:not(.product-form) ::placeholder {
   color: #71717a !important;
 }

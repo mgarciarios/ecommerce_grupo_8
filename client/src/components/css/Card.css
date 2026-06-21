@@ -98,6 +98,46 @@
   margin-bottom: 16px; 
 }
 
+/* ============================================================
+   BOTÓN FAVORITOS — Estilos base (modo claro)
+   ============================================================ */
+.card__favorite-btn {
+  width: max-content;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+
+  /* Estado por defecto (no favorito) — modo claro */
+  background: transparent;
+  color: #1a1a1a;
+  border: 2px solid #333333;
+}
+
+.card__favorite-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Estado activo (favorito) — modo claro */
+.card__favorite-btn.is-fav {
+  background: #ffebee;
+  color: #c62828;
+  border: 2px solid #ef5350;
+}
+
+.card__favorite-btn.is-fav:hover {
+  background: #ffcdd2;
+}
+
+/* ============================================================
+   BOTÓN AGREGAR AL CARRITO
+   ============================================================ */
 .card__button {
   width: 100%;
   padding: 10px 16px;
@@ -166,15 +206,29 @@
 }
 
 /* ==========================================================================
-   ACLARAR BOTÓN DE FAVORITOS EN MODO OSCURO
+   MODO OSCURO — BOTÓN FAVORITOS
    ========================================================================== */
+
+/* Estado por defecto (no favorito) — modo oscuro */
 .dark .card__favorite-btn:not(.is-fav) {
-  color: #f4f4f5 !important;        /* Texto blanco/claro */
-  border-color: #a1a1aa !important; /* Borde gris claro */
+  color: #f4f4f5;
+  border-color: #a1a1aa;
+  background: transparent;
 }
 
 .dark .card__favorite-btn:not(.is-fav):hover {
-  background: rgba(255, 255, 255, 0.1) !important; /* Hover sutil claro */
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Estado activo (favorito) — igual en ambos modos */
+.dark .card__favorite-btn.is-fav {
+  background: #3b0a15;
+  color: #ef9a9a;
+  border-color: #ef5350;
+}
+
+.dark .card__favorite-btn.is-fav:hover {
+  background: #4e0f1e;
 }
 
 /* ==========================================================================
