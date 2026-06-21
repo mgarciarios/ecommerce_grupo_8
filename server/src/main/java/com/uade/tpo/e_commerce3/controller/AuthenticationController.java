@@ -2,16 +2,20 @@ package com.uade.tpo.e_commerce3.controller;
 
 import org.springframework.http.ResponseEntity; // NUEVA IMPORTACIÓN
 import org.springframework.web.bind.annotation.PostMapping; // NUEVA IMPORTACIÓN
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.e_commerce3.dto.AuthResponse;
+import com.uade.tpo.e_commerce3.dto.ChangePasswordRequest;
 import com.uade.tpo.e_commerce3.dto.LoginRequest;
 import com.uade.tpo.e_commerce3.dto.RegisterRequest;
+import com.uade.tpo.e_commerce3.security.JwtUtil;
 import com.uade.tpo.e_commerce3.service.AuthenticationService;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final JwtUtil jwtUtil;
 
     //http://localhost:8080/api/auth/register con metodo post http, enviar un body -> crear un usuario
     @PostMapping("/register")
@@ -46,6 +51,33 @@ public class AuthenticationController {
         createJwtCookie(response, authResponse.getToken());
         
         return ResponseEntity.ok(authResponse);
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest request,
+                                                  HttpServletRequest httpRequest) {
+        String token = extractJwt(httpRequest);
+        if (token == null || !jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(401).body("Token no válido o sesión expirada");
+        }
+        String mail = jwtUtil.getUsername(token);
+        authenticationService.changePassword(request, mail);
+        return ResponseEntity.ok("Contraseña actualizada correctamente");
+    }
+
+    private String extractJwt(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+        return null;
     }
 
     // NUEVO METODO: Crea la cookie HttpOnly y la adjunta a la respuesta
