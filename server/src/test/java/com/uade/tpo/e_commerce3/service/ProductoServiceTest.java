@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +62,7 @@ class ProductoServiceTest {
             1500.0,
             10,
             "laptop.jpg",
+            new ArrayList<String>(),
             List.of("Electrónica")
         );
     }
@@ -148,6 +150,7 @@ class ProductoServiceTest {
             50.0,
             100,
             "mouse.jpg",
+            new ArrayList<String>(),
             List.of("Periféricos", "Nueva Categoría")
         );
 
@@ -197,6 +200,7 @@ class ProductoServiceTest {
             120.0,
             30,
             "teclado.jpg",
+            new ArrayList<String>(),
             List.of("Electrónica") // Categoría existente
         );
 
@@ -229,6 +233,7 @@ class ProductoServiceTest {
             2000.0,
             5,
             "laptop-pro.jpg",
+            new ArrayList<String>(),
             List.of("Electrónica")
         );
 

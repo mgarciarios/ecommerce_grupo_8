@@ -38,6 +38,7 @@ public class ProductoService {
                     producto.getPrecio(),
                     producto.getStock(),
                     producto.getFoto(),
+                    producto.getDetalleFotos(),
                     producto.getCategorias().stream().map(Categoria::getNombre).collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());           
@@ -52,7 +53,7 @@ public class ProductoService {
         if (producto == null) {
             throw new ProductoNotFoundException("Producto no encontrado con id: " + id );
         }
-        ProductoDTO productoDTO = new ProductoDTO(producto.getId(), producto.getNombre(), producto.getDescripcion(), producto.getPrecio(), producto.getStock(), producto.getFoto(), producto.getCategorias().stream().map(Categoria::getNombre).collect(Collectors.toList()));
+        ProductoDTO productoDTO = new ProductoDTO(producto.getId(), producto.getNombre(), producto.getDescripcion(), producto.getPrecio(), producto.getStock(), producto.getFoto(), producto.getDetalleFotos(), producto.getCategorias().stream().map(Categoria::getNombre).collect(Collectors.toList()));
         return productoDTO;
     }
 
@@ -71,7 +72,8 @@ public class ProductoService {
         producto.setPrecio(productoDTO.getPrecio());
         producto.setStock(productoDTO.getStock());
         producto.setFoto(productoDTO.getFoto());
-        
+        producto.setDetalleFotos(productoDTO.getDetalleFotos());
+
         // Buscar categorías existentes y crear las que no existan
         List<Categoria> categoriasEntity = new ArrayList<>();
         if (productoDTO.getCategorias() != null) {
@@ -94,12 +96,13 @@ public class ProductoService {
         Producto productoGuardado = productoRepository.save(producto);
         
         return new ProductoDTO(
-            productoGuardado.getId(), 
-            productoGuardado.getNombre(), 
-            productoGuardado.getDescripcion(), 
+            productoGuardado.getId(),
+            productoGuardado.getNombre(),
+            productoGuardado.getDescripcion(),
             productoGuardado.getPrecio(),
             productoGuardado.getStock(),
             productoGuardado.getFoto(),
+            productoGuardado.getDetalleFotos(),
             productoGuardado.getCategorias().stream().map(Categoria::getNombre).collect(Collectors.toList())
         );
     }
@@ -114,6 +117,7 @@ public class ProductoService {
     existingProducto.setPrecio(producto.getPrecio());
     existingProducto.setStock(producto.getStock());
     existingProducto.setFoto(producto.getFoto());
+    existingProducto.setDetalleFotos(producto.getDetalleFotos());
 
     List<Categoria> categoriasEntity = new ArrayList<>();
     if (producto.getCategorias() != null) {
@@ -134,12 +138,13 @@ public class ProductoService {
     // 3. Guardamos la ENTIDAD y la convertimos a DTO para devolverla
     Producto productoGuardado = productoRepository.save(existingProducto);
     return new ProductoDTO(
-            productoGuardado.getId(), 
-            productoGuardado.getNombre(), 
-            productoGuardado.getDescripcion(), 
+            productoGuardado.getId(),
+            productoGuardado.getNombre(),
+            productoGuardado.getDescripcion(),
             productoGuardado.getPrecio(),
             productoGuardado.getStock(),
             productoGuardado.getFoto(),
+            productoGuardado.getDetalleFotos(),
             productoGuardado.getCategorias().stream().map(Categoria::getNombre).collect(Collectors.toList())
         );
     }
@@ -151,12 +156,13 @@ public class ProductoService {
         productoRepository.save(producto);
 
         return new ProductoDTO(
-            producto.getId(), 
-            producto.getNombre(), 
-            producto.getDescripcion(), 
+            producto.getId(),
+            producto.getNombre(),
+            producto.getDescripcion(),
             producto.getPrecio(),
             producto.getStock(),
             producto.getFoto(),
+            producto.getDetalleFotos(),
             producto.getCategorias().stream().map(Categoria::getNombre).collect(Collectors.toList())
         );
     }
@@ -186,6 +192,7 @@ public class ProductoService {
                         producto.getPrecio(),
                         producto.getStock(),
                         producto.getFoto(),
+                        producto.getDetalleFotos(),
                         producto.getCategorias().stream().map(Categoria::getNombre).collect(Collectors.toList())
                 ))
                 .collect(Collectors.toList());

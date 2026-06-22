@@ -36,18 +36,21 @@ public class ProductoDTO {
     
     @Pattern(regexp = "^(/img/|https?://).*\\.(jpg|jpeg|png|gif|webp)$", message = "La foto debe ser una ruta local (/img/...) o URL válida de imagen")
     private String foto;
-    
+
+    private List<String> detalleFotos;
+
     @NotEmpty(message = "Debe seleccionar al menos una categoría")
     @Size(max = 10, message = "Máximo 10 categorías permitidas")
     private List<String> categorias;
 
-    public ProductoDTO(Long id, String nombre, String descripcion, Double precio, Integer stock, String foto, List<String> categorias) {
+    public ProductoDTO(Long id, String nombre, String descripcion, Double precio, Integer stock, String foto, List<String> detalleFotos, List<String> categorias) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.stock = stock;
         this.foto = foto;
+        this.detalleFotos = detalleFotos;
         this.categorias = categorias;
     }
 

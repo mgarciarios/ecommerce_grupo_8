@@ -9,6 +9,7 @@ import com.uade.tpo.e_commerce3.dto.ProductoEliminadoDTO;
 import com.uade.tpo.e_commerce3.model.Categoria;
 import com.uade.tpo.e_commerce3.service.ProductoService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -91,14 +93,24 @@ public class ProductoController {
             @RequestParam Double precio,
             @RequestParam Integer stock,
             @RequestParam String categorias,
-            @RequestParam(required = false) MultipartFile imagen) {
+            @RequestParam(required = false) MultipartFile mainFoto,
+            @RequestPart(required = false) List<MultipartFile> detalleFotos){
 
-        String fotoPath = null;
-        if (imagen != null && !imagen.isEmpty()) {
-            fotoPath = guardarImagen(imagen);
+        String mainFotoPath = null;
+        if (mainFoto != null && !mainFoto.isEmpty()) {
+            mainFotoPath = guardarImagen(mainFoto);
         }
 
-        ProductoDTO productoDTO = new ProductoDTO(null, nombre, descripcion, precio, stock, fotoPath, List.of(categorias));
+        List<String> detalleFotosPaths = new ArrayList<>();
+        if (detalleFotos != null) {
+            for (MultipartFile detalle : detalleFotos) {
+                if (detalle != null && !detalle.isEmpty()) {
+                    detalleFotosPaths.add(guardarImagen(detalle));
+                }
+            }
+        }
+
+        ProductoDTO productoDTO = new ProductoDTO(null, nombre, descripcion, precio, stock, mainFotoPath, detalleFotosPaths, List.of(categorias));
         ProductoDTO nuevoProducto = productoService.saveProducto(productoDTO);
         ApiResponse<ProductoDTO> response = ApiResponse.<ProductoDTO>builder()
             .mensaje("El producto " + nuevoProducto.getNombre() + " fue creado exitosamente")
@@ -115,14 +127,24 @@ public class ProductoController {
             @RequestParam Double precio,
             @RequestParam Integer stock,
             @RequestParam String categorias,
-            @RequestParam(required = false) MultipartFile imagen) {
+            @RequestParam(required = false) MultipartFile mainFoto,
+            @RequestPart(required = false) List<MultipartFile> detalleFotos) {
 
-        String fotoPath = null;
-        if (imagen != null && !imagen.isEmpty()) {
-            fotoPath = guardarImagen(imagen);
+        String mainFotoPath = null;
+        if (mainFoto != null && !mainFoto.isEmpty()) {
+            mainFotoPath = guardarImagen(mainFoto);
         }
 
-        ProductoDTO productoDTO = new ProductoDTO(null, nombre, descripcion, precio, stock, fotoPath, List.of(categorias));
+        List<String> detalleFotosPaths = new ArrayList<>();
+        if (detalleFotos != null) {
+            for (MultipartFile detalle : detalleFotos) {
+                if (detalle != null && !detalle.isEmpty()) {
+                    detalleFotosPaths.add(guardarImagen(detalle));
+                }
+            }
+        }
+
+        ProductoDTO productoDTO = new ProductoDTO(null, nombre, descripcion, precio, stock, mainFotoPath, detalleFotosPaths, List.of(categorias));
         ProductoDTO productoActualizado = productoService.updateProducto(id, productoDTO);
         ApiResponse<ProductoDTO> response = ApiResponse.<ProductoDTO>builder()
             .mensaje("El producto " + productoActualizado.getNombre() + " fue actualizado exitosamente")

@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -45,7 +47,15 @@ public class Producto {
     private Integer stock;
 
     private String foto;
-    
+
+    @ElementCollection
+    @CollectionTable(
+        name = "producto_foto",
+        joinColumns = @JoinColumn(name = "producto_id")
+    )
+    @Column(name = "foto_detalle_url")
+    private List<String> detalleFotos = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "productos_categorias",

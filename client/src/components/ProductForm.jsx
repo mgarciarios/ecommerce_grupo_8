@@ -11,6 +11,7 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
   });
 
   const [imagen, setImagen] = useState(null);
+  const [detalleImagenes, setDetalleImagenes] = useState([]);
   const [errores, setErrores] = useState({});
   const [enviando, setEnviando] = useState(false);
 
@@ -97,7 +98,10 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
       datosEnvio.append('stock', parseInt(formData.stock));
       datosEnvio.append('categorias', formData.categoria);
       if (imagen) {
-        datosEnvio.append('imagen', imagen);
+        datosEnvio.append('mainFoto', imagen);
+      }
+      if (detalleImagenes.length > 0) {
+        detalleImagenes.forEach((img) => datosEnvio.append('detalleFotos', img));
       }
 
       await onSubmit(datosEnvio, producto?.id);
@@ -119,6 +123,7 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
       categoria: '',
     });
     setImagen(null);
+    setDetalleImagenes([]);
     setErrores({});
   };
 
@@ -219,7 +224,9 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
       </div>
 
       <div className="form-group">
-        <label htmlFor="imagen">Imagen del Producto</label>
+        <label htmlFor="imagen">
+          {producto?.foto ? 'Cambiar imagen del Producto' : 'Imagen del Producto'}
+        </label>
         <input
           type="file"
           id="imagen"
@@ -227,6 +234,13 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
           accept="image/jpeg,image/png,image/gif,image/webp"
           onChange={(e) => setImagen(e.target.files[0] || null)}
         />
+        {producto?.foto && !imagen && (
+          <img
+            src={producto.foto.startsWith('http') ? producto.foto : `http://localhost:8080${producto.foto}`}
+            alt={producto.nombre}
+            style={{ maxWidth: '200px', marginTop: '8px', borderRadius: '6px' }}
+          />
+        )}
         {imagen && (
           <img
             src={URL.createObjectURL(imagen)}
@@ -235,6 +249,58 @@ export default function ProductForm({ onSubmit, producto = null, categorias = []
           />
         )}
       </div>
+
+      {(producto?.foto || imagen) && (
+        <div className="form-group">
+          <label htmlFor="detalleImagenes">Imágenes adicionales</label>
+          <input
+            type="file"
+            id="detalleImagenes"
+            name="detalleImagenes"
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            multiple
+            onChange={(e) => {
+              const nuevos = Array.from(e.target.files || []);
+              setDetalleImagenes((prev) => [...prev, ...nuevos]);
+              e.target.value = '';
+            }}
+          />
+          {detalleImagenes.length > 0 && (
+            <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
+              {detalleImagenes.map((img, i) => (
+                <div key={i} style={{ position: 'relative', display: 'inline-block' }}>
+                  <img
+                    src={URL.createObjectURL(img)}
+                    alt={`Detalle ${i + 1}`}
+                    style={{ maxWidth: '100px', borderRadius: '6px' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setDetalleImagenes((prev) => prev.filter((_, idx) => idx !== i))}
+                    style={{
+                      position: 'absolute',
+                      top: '-6px',
+                      right: '-6px',
+                      background: '#ff4444',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      lineHeight: '1',
+                    }}
+                    aria-label={`Quitar detalle ${i + 1}`}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="form-botones">
         <button type="submit" className="btn btn-primary" disabled={enviando}>

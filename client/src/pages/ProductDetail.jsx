@@ -11,7 +11,7 @@ import './css/ProductDetail.css';
 export default function ProductoDetalle() {
   const { id } = useParams(); 
   const navigate = useNavigate();
-  const { obtenerProductoPorId } = useProducts();
+  const { cargarProductoById } = useProducts();
   
   const dispatch = useDispatch();
   const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
@@ -20,6 +20,7 @@ export default function ProductoDetalle() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [cantidad, setCantidad] = useState(1);
+  const [imgActual, setImgActual] = useState(0);
   const isLoggedIn = isAuthenticated();
 
   // FUNCIÓN PARA NORMALIZAR LA URL DE LA IMAGEN
@@ -40,7 +41,7 @@ export default function ProductoDetalle() {
     const fetchProducto = async () => {
       try {
         setCargando(true);
-        const data = await obtenerProductoPorId(id);
+        const data = await cargarProductoById(id);
         if (data) {
           setProducto(data);
         } else {
@@ -55,9 +56,17 @@ export default function ProductoDetalle() {
     };
 
     if (id) {
+      setImgActual(0);
       fetchProducto();
     }
-  }, [id, obtenerProductoPorId]);
+  }, [id, cargarProductoById]);
+
+  const imagenes = producto
+    ? [producto.foto, ...(producto.detalleFotos || [])].filter(Boolean)
+    : [];
+
+  const prevImg = () => setImgActual((i) => (i === 0 ? imagenes.length - 1 : i - 1));
+  const nextImg = () => setImgActual((i) => (i === imagenes.length - 1 ? 0 : i + 1));
 
   const incrementarCantidad = () => {
     if (cantidad < (producto?.stock || 99)) {
@@ -151,15 +160,59 @@ export default function ProductoDetalle() {
 
       <div className="detalle-card">
         <div className="detalle-imagen">
-          {/* IMAGEN CORREGIDA CON NORMALIZACIÓN Y APAGADO DE ERROR EN BUCLE */}
-          <img 
-            src={normalizeImageUrl(producto.foto || producto.imgLink || producto.imagen || producto.image || producto.img)} 
-            alt={producto.nombre}
-            onError={(e) => {
-              e.target.onerror = null; // Corta el bucle de renderizado infinito de raíz
-              e.target.src = '/icons.svg';
-            }}
-          />
+          {imagenes.length > 1 && (
+            <div className="detalle-thumbnails">
+              {imagenes.map((img, i) => (
+                <button
+                  key={i}
+                  className={`detalle-thumb ${i === imgActual ? 'active' : ''}`}
+                  onClick={() => setImgActual(i)}
+                  aria-label={`Ver imagen ${i + 1}`}
+                >
+                  <img
+                    src={normalizeImageUrl(img)}
+                    alt={`${producto.nombre} - ${i + 1}`}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/icons.svg';
+                    }}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="detalle-imagen-main">
+            <img
+              src={normalizeImageUrl(imagenes[imgActual])}
+              alt={producto.nombre}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/icons.svg';
+              }}
+            />
+
+            {imagenes.length > 1 && (
+              <>
+                <button className="carousel-btn carousel-prev" onClick={prevImg} aria-label="Anterior">
+                  ‹
+                </button>
+                <button className="carousel-btn carousel-next" onClick={nextImg} aria-label="Siguiente">
+                  ›
+                </button>
+                <div className="carousel-dots">
+                  {imagenes.map((_, i) => (
+                    <button
+                      key={i}
+                      className={`carousel-dot ${i === imgActual ? 'active' : ''}`}
+                      onClick={() => setImgActual(i)}
+                      aria-label={`Imagen ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
         <div className="detalle-info">
