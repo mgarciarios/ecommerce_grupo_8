@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../store/slices/userSlice";
+import { authApi } from "../api/authApi";
 import "./css/Register.css";
 
 export default function Register() {
@@ -53,7 +54,6 @@ export default function Register() {
     setError("");
 
     try {
-      // Preparar el body que se enviará
       const requestBody = {
         nombre: form.nombre,
         apellido: form.apellido,
@@ -62,82 +62,19 @@ export default function Register() {
         password: form.password,
       };
 
-      console.log("📤 Enviando solicitud a:", "http://localhost:8080/api/auth/register");
-      console.log("📦 Body enviado:", JSON.stringify(requestBody, null, 2));
+      const data = await authApi.register(requestBody);
 
-      // Llamada al endpoint de registro
-      const response = await fetch("http://localhost:8080/api/auth/register", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+      console.log("Registro exitoso:", data);
 
-      console.log("📡 Status HTTP:", response.status);
-      console.log("📡 Status Text:", response.statusText);
-      console.log("📡 Headers:", Object.fromEntries(response.headers.entries()));
-
-      // Intentar obtener la respuesta como texto primero para mejor debugging
-      const responseText = await response.text();
-      console.log("📄 Respuesta cruda (texto):", responseText);
-
-      let data = null;
-      try {
-        // Intentar parsear como JSON
-        data = JSON.parse(responseText);
-        console.log("📄 Respuesta parseada (JSON):", data);
-      } catch (parseError) {
-        console.error("❌ Error al parsear JSON:", parseError);
-        data = { message: responseText || "No se pudo parsear la respuesta" };
-      }
-
-      if (!response.ok) {
-        // Mostrar error detallado
-        console.error("❌ Error HTTP:", response.status);
-        console.error("❌ Detalle del error:", data);
-        
-        // Construir mensaje de error detallado
-        let errorMessage = `Error ${response.status}: `;
-        
-        if (response.status === 404) {
-          errorMessage += "El endpoint /api/auth/register no existe. Verifica la URL.";
-        } else if (response.status === 409) {
-          errorMessage += data.message || "El email o nombre de usuario ya está registrado";
-        } else if (response.status === 400) {
-          errorMessage += data.message || "Datos inválidos";
-        } else if (response.status === 500) {
-          errorMessage += data.message || "Error interno del servidor. Revisa los logs del backend.";
-        } else {
-          errorMessage += data.message || data.error || "Error al registrar usuario";
-        }
-        
-        throw new Error(errorMessage);
-      }
-
-      console.log("✅ Registro exitoso:", data);
-      
-      // Si el backend devuelve token en el registro, guardarlo en Redux
       if (data.token && data.user) {
-        dispatch(login({
-          user: data.user,
-          token: data.token
-        }));
+        dispatch(login({ user: data.user, token: data.token }));
         navigate("/productos");
       } else {
-        // Si no hay token, mostrar mensaje y redirigir a login
         alert("Registro exitoso. Ahora podés iniciar sesión.");
         navigate("/login");
       }
-
     } catch (err) {
-      console.error("🚨 ERROR CAPTURADO:", err);
-      console.error("🚨 Nombre del error:", err.name);
-      console.error("🚨 Mensaje del error:", err.message);
-      console.error("🚨 Stack trace:", err.stack);
-      
-      // Mostrar error detallado en la interfaz
+      console.error("Error en registro:", err);
       setError(err.message || "Error al conectar con el servidor");
     } finally {
       setLoading(false);

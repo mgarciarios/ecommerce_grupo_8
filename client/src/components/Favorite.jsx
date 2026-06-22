@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFavorite } from '../store/slices/favoriteSlice';
+import { favoritosApi } from '../api/favoritosApi';
 import './css/Favorite.css';
 
 export default function Favorite({ categoria }) {
@@ -8,19 +9,11 @@ export default function Favorite({ categoria }) {
   const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
 
   const handleRemoveFromFavorite = (productId) => {
-    // NUEVO: Eliminamos la búsqueda del token en localStorage
     const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
     const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
 
-    // Petición a la BD para borrar
-    // NUEVO: Ahora solo comprobamos que exista el userId
     if (userId) {
-      fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${productId}`, {
-        method: 'DELETE',
-        // NUEVO: Incluimos credentials para que el navegador envíe la cookie sola
-        credentials: 'include', 
-        // NUEVO: Eliminamos por completo el header 'Authorization'
-      }).catch(err => console.error("Error BD:", err));
+      favoritosApi.remove(userId, productId).catch(err => console.error("Error BD:", err));
     }
 
     dispatch(removeFavorite(productId));

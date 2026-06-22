@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { productService } from '../services/productService';
+import { productService } from '../api/productApi.js';
 
 export const useProducts = () => {
   const [productos, setProductos] = useState([]);

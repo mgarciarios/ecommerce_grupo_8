@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/slices/userSlice";
+import { usuarioApi } from "../api/usuarioApi";
+import { authApi } from "../api/authApi";
 import "./css/Profile.css";
 
 const IconUser = () => (
@@ -116,27 +118,14 @@ export default function Profile() {
       if (!userId) return;
 
       try {
-        const response = await fetch(`http://localhost:8080/api/usuarios/${userId}`, {
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-
-          // Actualizamos el formulario con lo que trajimos de la BD
-          setInfo((prevInfo) => ({
-            ...prevInfo,
-            nombre: data.nombre || data.usuario?.nombre || prevInfo.nombre,
-            apellido: data.apellido || data.usuario?.apellido || prevInfo.apellido,
-            username: data.username || data.usuario?.username || prevInfo.username,
-            email: data.mail || data.usuario?.mail || prevInfo.email,
-          }));
-        } else {
-          console.error("Error al traer el perfil. Status:", response.status);
-        }
+        const data = await usuarioApi.getById(userId);
+        setInfo((prevInfo) => ({
+          ...prevInfo,
+          nombre: data.nombre || data.usuario?.nombre || prevInfo.nombre,
+          apellido: data.apellido || data.usuario?.apellido || prevInfo.apellido,
+          username: data.username || data.usuario?.username || prevInfo.username,
+          email: data.mail || data.usuario?.mail || prevInfo.email,
+        }));
       } catch (error) {
         console.error("Error de conexión al traer el usuario:", error);
       }
@@ -144,7 +133,7 @@ export default function Profile() {
 
     fetchUserData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // El array vacío asegura que esto se ejecute solo una vez al abrir el Perfil
+  }, []);
 
   const [pwd, setPwd] = useState({
     actual: "",
@@ -177,37 +166,12 @@ export default function Profile() {
       return;
     }
 
-    const body = {
-      oldPassword: pwd.actual,
-      newPassword: pwd.nueva,
-      confirmPassword: pwd.confirmar,
-    };
-    console.log("[changePassword] Enviando petición a /api/auth/change-password", {
-      endpoint: "PUT /api/auth/change-password",
-      oldPasswordLength: body.oldPassword.length,
-      newPasswordLength: body.newPassword.length,
-    });
-
     try {
-      const response = await fetch("http://localhost:8080/api/auth/change-password", {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-
-      if (response.ok) {
-        console.log("[changePassword] Éxito:", await response.text());
-        setPwd({ actual: "", nueva: "", confirmar: "" });
-        showToast("Contraseña actualizada correctamente");
-      } else {
-        const errorText = await response.text();
-        alert(errorText || "Error al cambiar la contraseña.");
-      }
+      await authApi.changePassword(pwd.actual, pwd.nueva, pwd.confirmar);
+      setPwd({ actual: "", nueva: "", confirmar: "" });
+      showToast("Contraseña actualizada correctamente");
     } catch (error) {
-      alert("Error de conexión al cambiar la contraseña.");
+      alert(error.message || "Error de conexión al cambiar la contraseña.");
     }
   };
 

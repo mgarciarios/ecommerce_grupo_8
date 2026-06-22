@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PurchaseCard from '../components/PurchaseCard';
+import { pedidoApi } from '../api/pedidoApi';
 
 export default function Purchases() {
   const [pedidos, setPedidos] = useState(null);
@@ -14,13 +15,7 @@ export default function Purchases() {
       return;
     }
 
-    fetch(`http://localhost:8080/api/pedidos/usuario/${userId}`, {
-      credentials: "include",
-    })
-      .then(res => {
-        if (!res.ok) throw new Error(`Error ${res.status}`);
-        return res.json();
-      })
+    pedidoApi.getByUsuario(userId)
       .then(data => setPedidos(data))
       .catch(err => setError(err.message));
   }, []);

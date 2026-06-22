@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../store/slices/userSlice";
+import { authApi } from "../api/authApi";
 import "./css/Login.css";
 
 export default function Login() {
@@ -34,48 +35,17 @@ export default function Login() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        credentials: "include", // ¡ESTA ES LA LÍNEA MÁGICA QUE FALTA!
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          mail: email,
-          password: password
-        }),
-      });
+      const data = await authApi.login(email, password);
 
-      const responseText = await response.text();
-      let data = null;
-      
-      try {
-        data = JSON.parse(responseText);
-      } catch (parseError) {
-        // Si no es JSON (ej. un error 500 en texto plano), lo guardamos como mensaje
-        data = { message: responseText || "Error del servidor (respuesta no JSON)" };
-      }
-
-      if (!response.ok) {
-        throw new Error(data.message || "Error al iniciar sesión");
-      }
-
-      // Asegurarnos de no perder el idCarrito si viene suelto en la respuesta
       const userData = data.usuario || data.user || data;
       if (data.idCarrito && !userData.idCarrito) {
         userData.idCarrito = data.idCarrito;
       }
 
-      // CAMBIO: Usar Redux para guardar solo el usuario, el token lo gestiona la cookie sola
-      dispatch(login({
-        user: userData
-        // Eliminamos la linea: token: data.token
-      }));
+      dispatch(login({ user: userData }));
 
       console.log("Login exitoso:", data);
-
       navigate("/productos");
-
     } catch (err) {
       console.error("Error en login:", err);
       setError(err.message || "Credenciales incorrectas");

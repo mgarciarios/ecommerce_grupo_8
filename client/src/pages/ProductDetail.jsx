@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
 import { addItemToCart } from '../store/slices/cartSlice';
 import { isAuthenticated } from '../utils/auth';
+import { favoritosApi } from '../api/favoritosApi';
 import './css/ProductDetail.css';
 
 export default function ProductoDetalle() {
@@ -39,8 +40,7 @@ export default function ProductoDetalle() {
     const fetchProducto = async () => {
       try {
         setCargando(true);
-        const response = await fetch(`http://localhost:8080/api/productos/${id}`);
-        const data = await response.json();
+        const data = await obtenerProductoPorId(id);
         if (data) {
           setProducto(data);
         } else {
@@ -106,18 +106,12 @@ export default function ProductoDetalle() {
   if (esFav) {
     dispatch(removeFavorite(producto.id));
     if (userId) {
-      fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${producto.id}`, {
-        method: 'DELETE',
-        credentials: 'include' // Agregamos credentials y quitamos headers
-      }).catch(err => console.error("Error BD:", err));
+      favoritosApi.remove(userId, producto.id).catch(err => console.error("Error BD:", err));
     }
   } else {
     dispatch(addFavorite(producto));
     if (userId) {
-      fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${producto.id}`, {
-        method: 'POST',
-        credentials: 'include' // Agregamos credentials y quitamos headers
-      }).catch(err => console.error("Error BD:", err));
+      favoritosApi.add(userId, producto.id).catch(err => console.error("Error BD:", err));
     }
   }
 };

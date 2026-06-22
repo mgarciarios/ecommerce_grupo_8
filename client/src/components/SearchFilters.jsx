@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { productService } from '../services/productService'
+import { productService } from '../api/productApi.js'
 import './css/SearchFilters.css'
 
 export default function SearchFilters() {

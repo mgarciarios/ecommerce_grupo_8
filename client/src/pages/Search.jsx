@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Card from '../components/Card'
 import SearchFilters from '../components/SearchFilters'
-import { productService } from '../services/productService'
+import { productService } from '../api/productApi.js'
 import '../components/css/ProductList.css'
 import './css/Search.css'
 

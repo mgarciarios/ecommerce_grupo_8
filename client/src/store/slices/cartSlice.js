@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { carritoApi } from '../../api/carritoApi';
 
-const API_BASE = 'http://localhost:8080/api/carrito';
 const PURCHASES_CACHE_PREFIX = 'purchaseHistory';
 
 const getCarritoId = (state) => state.user?.user?.idCarrito;
@@ -56,14 +56,7 @@ export const fetchCartItems = createAsyncThunk(
     if (!cartId) return [];
 
     try {
-      const response = await fetch(`${API_BASE}/${cartId}`, {
-        // NUEVO: Agregamos credentials y quitamos el header Authorization
-        credentials: 'include', 
-      });
-
-      if (!response.ok) throw new Error('Error al cargar el carrito');
-
-      const data = await response.json();
+      const data = await carritoApi.getCart(cartId);
       const productos = data.productos || [];
       console.log("👉 PRODUCTOS CRUDOS DEL BACKEND:", productos);
 
@@ -106,26 +99,8 @@ export const addItemToCart = createAsyncThunk(
     const cartId = getCarritoId(state);
     if (cartId) {
       try {
-        const response = await fetch(`${API_BASE}/${cartId}/productos`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            productoId: product.id,
-            cantidad: product.cantidad, 
-          }),
-        });
-
-        // NUEVO: Verificamos si el status HTTP es de error (ej: 403, 500)
-        if (!response.ok) {
-           const errorMsg = await response.text();
-           throw new Error(`Error ${response.status}: ${errorMsg || 'No autorizado'}`);
-        }
-
+        await carritoApi.addItem(cartId, product.id, product.cantidad);
       } catch (err) {
-        // Ahora sí, si response.ok es falso, caerá aquí y Redux mostrará el error real
         return rejectWithValue(err.message);
       }
     }
@@ -146,11 +121,7 @@ export const removeItemFromCart = createAsyncThunk(
     const cartId = getCarritoId(state);
     if (cartId) {
       try {
-        await fetch(`${API_BASE}/${cartId}/productos/${productId}`, {
-          method: 'DELETE',
-          credentials: 'include', // NUEVO: Habilitar envío de cookies
-          // NUEVO: Eliminado el header Authorization
-        });
+        await carritoApi.removeItem(cartId, productId);
       } catch (err) {
         return rejectWithValue(err.message);
       }
@@ -177,22 +148,9 @@ export const updateCartItemQuantity = createAsyncThunk(
       try {
         const cantidadAReducir = delta < 0 ? Math.abs(delta) : 0;
         if (cantidadAReducir > 0) {
-          await fetch(
-            `${API_BASE}/${cartId}/productos/${id}/reduce?cantidad=${cantidadAReducir}`,
-            {
-              method: 'PUT',
-              credentials: 'include', // NUEVO
-            }
-          );
+          await carritoApi.reduceItem(cartId, id, cantidadAReducir);
         } else {
-          await fetch(`${API_BASE}/${cartId}/productos`, {
-            method: 'POST',
-            credentials: 'include', // NUEVO
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ productoId: id, cantidad: delta }), 
-          });
+          await carritoApi.addOrIncrement(cartId, id, delta);
         }
       } catch (err) {
         return rejectWithValue(err.message);
@@ -219,17 +177,7 @@ export const checkoutCart = createAsyncThunk(
     }
 
     try {
-      const response = await fetch(`${API_BASE}/${carritoId}/checkout`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        return rejectWithValue(errorData.mensaje || errorData.message || 'Error al finalizar la compra');
-      }
-
-      return response.json();
+      return await carritoApi.checkout(carritoId);
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -248,10 +196,7 @@ export const clearUserCart = createAsyncThunk(
     const cartId = getCarritoId(state);
     if (cartId) {
       try {
-        await fetch(`${API_BASE}/${cartId}/productos`, {
-          method: 'DELETE',
-          credentials: 'include', 
-        });
+        await carritoApi.clear(cartId);
       } catch (err) {
         return rejectWithValue(err.message);
       }

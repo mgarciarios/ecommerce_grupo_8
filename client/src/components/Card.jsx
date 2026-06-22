@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addFavorite, removeFavorite } from '../store/slices/favoriteSlice';
 import { addItemToCart, selectCartItems } from '../store/slices/cartSlice';
 import { isAuthenticated } from '../utils/auth';
+import { favoritosApi } from '../api/favoritosApi';
 import './css/Card.css';
 
 const Card = ({
@@ -56,21 +57,13 @@ const handleFavoriteClick = (e) => {
 
     if (esFav) {
       dispatch(removeFavorite(productId));
-      // Petición a la BD para borrar
       if (userId) {
-        fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${productId}`, {
-          method: 'DELETE',
-          credentials: 'include' // Agregamos credentials y quitamos headers
-        }).catch(err => console.error("Error BD al borrar favorito:", err));
+        favoritosApi.remove(userId, productId).catch(err => console.error("Error BD al borrar favorito:", err));
       }
     } else {
       dispatch(addFavorite(infoProducto));
-      // Petición a la BD para agregar
       if (userId) {
-        fetch(`http://localhost:8080/api/usuarios/${userId}/favoritos/${productId}`, {
-          method: 'POST',
-          credentials: 'include' // Agregamos credentials y quitamos headers
-        }).catch(err => console.error("Error BD al agregar favorito:", err));
+        favoritosApi.add(userId, productId).catch(err => console.error("Error BD al agregar favorito:", err));
       }
     }
   };
