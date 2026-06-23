@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { logout } from './userSlice';
 
 const favoriteSlice = createSlice({
   name: 'favorite',
@@ -35,6 +36,11 @@ const favoriteSlice = createSlice({
       state.items = action.payload; // Sobreescribe los favoritos con los que vienen de la BD
     }
 
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logout, (state) => {
+      state.items = [];
+    });
   }
 });
 

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { carritoApi } from '../../api/carritoApi';
+import { logout } from './userSlice';
 
 const PURCHASES_CACHE_PREFIX = 'purchaseHistory';
 
@@ -302,6 +303,11 @@ const cartSlice = createSlice({
       })
       .addCase(clearUserCart.rejected, (state, action) => {
         state.error = action.payload || 'Error al vaciar el carrito';
+      })
+      // logout
+      .addCase(logout, (state) => {
+        state.items = [];
+        state.error = null;
       });
   },
 });
