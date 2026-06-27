@@ -24,7 +24,6 @@ import com.uade.tpo.e_commerce3.dto.PedidoDTO;
 import com.uade.tpo.e_commerce3.dto.ProductoCarritoDTO;
 import com.uade.tpo.e_commerce3.model.Carrito;
 import com.uade.tpo.e_commerce3.service.CarritoService;
-import com.uade.tpo.e_commerce3.service.PedidoService;
 
 
 @RestController
@@ -36,8 +35,6 @@ public class CarritoController {
     @Autowired
     private CarritoService carritoService;
 
-    @Autowired
-    private PedidoService pedidoService;
 
     @GetMapping
     public ResponseEntity<List<CarritoDTO>> getAllCarritos() {

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { FavoriteProvider } from './hooks/useContext/FavoriteProvider';
 import { useFavorites } from './hooks/useFavorites';
 import Landing from './pages/Landing';
 import ProductDetail from './pages/ProductDetail';
@@ -83,11 +82,9 @@ function AppContent() {
 
 function App() {
   return (
-    <FavoriteProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </FavoriteProvider>
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 
