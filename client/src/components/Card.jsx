@@ -17,6 +17,7 @@ const Card = ({
   const dispatch = useDispatch();
   const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
   const cartItems = useSelector(selectCartItems);
+  const { user } = useSelector((state) => state.user); // Obtener usuario desde Redux
 
   const productId = id ?? producto?.id;
   const esFav = favorites.some((item) => item.id === productId);
@@ -44,11 +45,8 @@ const Card = ({
 
 const handleFavoriteClick = (e) => {
     e.stopPropagation(); 
-
-    // Eliminamos la búsqueda del token
-    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
-    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
-
+    const userId = user?.id; // Usar el ID del usuario desde Redux
+ 
     // Ahora solo validamos que exista el usuario
     if (!userId) {
       alert("Inicia sesion para marcar productos como favoritos");
