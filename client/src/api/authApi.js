@@ -48,4 +48,16 @@ export const authApi = {
     }
     return response.text();
   },
+
+  logout: async () => {
+    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include', // Esencial para que el navegador envíe la cookie que se va a invalidar
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || 'Error al cerrar sesión');
+    }
+    return response.text();
+  },
 };

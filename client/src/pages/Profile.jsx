@@ -146,6 +146,20 @@ export default function Profile() {
     setTimeout(() => setToast(null), 3000);
   };
 
+  const handleLogout = async () => {
+    try {
+      // 1. PASO CRÍTICO: Llamar al backend para que destruya la cookie.
+      await authApi.logout();
+    } catch (error) {
+      console.error("Error al cerrar sesión en el backend:", error);
+      // Aunque el backend falle, continuamos para que el usuario vea la sesión cerrada.
+    } finally {
+      // 2. Limpiar el estado del frontend y redirigir.
+      dispatch(logout());
+      navigate('/productos');
+    }
+  };
+
   const handleInfoSave = (e) => {
     e.preventDefault();
     if (!info.nombre || !info.apellido || !info.username || !info.email) {
@@ -269,10 +283,7 @@ export default function Profile() {
             <button
               type="button"
               className="profile-btn-logout"
-              onClick={() => {
-                dispatch(logout());
-                navigate('/productos');
-              }}
+              onClick={handleLogout}
             >
               Salir
             </button>

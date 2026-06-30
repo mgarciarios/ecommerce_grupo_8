@@ -65,6 +65,19 @@ public class AuthenticationController {
         return ResponseEntity.ok("Contraseña actualizada correctamente");
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        // Creamos una cookie con el mismo nombre ("jwt") pero sin valor
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        // La clave: establecemos su edad máxima en 0 para que el navegador la borre inmediatamente.
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return ResponseEntity.ok("Cierre de sesión exitoso");
+    }
+
+
     private String extractJwt(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {

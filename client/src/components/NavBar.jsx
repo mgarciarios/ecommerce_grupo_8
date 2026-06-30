@@ -6,6 +6,7 @@ import { logout } from '../store/slices/userSlice'
 import { setFavorites } from '../store/slices/favoriteSlice'
 import { setCartItems } from '../store/slices/cartSlice'
 import ThemeToggle from './ThemeToggle'
+import { authApi } from '../api/authApi'
 import './css/NavBar.css'
 import { isAdminUser } from '../utils/auth'
 
@@ -54,10 +55,18 @@ const NavBar = () => {
     }
   }
 
-  const handleLogout = () => {
-    dispatch(logout())
-    closeMenu()
-    navigate('/productos')
+  const handleLogout = async () => {
+    try {
+      // 1. Llama al backend para que invalide la cookie HttpOnly
+      await authApi.logout();
+    } catch (error) {
+      console.error("Error al cerrar sesión en el backend:", error);
+    } finally {
+      // 2. Limpia el estado del frontend y redirige, sin importar si el backend falló.
+      closeMenu();
+      dispatch(logout());
+      navigate('/productos');
+    }
   }
 
   const closeMenu = () => setMenuOpen(false)
