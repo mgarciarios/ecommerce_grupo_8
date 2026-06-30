@@ -7,11 +7,10 @@ import './css/Favorite.css';
 export default function Favorite({ categoria }) {
   const dispatch = useDispatch();
   const favorites = useSelector((state) => (state.favorite && state.favorite.items) || []);
+  const { user } = useSelector((state) => state.user); // Obtener usuario desde Redux
 
   const handleRemoveFromFavorite = (productId) => {
-    const localUser = JSON.parse(localStorage.getItem("user") || localStorage.getItem("usuario") || "{}");
-    const userId = localUser?.id || localUser?.usuario?.id || localUser?.user?.id;
-
+    const userId = user?.id; // Usar el ID del usuario desde Redux
     if (userId) {
       favoritosApi.remove(userId, productId).catch(err => console.error("Error BD:", err));
     }
